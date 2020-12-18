@@ -1,40 +1,58 @@
 package game;
+
+import game.core.*;
+
 import java.util.ArrayList;
 
-public class Board 
+public class Board implements IRenderable
 {
-	FieldState [][] fields;
-	final Vector2 size;
-	ArrayList<IBoardListener> listeners = new ArrayList<IBoardListener>(); 
-	 
-	
-	public Board(int sizeX, int sizeY)
+	private FieldState[][] fields;
+	private final Vector2Int size;
+	private boolean owned;
+
+	private ArrayList<IBoardListener> listeners = new ArrayList<IBoardListener>();
+
+	public Board(int sizeX, int sizeY, boolean owned)
 	{
-		size = new Vector2(sizeX, sizeY);
-		fields = new FieldState[sizeX][sizeY];
-		for(int x = 0; x < size.x; x++) 
-		{
-			for(int y = 0; y < size.y; y++) 
-			{
-				fields[x][y] = FieldState.WATER;
-			}
-		}
-		
+		this(new Vector2Int(sizeX, sizeY), owned);
+	}
+
+	public Board(Vector2Int size, boolean owned)
+	{
+		Game.addRenderable(this);
+
+		this.size = size;
+		this.owned = owned;
+
+		fields = new FieldState[size.x][size.y];
+
+		setFields(FieldState.WATER);
 	}
 	
-	public void setField(Vector2 pos, FieldState state)
+	public void setField(Vector2Int pos, FieldState state)
 	{
 		fields[pos.x][pos.y] = state;
 		InvokeFieldChanged(pos, state);
 	}
-	
+
 	public void setField(int x, int y, FieldState state)
 	{
 		fields[x][y] = state;
-		InvokeFieldChanged(new Vector2(x, y), state);
+		InvokeFieldChanged(new Vector2Int(x, y), state);
 	}
-	
-	public FieldState getField(Vector2 pos)
+
+	public void setFields(FieldState state)
+	{
+		for(int x = 0; x < size.x; x++)
+		{
+			for (int y = 0; y < size.y; y++)
+			{
+				setField(x, y, state);
+			}
+		}
+	}
+
+	public FieldState getField(Vector2Int pos)
 	{
 		return fields[pos.x][pos.y];
 	}
@@ -49,19 +67,6 @@ public class Board
 		return fields;
 	}
 	
-	public void resetBoard() 
-	{
-		fields = new FieldState[size.x][size.y];
-	}
-	
-	public void InvokeFieldChanged(Vector2 pos, FieldState state)
-	{
-		for(var listener:listeners)
-		{
-			listener.onFieldChanged(pos, state);
-		}
-	}
-	
 	public void addListener(IBoardListener listener)
 	{
 		listeners.add(listener);
@@ -71,10 +76,42 @@ public class Board
 	{
 		listeners.remove(listener);
 	}
-	
-	public static void main(String args[])  
-    {  
-       var board = new Board(10,10);
-       System.out.println(board.getField(1, 1));
-    } 
+
+	public void InvokeFieldChanged(Vector2Int pos, FieldState state)
+	{
+		for(var listener:listeners)
+		{
+			listener.onFieldChanged(pos, state);
+		}
+	}
+
+	@Override
+	public void render(BoardRenderer renderer)
+	{
+		for (int x = 0; x < size.x; x++)
+		{
+			for (int y = 0; y < size.y; y++)
+			{
+				var field = getField(x, y);
+				var position = new Vector2Int(x, y);
+
+				var sprite = Resources.SPRITE_NULL;
+
+				switch (field)
+				{
+					case WATER -> sprite = Resources.WATER_DUMMY;
+					case SHIP -> sprite = Resources.SHIP_DUMMY;
+				}
+
+				if (owned)
+				{
+					renderer.drawLeftField(sprite, position);
+				}
+				else
+				{
+					renderer.drawRightField(sprite, position);
+				}
+			}
+		}
+	}
 }
