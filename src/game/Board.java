@@ -54,12 +54,26 @@ public class Board implements IRenderable
 
 	public FieldState getField(Vector2Int pos)
 	{
-		return fields[pos.x][pos.y];
+		try
+		{
+			return fields[pos.x][pos.y];
+		}
+		catch (IndexOutOfBoundsException ex)
+		{
+			return null;
+		}
 	}
-	
+
 	public FieldState getField(int x, int y)
 	{
-		return fields[x][y];
+		try
+		{
+			return fields[x][y];
+		}
+		catch (IndexOutOfBoundsException ex)
+		{
+			return null;
+		}
 	}
 
 	public FieldState[][] getFields()
@@ -70,6 +84,45 @@ public class Board implements IRenderable
 	public Vector2Int getSize()
 	{
 		return size;
+	}
+
+	public boolean canPlace(Vector2Int position, ShipType shipType)
+	{
+		switch (shipType)
+		{
+			case PATROL ->
+			{
+				return getField(position) == FieldState.WATER;
+			}
+			case SUPER_PATROL ->
+			{
+				return getField(position) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right())) == FieldState.WATER;
+			}
+			default ->
+			{
+				return false;
+			}
+		}
+	}
+
+	public void placeShip(Vector2Int position, ShipType shipType)
+	{
+		if (canPlace(position, shipType))
+		{
+			switch (shipType)
+			{
+				case PATROL ->
+				{
+					setField(position, FieldState.SHIP);
+				}
+				case SUPER_PATROL ->
+				{
+					setField(position, FieldState.SHIP);
+					setField(position.add(Vector2Int.right()), FieldState.SHIP);
+				}
+			}
+		}
 	}
 
 	public void addListener(IBoardListener listener)

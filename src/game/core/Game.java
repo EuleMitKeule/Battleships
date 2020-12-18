@@ -5,8 +5,7 @@ import game.Match;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Game extends JComponent implements IRenderable, IUpdatable
@@ -18,6 +17,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	private static ArrayList<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	private static Input input;
+	private static UI ui;
 
 	private String title;
 
@@ -46,6 +46,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 		}
 
 		input = new Input();
+		ui = new UI(this);
 
 		frame = new JFrame(title);
 

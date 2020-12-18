@@ -36,9 +36,9 @@ public class Human extends Player implements IInputListener
                 var cellPos = BoardRenderer.worldToCell(mousePos);
                 if (cellPos != null)
                 {
-                    if (board.getField(cellPos) != FieldState.SHIP)
+                    if (board.canPlace(cellPos, curShipType))
                     {
-                        invokeShipPlaced(cellPos);
+                        invokeShipPlaced(cellPos, curShipType);
                     }
                 }
             }

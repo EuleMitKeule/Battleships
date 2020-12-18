@@ -2,7 +2,18 @@ package game;
 
 public interface IMatchListener
 {
-    void onPlacingPlayerChanged(Player player);
+    default void onPlacingPlayerChanged(Player player, ShipType shipType)
+    {
 
-    void onGuessingPlayerChanged(Player player);
+    }
+
+    default void onGuessingPlayerChanged(Player player)
+    {
+
+    }
+
+    default void onPlayerAdded(Player player, boolean isLeftPlayer)
+    {
+
+    }
 }

@@ -8,8 +8,11 @@ public abstract class Player implements IMatchListener
 {
 	protected String name;
 	protected Board board;
+
 	protected boolean isPlacing;
 	protected boolean isGuessing;
+
+	protected ShipType curShipType;
 
 	private ArrayList<IPlayerListener> listeners = new ArrayList<IPlayerListener>();
 
@@ -19,6 +22,11 @@ public abstract class Player implements IMatchListener
 		this.board = board;
 
 		Match.addListener(this);
+	}
+
+	public String getName()
+	{
+		return this.name;
 	}
 
 	public void addListener(IPlayerListener listener)
@@ -31,11 +39,11 @@ public abstract class Player implements IMatchListener
 		listeners.remove(listener);
 	}
 
-	protected void invokeShipPlaced(Vector2Int position)
+	protected void invokeShipPlaced(Vector2Int position, ShipType shipType)
 	{
 		for (var listener : listeners)
 		{
-			listener.onShipPlaced(this, position);
+			listener.onShipPlaced(this, position, shipType);
 		}
 	}
 
@@ -48,14 +56,14 @@ public abstract class Player implements IMatchListener
 	}
 
 	@Override
-	public void onPlacingPlayerChanged(Player player)
+	public void onPlacingPlayerChanged(Player player, ShipType shipType)
 	{
 		isPlacing = player == this;
 		isGuessing = false;
 
 		if (isPlacing)
 		{
-			System.out.println("Player " + name + " is now placing a ship");
+			curShipType = shipType;
 		}
 	}
 

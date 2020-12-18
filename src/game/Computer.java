@@ -12,21 +12,21 @@ public class Computer extends Player
     }
 
     @Override
-    public void onPlacingPlayerChanged(Player player)
+    public void onPlacingPlayerChanged(Player player, ShipType shipType)
     {
-        super.onPlacingPlayerChanged(player);
+        super.onPlacingPlayerChanged(player, shipType);
 
         if (player == this)
         {
             var rand = new Random();
-            var placePos = new Vector2Int(rand.nextInt(board.getSize().x), rand.nextInt(board.getSize().y));
+            var cellPos = new Vector2Int(rand.nextInt(board.getSize().x), rand.nextInt(board.getSize().y));
 
-            while (board.getField(placePos.x, placePos.y) != FieldState.WATER)
+            while (!board.canPlace(cellPos, curShipType))
             {
-                placePos = new Vector2Int(rand.nextInt(board.getSize().x), rand.nextInt(board.getSize().y));
+                cellPos = new Vector2Int(rand.nextInt(board.getSize().x), rand.nextInt(board.getSize().y));
             }
 
-            invokeShipPlaced(placePos);
+            invokeShipPlaced(cellPos, shipType);
         }
     }
 

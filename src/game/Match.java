@@ -26,10 +26,14 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         leftPlayer = new Human("eule", leftBoard);
         leftPlayer.addListener(this);
 
+        invokePlayerAdded(leftPlayer, true);
+
         rightPlayer = new Computer("com", rightBoard);
         rightPlayer.addListener(this);
 
-        invokePlacingPlayerChanged(leftPlayer);
+        invokePlayerAdded(rightPlayer, false);
+
+        invokePlacingPlayerChanged(leftPlayer, ShipType.SUPER_PATROL);
 
         Game.addUpdatable(this);
     }
@@ -41,20 +45,15 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
     }
 
     @Override
-    public void onShipPlaced(Player player, Vector2Int position)
+    public void onShipPlaced(Player player, Vector2Int position, ShipType shipType)
     {
-        System.out.println("Player " + player.name + " just placed a ship");
+        System.out.println("Player " + player.name + " placed a ship of type " + shipType);
 
-        if (player == leftPlayer)
-        {
-            leftBoard.setField(position, FieldState.SHIP);
-            invokePlacingPlayerChanged(rightPlayer);
-        }
-        else if (player == rightPlayer)
-        {
-            rightBoard.setField(position, FieldState.SHIP);
-            invokePlacingPlayerChanged(leftPlayer);
-        }
+        var board = player == leftPlayer ? leftBoard : rightBoard;
+
+        board.placeShip(position, shipType);
+
+        invokePlacingPlayerChanged(player == leftPlayer ? rightPlayer : leftPlayer, ShipType.SUPER_PATROL);
     }
 
     @Override
@@ -71,11 +70,19 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         }
     }
 
-    private void invokePlacingPlayerChanged(Player player)
+    private void invokePlacingPlayerChanged(Player player, ShipType shipType)
     {
         for (var listener : listeners)
         {
-            listener.onPlacingPlayerChanged(player);
+            listener.onPlacingPlayerChanged(player, shipType);
+        }
+    }
+
+    private void invokePlayerAdded(Player player, boolean isLeftPlayer)
+    {
+        for (var listener : listeners)
+        {
+            listener.onPlayerAdded(player, isLeftPlayer);
         }
     }
 
