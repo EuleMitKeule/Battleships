@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Game extends JComponent implements IRenderable, IUpdatable
 {
 	public static final Vector2Int GAME_SIZE = new Vector2Int(1472, 768);
+	public static final Vector2Int BOARD_SIZE = new Vector2Int(10, 10);
 
 	private static ArrayList<IUpdatable> updatables = new ArrayList<IUpdatable>();
 	private static ArrayList<IRenderable> renderables = new ArrayList<IRenderable>();
@@ -103,12 +104,12 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 
 	public void paintComponent(Graphics g)
 	{
-		render(new BoardRenderer(g, new Vector2Int(64, 64), new Vector2Int(768, 64), 64));
+		render(new BoardRenderer(g, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE));
 	}
 
 	public void StartMatch()
 	{
-		var match = new Match(new Vector2Int(10, 10));
+		var match = new Match(BOARD_SIZE);
 	}
 
 	public static void addRenderable(IRenderable renderable)

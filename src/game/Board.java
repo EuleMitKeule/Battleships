@@ -66,7 +66,12 @@ public class Board implements IRenderable
 	{
 		return fields;
 	}
-	
+
+	public Vector2Int getSize()
+	{
+		return size;
+	}
+
 	public void addListener(IBoardListener listener)
 	{
 		listeners.add(listener);
@@ -81,7 +86,7 @@ public class Board implements IRenderable
 	{
 		for(var listener:listeners)
 		{
-			listener.onFieldChanged(pos, state);
+			listener.onFieldChanged(this, pos, state);
 		}
 	}
 
