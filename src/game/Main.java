@@ -7,7 +7,6 @@ public class Main {
 	Player player2;
 	
 	public Main(Player player1, Player player2) {
-		board = new Board();
 		this.player1 = player1;
 		this.player2 = player2;
 				
@@ -15,5 +14,6 @@ public class Main {
 	public static void main(String args[])  
     {
 		System.out.println("Game gestartet");
+		var game = new Game();
     } 
 }
