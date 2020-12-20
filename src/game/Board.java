@@ -90,19 +90,28 @@ public class Board implements IRenderable
 	{
 		switch (shipType)
 		{
-			case PATROL ->
-			{
+			case PATROL:
 				return getField(position) == FieldState.WATER;
-			}
-			case SUPER_PATROL ->
-			{
+			case SUPER_PATROL:
 				return getField(position) == FieldState.WATER &&
 						getField(position.add(Vector2Int.right())) == FieldState.WATER;
-			}
-			default ->
-			{
+			case DESTROYER:
+				return getField(position) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right())) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right().times(2))) == FieldState.WATER;
+			case BATTLESHIP:
+				return getField(position) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right())) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right().times(2))) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right().times(3))) == FieldState.WATER;
+			case CARRIER:
+				return getField(position) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right())) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right().times(2))) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right().times(3))) == FieldState.WATER &&
+						getField(position.add(Vector2Int.right().times(4))) == FieldState.WATER;
+			default:
 				return false;
-			}
 		}
 	}
 
@@ -112,15 +121,31 @@ public class Board implements IRenderable
 		{
 			switch (shipType)
 			{
-				case PATROL ->
-				{
+				case PATROL:
 					setField(position, FieldState.SHIP);
-				}
-				case SUPER_PATROL ->
-				{
+					break;
+				case SUPER_PATROL:
 					setField(position, FieldState.SHIP);
 					setField(position.add(Vector2Int.right()), FieldState.SHIP);
-				}
+					break;
+				case DESTROYER:
+					setField(position, FieldState.SHIP);
+					setField(position.add(Vector2Int.right()), FieldState.SHIP);
+					setField(position.add(Vector2Int.right().times(2)), FieldState.SHIP);
+					break;
+				case BATTLESHIP:
+					setField(position, FieldState.SHIP);
+					setField(position.add(Vector2Int.right()), FieldState.SHIP);
+					setField(position.add(Vector2Int.right().times(2)), FieldState.SHIP);
+					setField(position.add(Vector2Int.right().times(3)), FieldState.SHIP);
+					break;
+				case CARRIER:
+					setField(position, FieldState.SHIP);
+					setField(position.add(Vector2Int.right()), FieldState.SHIP);
+					setField(position.add(Vector2Int.right().times(2)), FieldState.SHIP);
+					setField(position.add(Vector2Int.right().times(3)), FieldState.SHIP);
+					setField(position.add(Vector2Int.right().times(4)), FieldState.SHIP);
+					break;
 			}
 		}
 	}

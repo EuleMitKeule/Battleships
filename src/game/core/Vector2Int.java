@@ -15,6 +15,11 @@ public class Vector2Int
 	{
 		return new Vector2Int(this.x + other.x, this.y + other.y);
 	}
+	
+	public Vector2Int times(int value)
+	{
+		return new Vector2Int(this.x * value, this.y * value);
+	}
 
 	public static Vector2Int zero()
 	{
