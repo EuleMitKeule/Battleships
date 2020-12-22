@@ -93,7 +93,6 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
     public void onShipPlaced(Player player, Vector2Int position, ShipType shipType)
     {
     	var isLeftPlayer = player == leftPlayer;
-        System.out.println("Player " + player.name + " placed a ship of type " + shipType);
         var board = isLeftPlayer ? leftBoard : rightBoard;
         board.placeShip(position, shipType);
         if(leftShipQueue.size() == 0 && rightShipQueue.size() == 0)
@@ -109,9 +108,13 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
     {
     	var isLeftPlayer = player == leftPlayer;
     	var board = isLeftPlayer ? rightBoard : leftBoard;
-    	var shipHit = board.guessField(pos);
-    	if(shipHit) invokeGuessingPlayerChanged(isLeftPlayer ? leftPlayer : rightPlayer);
-    	else invokeGuessingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer);
+
+    	if (canGuess(player, pos))
+        {
+            var shipHit = board.guessField(pos);
+            if(shipHit) invokeGuessingPlayerChanged(isLeftPlayer ? leftPlayer : rightPlayer);
+            else invokeGuessingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer);
+        }
     }
     
     public boolean canGuess(Player player, Vector2Int pos)
@@ -188,13 +191,5 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
 		if(isLeftBoard) leftShipCount -= 1;
 		else rightShipCount -= 1;
 		invokeShipCountChanged(isLeftBoard ? leftShipCount : rightShipCount, isLeftBoard);
-	}
-
-	public int getLeftShipCount() {
-		return leftShipCount;
-	}
-
-	public int getRightShipCount() {
-		return rightShipCount;
 	}
 }

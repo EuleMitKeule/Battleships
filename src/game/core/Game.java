@@ -1,6 +1,7 @@
 package game.core;
 
 import game.Match;
+import game.Resources;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

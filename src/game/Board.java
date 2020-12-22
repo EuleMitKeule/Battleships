@@ -201,7 +201,7 @@ public class Board implements IRenderable
 					setShip(position, ShipType.BATTLESHIP_FRONT);
 					setShip(position.add(Vector2Int.right()), ShipType.BATTLESHIP_FRONT_MID);
 					setShip(position.add(Vector2Int.right().times(2)), ShipType.BATTLESHIP_BACK_MID);
-					setShip(position.add(Vector2Int.right().times(3)), ShipType.BATTLESHIP_FRONT);
+					setShip(position.add(Vector2Int.right().times(3)), ShipType.BATTLESHIP_BACK);
 					break;
 				case CARRIER:
 					setField(position, FieldState.SHIP);
@@ -252,38 +252,6 @@ public class Board implements IRenderable
 		return getField(pos) == FieldState.WATER || getField(pos) == FieldState.SHIP;
 	}
 
-	@Override
-	public void render(BoardRenderer renderer)
-	{
-		for (int x = 0; x < size.x; x++)
-		{
-			for (int y = 0; y < size.y; y++)
-			{
-				var field = getField(x, y);
-				var position = new Vector2Int(x, y);
-
-				var sprite = Resources.SPRITE_NULL;
-
-				switch (field)
-				{
-					case WATER -> sprite = Resources.WATER_DUMMY;
-					case SHIP -> sprite = owned ? Resources.SHIP_DUMMY : Resources.WATER_DUMMY;
-					case WATER_GUESSED -> sprite = Resources.WATER_GUESSED_DUMMY;
-					case SHIP_GUESSED -> sprite = Resources.SHIP_GUESSED_DUMMY;
-				}
-
-				if (owned)
-				{
-					renderer.drawLeftField(sprite, position);
-				}
-				else
-				{
-					renderer.drawRightField(sprite, position);
-				}
-			}
-		}
-	}
-
 	public boolean guessField(Vector2Int pos) 
 	{
 		switch(getField(pos)) 
@@ -303,8 +271,6 @@ public class Board implements IRenderable
     	}
 		
 	}
-	
-	
 	
 	private boolean isLastShipField(Vector2Int pos)
 	{
@@ -366,20 +332,6 @@ public class Board implements IRenderable
 					getShip(pos.add(Vector2Int.right().times(4))) != ShipType.CARRIER_BACK) return true;
 		}
 		
-		if(startField == ShipType.CARRIER_FRONT) {
-			if(getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_FRONT_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_MID &&
-					getShip(pos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK_MID &&
-					getShip(pos.add(Vector2Int.right().times(4))) != ShipType.CARRIER_BACK) return true;
-		}
-		
-		if(startField == ShipType.CARRIER_FRONT) {
-			if(getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_FRONT_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_MID &&
-					getShip(pos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK_MID &&
-					getShip(pos.add(Vector2Int.right().times(4))) != ShipType.CARRIER_BACK) return true;
-		}
-		
 		if(startField == ShipType.CARRIER_FRONT_MID) {
 			if(getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
 					getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_MID &&
@@ -388,8 +340,8 @@ public class Board implements IRenderable
 		}
 		
 		if(startField == ShipType.CARRIER_MID) {
-			if(getShip(pos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT &&
-					getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT_MID &&
+			if(getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
+					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
 					getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_BACK_MID &&
 					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK) return true;
 		}
@@ -398,7 +350,7 @@ public class Board implements IRenderable
 			if(getShip(pos.add(Vector2Int.left().times(3))) != ShipType.CARRIER_FRONT &&
 					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
 					getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK) return true;
+					getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_BACK) return true;
 		}
 		
 		if(startField == ShipType.CARRIER_BACK) {
@@ -408,5 +360,61 @@ public class Board implements IRenderable
 					getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_BACK_MID) return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void render(BoardRenderer renderer)
+	{
+		for (int x = 0; x < size.x; x++)
+		{
+			for (int y = 0; y < size.y; y++)
+			{
+				var field = getField(x, y);
+				var position = new Vector2Int(x, y);
+
+				var sprite = Resources.SPRITE_NULL;
+
+				switch (field)
+				{
+					case WATER -> sprite = Resources.WATER_DUMMY;
+					case SHIP ->
+					{
+						//if (owned)
+						//{
+						switch (getShip(position))
+						{
+							case PATROL -> sprite = Resources.PATROL;
+							case SUPER_PATROL_FRONT -> sprite = Resources.SUPER_PATROL_FRONT;
+							case SUPER_PATROL_BACK -> sprite = Resources.SUPER_PATROL_BACK;
+							case DESTROYER_FRONT -> sprite = Resources.DESTROYER_FRONT;
+							case DESTROYER_MID -> sprite = Resources.DESTROYER_MID;
+							case DESTROYER_BACK -> sprite = Resources.DESTROYER_BACK;
+							case BATTLESHIP_FRONT -> sprite = Resources.BATTLESHIP_FRONT;
+							case BATTLESHIP_FRONT_MID -> sprite = Resources.BATTLESHIP_FRONT_MID;
+							case BATTLESHIP_BACK_MID -> sprite = Resources.BATTLESHIP_BACK_MID;
+							case BATTLESHIP_BACK -> sprite = Resources.BATTLESHIP_BACK;
+							case CARRIER_FRONT -> sprite = Resources.CARRIER_FRONT;
+							case CARRIER_FRONT_MID -> sprite = Resources.CARRIER_FRONT_MID;
+							case CARRIER_MID -> sprite = Resources.CARRIER_MID;
+							case CARRIER_BACK_MID -> sprite = Resources.CARRIER_BACK_MID;
+							case CARRIER_BACK -> sprite = Resources.CARRIER_BACK;
+							default -> sprite = Resources.SPRITE_NULL;
+						}
+						//}
+					}
+					case WATER_GUESSED -> sprite = Resources.WATER_GUESSED_DUMMY;
+					case SHIP_GUESSED -> sprite = Resources.SHIP_GUESSED_DUMMY;
+				}
+
+				if (owned)
+				{
+					renderer.drawLeftField(sprite, position);
+				}
+				else
+				{
+					renderer.drawRightField(sprite, position);
+				}
+			}
+		}
 	}
 }
