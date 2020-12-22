@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class Computer extends Player
 {
-    public Computer(String name, Board board)
+    public Computer(String name, Match match)
     {
-        super(name, board);
+        super(name, match);
     }
 
     @Override
@@ -19,11 +19,11 @@ public class Computer extends Player
         if (player == this)
         {
             var rand = new Random();
-            var cellPos = new Vector2Int(rand.nextInt(board.getSize().x), rand.nextInt(board.getSize().y));
+            var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
 
-            while (!board.canPlace(cellPos, curShipType))
+            while (!match.canPlace(this, cellPos, curShipType))
             {
-                cellPos = new Vector2Int(rand.nextInt(board.getSize().x), rand.nextInt(board.getSize().y));
+                cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
             }
 
             invokeShipPlaced(cellPos, shipType);
@@ -33,6 +33,18 @@ public class Computer extends Player
     @Override
     public void onGuessingPlayerChanged(Player player)
     {
-
+    	super.onGuessingPlayerChanged(player);
+    	if(isGuessing)
+    	{
+    		System.out.println("computer red");
+    		var rand = new Random();
+            var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+            
+            while (!match.canGuess(this, cellPos))
+            {
+                cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+            }
+            invokeGuess(cellPos);
+    	}
     }
 }

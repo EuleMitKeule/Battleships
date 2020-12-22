@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public abstract class Player implements IMatchListener
 {
 	protected String name;
-	protected Board board;
+	protected Match match;
 
 	protected boolean isPlacing;
 	protected boolean isGuessing;
@@ -16,10 +16,10 @@ public abstract class Player implements IMatchListener
 
 	private ArrayList<IPlayerListener> listeners = new ArrayList<IPlayerListener>();
 
-	public Player(String name, Board board)
+	public Player(String name, Match match)
 	{
 		this.name = name;
-		this.board = board;
+		this.match = match;
 
 		Match.addListener(this);
 	}

@@ -27,14 +27,16 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         this.boardSize = boardSize;
 
         leftBoard = new Board(boardSize, true);
+        leftBoard.addListener(this);
         rightBoard = new Board(boardSize, false);
-
-        leftPlayer = new Human("eule", leftBoard);
+        rightBoard.addListener(this);
+        
+        leftPlayer = new Human("eule", this);
         leftPlayer.addListener(this);
 
         invokePlayerAdded(leftPlayer, true);
 
-        rightPlayer = new Computer("com", rightBoard);
+        rightPlayer = new Computer("com", this);
         rightPlayer.addListener(this);
 
         invokePlayerAdded(rightPlayer, false);
@@ -86,15 +88,43 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         System.out.println("Player " + player.name + " placed a ship of type " + shipType);
         var board = isLeftPlayer ? leftBoard : rightBoard;
         board.placeShip(position, shipType);
-        invokePlacingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer, isLeftPlayer ? rightShipQueue.pop() : leftShipQueue.pop());
+        if(leftShipQueue.size() == 0 && rightShipQueue.size() == 0)
+        {
+        	invokeGuessingPlayerChanged(leftPlayer);
+        }
+        else invokePlacingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer, isLeftPlayer ? rightShipQueue.pop() : leftShipQueue.pop());
+        
     }
 
     @Override
-    public void onGuess(Player player, Vector2Int position)
+    public void onGuess(Player player, Vector2Int pos)
     {
-    	
+    	var isLeftPlayer = player == leftPlayer;
+    	var board = isLeftPlayer ? rightBoard : leftBoard;
+    	var shipHit = board.guessField(pos);
+    	if(shipHit) invokeGuessingPlayerChanged(isLeftPlayer ? leftPlayer : rightPlayer);
+    	else invokeGuessingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer);
+    }
+    
+    public boolean canGuess(Player player, Vector2Int pos)
+    {
+    	var isLeftPlayer = player == leftPlayer;
+        var board = isLeftPlayer ? rightBoard : leftBoard;
+        return board.canGuess(pos);
+    }
+    
+    public boolean canPlace(Player player, Vector2Int pos, ShipType shipType)
+    {
+    	var isLeftPlayer = player == leftPlayer;
+        var board = isLeftPlayer ? leftBoard : rightBoard;
+        return board.canPlace(pos, shipType);
     }
 
+    public Vector2Int getBoardSize()
+    {
+    	return boardSize;
+    }
+    
     private void invokeGuessingPlayerChanged(Player player)
     {
         for (var listener : listeners)
@@ -134,4 +164,10 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
     {
 
     }
+
+	@Override
+	public void onShipDestroyed(Board board) 
+	{
+		System.out.println("Ship Destroyed");
+	}
 }

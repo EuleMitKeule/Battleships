@@ -35,9 +35,19 @@ public class Vector2Int
 	{
 		return new Vector2Int(1, 0);
 	}
+	
+	public static Vector2Int left()
+	{
+		return new Vector2Int(-1, 0);
+	}
 
 	public static Vector2Int up()
 	{
 		return new Vector2Int(0, 1);
+	}
+	
+	public static Vector2Int down()
+	{
+		return new Vector2Int(0, -1);
 	}
 }

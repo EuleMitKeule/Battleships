@@ -7,9 +7,9 @@ import game.core.Vector2;
 
 public class Human extends Player implements IInputListener
 {
-    public Human(String name, Board board)
+    public Human(String name, Match match)
     {
-        super(name, board);
+        super(name, match);
 
         Input.addListener(this);
     }
@@ -36,7 +36,7 @@ public class Human extends Player implements IInputListener
                 var cellPos = BoardRenderer.worldToCell(mousePos);
                 if (cellPos != null)
                 {
-                    if (board.canPlace(cellPos, curShipType))
+                    if (match.canPlace(this, cellPos, curShipType))
                     {
                         invokeShipPlaced(cellPos, curShipType);
                     }
