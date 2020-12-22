@@ -26,6 +26,7 @@ public class Board implements IRenderable
 		this.owned = owned;
 
 		fields = new FieldState[size.x][size.y];
+		ships = new ShipType[size.x][size.y];
 
 		setFields(FieldState.WATER);
 	}

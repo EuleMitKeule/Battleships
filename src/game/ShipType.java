@@ -22,5 +22,4 @@ public enum ShipType
     CARRIER_BACK_MID,
     CARRIER_BACK,
     SHIP_DESTROYED
-    
 }
