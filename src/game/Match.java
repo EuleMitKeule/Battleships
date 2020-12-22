@@ -16,6 +16,9 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
     private Player leftPlayer;
     private Player rightPlayer;
     
+    private int leftShipCount;
+    private int rightShipCount;
+    
     private final LinkedList<ShipType> leftShipQueue = new LinkedList<ShipType>();
     private final LinkedList<ShipType> rightShipQueue = new LinkedList<ShipType>();
 
@@ -69,6 +72,11 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         	rightShipQueue.add(ShipType.PATROL);
         }
         
+        rightShipCount = rightShipQueue.size();
+        leftShipCount = leftShipQueue.size();
+        invokeShipCountChanged(rightShipCount, false);
+        invokeShipCountChanged(leftShipCount, true);
+
         invokePlacingPlayerChanged(leftPlayer, leftShipQueue.pop());
     }
 
@@ -148,6 +156,14 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
             listener.onPlayerAdded(player, isLeftPlayer);
         }
     }
+    
+    private void invokeShipCountChanged(int shipCount, boolean isLeft)
+    {
+    	for (var listener : listeners)
+        {
+            listener.onShipCountChanged(shipCount, isLeft);
+        }
+    }
 
     public static void addListener(IMatchListener listener)
     {
@@ -168,6 +184,17 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
 	@Override
 	public void onShipDestroyed(Board board) 
 	{
-		System.out.println("Ship Destroyed");
+		var isLeftBoard = board == leftBoard;
+		if(isLeftBoard) leftShipCount -= 1;
+		else rightShipCount -= 1;
+		invokeShipCountChanged(isLeftBoard ? leftShipCount : rightShipCount, isLeftBoard);
+	}
+
+	public int getLeftShipCount() {
+		return leftShipCount;
+	}
+
+	public int getRightShipCount() {
+		return rightShipCount;
 	}
 }

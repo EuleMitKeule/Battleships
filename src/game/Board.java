@@ -292,9 +292,11 @@ public class Board implements IRenderable
 	    		setField(pos, FieldState.WATER_GUESSED);
 	    		return false;
 	    	case SHIP:
-	    		setShip(pos, ShipType.SHIP_DESTROYED);
 	    		setField(pos, FieldState.SHIP_GUESSED);
 	    		if(isLastShipField(pos)) invokeShipDestroyed();
+
+	    		setShip(pos, ShipType.SHIP_DESTROYED);
+	    		
 	    		return true;
 	    	default:
 	    		return false;
