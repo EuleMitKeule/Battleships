@@ -4,10 +4,14 @@ import game.core.Vector2Int;
 
 import java.util.Random;
 
+import javax.lang.model.util.ElementScanner14;
+import javax.swing.text.DefaultStyledDocument.ElementSpec;
+
 public class Computer extends Player
 {
+    private Vector2Int lastGuessPos;
+
     /**
-     * 
      * @param name The name of the player
      * @param match The match context
      */
@@ -45,21 +49,68 @@ public class Computer extends Player
      * @param player The new placing player
      */
     @Override
-    public void onGuessingPlayerChanged(Player player)
+    public void onGuessingPlayerChanged(Player player, boolean hasHit)
     {
-        super.onGuessingPlayerChanged(player);
-        
+        super.onGuessingPlayerChanged(player, hasHit);
+
     	if (isGuessing)
     	{
-    		var rand = new Random();
-            var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
-            
-            while (!match.canGuess(this, cellPos))
+            // try
+            // {
+            //     Thread.sleep(1000);
+            // }
+            // catch (Exception ex) { }
+
+            if (lastGuessPos == null)
             {
-                cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+                var guessPos = getRandomGuessPos();
+                lastGuessPos = guessPos;
+                invokeFieldGuessed(guessPos);
             }
-            
-            invokeFieldGuessed(cellPos);
+            else
+            {
+                if (hasHit)
+                {
+                    var rightPos = lastGuessPos.add(Vector2Int.right());
+                    var leftPos = lastGuessPos.add(Vector2Int.left());
+
+                    if (match.inBounds(rightPos) && match.canGuess(this, rightPos))
+                    {
+                        lastGuessPos = rightPos;
+                        invokeFieldGuessed(rightPos);
+                    }
+                    else if (match.inBounds(leftPos) && match.canGuess(this, leftPos))
+                    {
+                        lastGuessPos = leftPos;
+                        invokeFieldGuessed(leftPos);
+                    }
+                    else
+                    {
+                        var guessPos = getRandomGuessPos();
+                        lastGuessPos = guessPos;
+                        invokeFieldGuessed(guessPos);
+                    }
+                }
+                else
+                {
+                    var guessPos = getRandomGuessPos();
+                    lastGuessPos = guessPos;
+                    invokeFieldGuessed(guessPos);
+                }
+            }
     	}
+    }
+    
+    private Vector2Int getRandomGuessPos()
+    {
+        var rand = new Random();
+        var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+        
+        while (!match.canGuess(this, cellPos))
+        {
+            cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+        }
+
+        return cellPos;
     }
 }

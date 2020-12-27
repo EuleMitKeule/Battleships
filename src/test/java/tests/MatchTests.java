@@ -7,7 +7,7 @@ import org.junit.Test;
 public class MatchTests
 {
     @Test
-    public void shouldGiveTrue()
+    public void shouldWork()
     {
         assertTrue(true);
     }

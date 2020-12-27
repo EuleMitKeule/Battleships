@@ -100,7 +100,7 @@ public abstract class Player implements IMatchListener
 	 * @param player The new guessing player
 	 */
 	@Override
-	public void onGuessingPlayerChanged(Player player)
+	public void onGuessingPlayerChanged(Player player, boolean hasHit)
 	{
 		isGuessing = player == this;
 		isPlacing = false;

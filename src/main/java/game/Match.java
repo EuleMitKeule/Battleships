@@ -79,7 +79,7 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
 
         if (leftShipQueue.size() == 0 && rightShipQueue.size() == 0)
         {
-        	invokeGuessingPlayerChanged(leftPlayer);
+        	invokeGuessingPlayerChanged(leftPlayer, false);
         }
         else
         {
@@ -104,9 +104,9 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
             var shipHit = board.guessField(cellPos);
 
             if (shipHit) 
-                invokeGuessingPlayerChanged(isLeftPlayer ? leftPlayer : rightPlayer);
+                invokeGuessingPlayerChanged(isLeftPlayer ? leftPlayer : rightPlayer, true);
             else 
-                invokeGuessingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer);
+                invokeGuessingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer, false);
         }
     }
     
@@ -148,13 +148,22 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
     }
 
     /**
-     * 
      * @param position The world position to check
      * @return Returns whether the given position is inside the bounds of the right board
      */
     public boolean inRightBounds(Vector2 position)
     {
         return rightBoard.inBounds(position);
+    }
+
+    /**
+     * @param cellPos The cell position to check
+     * @return Returns whether the given cell position is inside the bounds of any board
+     */
+    public boolean inBounds(Vector2Int cellPos)
+    {
+        return cellPos.x > 0 && cellPos.x < boardSize.x &&
+                cellPos.y > 0 && cellPos.y < boardSize.y;
     }
 
     /**
@@ -182,11 +191,11 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
      * Invokes the GuessingPlayerChanged event
      * @param player The player that guesses next
      */
-    private void invokeGuessingPlayerChanged(Player player)
+    private void invokeGuessingPlayerChanged(Player player, boolean hasHit)
     {
         for (var listener : listeners)
         {
-            listener.onGuessingPlayerChanged(player);
+            listener.onGuessingPlayerChanged(player, hasHit);
         }
     }
 
