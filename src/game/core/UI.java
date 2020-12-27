@@ -13,6 +13,10 @@ public class UI implements IMatchListener
     private JLabel leftPlayerName;
     private JLabel rightPlayerName;
 
+    /**
+     * @param game The game window context
+     * @param match The match context
+     */
     public UI (Game game, Match match)
     {
         var labelFont = new JLabel().getFont();
@@ -36,6 +40,11 @@ public class UI implements IMatchListener
         match.addListener(this);
     }
 
+    /**
+     * Gets invoked when a new player is added to the match context
+     * @param player The player that was added
+     * @param isLeftPlayer Whether the player is on the left side or the right side
+     */
     @Override
     public void onPlayerAdded(Player player, boolean isLeftPlayer)
     {
@@ -44,6 +53,11 @@ public class UI implements IMatchListener
         label.setText(player.getName());
     }
     
+    /**
+     * Gets invoked when either ship count has changed
+     * @param shipCount The new ship count
+     * @param isLeft Whether the ship count is on the left or the right side
+     */
     @Override
     public void onShipCountChanged(int shipCount, boolean isLeft)
     {

@@ -6,6 +6,11 @@ import game.core.Vector2;
 
 public class Human extends Player implements IInputListener
 {
+    /**
+     * 
+     * @param name The name for the player
+     * @param match The match context
+     */
     public Human(String name, Match match)
     {
         super(name, match);
@@ -13,6 +18,10 @@ public class Human extends Player implements IInputListener
         Input.addListener(this);
     }
 
+    /**
+     * Gets invoked when the left mouse button is pressed down
+     * @param mousePos The current mouse position
+     */
     @Override
     public void onMouseDown(Vector2 mousePos)
     {
@@ -35,7 +44,7 @@ public class Human extends Player implements IInputListener
             if (match.inRightBounds(mousePos))
             {
                 var cellPos = match.worldToCell(mousePos);
-                if (cellPos != null) invokeGuess(cellPos);
+                if (cellPos != null) invokeFieldGuessed(cellPos);
             }
         }
     }

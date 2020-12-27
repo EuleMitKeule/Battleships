@@ -29,7 +29,11 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	private Timer renderTimer;
 	private Timer secondsTimer;
 
-
+	/**
+	 * @param title The window title
+	 * @param targetUpdates The targeted update frames per second
+	 * @param targetRenders The targeted render frames per second
+	 */
 	public Game(String title, int targetUpdates, int targetRenders)
 	{
 		try
@@ -99,31 +103,55 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 		thread.start();
 	}
 
-	public void paintComponent(Graphics g)
+	/**
+	 * Gets invoked every render frame
+	 * @param graphics The graphics context
+	 */
+	public void paintComponent(Graphics graphics)
 	{
-		render(new BoardRenderer(g, new Vector2Int(64, 64), new Vector2Int(768, 64), 64));
+		render(new BoardRenderer(graphics, new Vector2Int(64, 64), new Vector2Int(768, 64), 64));
 	}
 
+	/**
+	 * Adds an IRenderable to the list of renderable objects
+	 * @param renderable The renderable to add
+	 */
 	public static void addRenderable(IRenderable renderable)
 	{
 		renderables.add(renderable);
 	}
 
+	/**
+	 * Removes an IRenderable from the list of renderable objects
+	 * @param renderable The renderable to remove
+	 */
 	public static void removeRenderable(IRenderable renderable)
 	{
 		renderables.remove(renderable);
 	}
 
+	/**
+	 * Adds an IUpdatable to the list of updatable objects
+	 * @param updatable The updatable to add
+	 */
 	public static void addUpdatable(IUpdatable updatable)
 	{
 		updatables.add(updatable);
 	}
 
+	/**
+	 * Removes an IUpdatable from the list of updatable objects
+	 * @param updatable The updatable to remove
+	 */
 	public static void removeUpdatable(IUpdatable updatable)
 	{
 		updatables.remove(updatable);
 	}
 
+	/**
+	 * Invokes the render method on every renderable object
+	 * @param renderer The renderer context
+	 */
 	@Override
 	public void render(BoardRenderer renderer)
 	{
@@ -133,6 +161,10 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 		}
 	}
 
+	/**
+	 * Invokes the update method on every updatable object
+	 * @param elapsedMillis The time passed since last frame in milliseconds
+	 */
 	@Override
 	public void update(long elapsedMillis)
 	{

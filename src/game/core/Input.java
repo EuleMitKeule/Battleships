@@ -66,6 +66,10 @@ public class Input implements KeyListener, MouseListener
 
     }
 
+    /**
+     * Invokes the KeyDown event
+     * @param keyCode The keyCode of the pressed key
+     */
     private void invokeKeyDown(int keyCode)
     {
         for (var listener : listeners)
@@ -74,6 +78,10 @@ public class Input implements KeyListener, MouseListener
         }
     }
 
+    /**
+     * Invokes the KeyUp event
+     * @param keyCode The keyCode of the released key
+     */
     private void invokeKeyUp(int keyCode)
     {
         for (var listener : listeners)
@@ -82,6 +90,10 @@ public class Input implements KeyListener, MouseListener
         }
     }
 
+    /**
+     * Invokes the MouseDown event
+     * @param mousePos The current mouse position in world space
+     */
     private void invokeMouseDown(Vector2 mousePos)
     {
         for (var listener : listeners)
@@ -90,6 +102,10 @@ public class Input implements KeyListener, MouseListener
         }
     }
 
+    /**
+     * Invokes the MouseUp event
+     * @param mousePos The current mouse position in world space
+     */
     private void invokeMouseUp(Vector2 mousePos)
     {
         for (var listener : listeners)
@@ -98,11 +114,19 @@ public class Input implements KeyListener, MouseListener
         }
     }
 
+    /**
+     * Adds an IInputListener to the list of observers
+     * @param listener The listener to add
+     */
     public static void addListener(IInputListener listener)
     {
         listeners.add(listener);
     }
 
+    /**
+     * Remvoves an IInputListener from the list of observers
+     * @param listener The listener to remove
+     */
     public static void removeListener(IInputListener listener)
     {
         listeners.remove(listener);

@@ -16,6 +16,12 @@ public class Board implements IRenderable
 
 	private ArrayList<IBoardListener> listeners = new ArrayList<IBoardListener>();
 
+	/**
+	 * @param size The cell dimensions of the board
+	 * @param offset The pixel offset of the board
+	 * @param tileSize The pixel size of one tile
+	 * @param owned Whether the board is assigned to the player running the application
+	 */
 	public Board(Vector2Int size, Vector2Int offset, int tileSize, boolean owned)
 	{
 		Game.addRenderable(this);
@@ -31,19 +37,33 @@ public class Board implements IRenderable
 		setFields(FieldState.WATER);
 	}
 	
-	public void setField(Vector2Int pos, FieldState state)
+	/**
+	 * Sets a field on the board to a new field state
+	 * @param cellPos The cell position to set
+	 * @param state The field state to assign
+	 */
+	public void setField(Vector2Int cellPos, FieldState state)
 	{
-		
-		fields[pos.x][pos.y] = state;
-		invokeFieldChanged(pos, state);
+		fields[cellPos.x][cellPos.y] = state;
+		invokeFieldChanged(cellPos, state);
 	}
 
+	/**
+	 * Sets a field on the board to a new field state
+	 * @param x The x cell coordinate
+	 * @param y The y cell coordinate
+	 * @param state The field state to assign
+	 */
 	public void setField(int x, int y, FieldState state)
 	{
 		fields[x][y] = state;
 		invokeFieldChanged(new Vector2Int(x, y), state);
 	}
 
+	/**
+	 * Sets all fields on the board to a new field state
+	 * @param state The field state to assign
+	 */
 	public void setFields(FieldState state)
 	{
 		for(int x = 0; x < size.x; x++)
@@ -55,17 +75,33 @@ public class Board implements IRenderable
 		}
 	}
 	
-	public void setShip(Vector2Int pos, ShipType shipType)
+	/**
+	 * Sets a field on the board to a new ship state
+	 * @param cellPos The cell position to set
+	 * @param shipType The ship type to assign
+	 */
+	public void setShip(Vector2Int cellPos, ShipType shipType)
 	{
-		
-		ships[pos.x][pos.y] = shipType;
+		ships[cellPos.x][cellPos.y] = shipType;
+		//TODO: Invoke FieldStateChanged event
 	}
 
+	/**
+	 * Sets a field on the board to a new ship state
+	 * @param x The x cell coordinate
+	 * @param y The y cell coordinate
+	 * @param shipType The ship type to assign
+	 */
 	public void setShip(int x, int y, ShipType shipType)
 	{
 		ships[x][y] = shipType;
+		//TODO: Invoke FieldStateChanged event
 	}
 
+	/**
+	 * Sets all fields on the board to a new ship state
+	 * @param shipType The ship type to assign
+	 */
 	public void setShips(ShipType shipType)
 	{
 		for(int x = 0; x < size.x; x++)
@@ -77,11 +113,15 @@ public class Board implements IRenderable
 		}
 	}
 
-	public ShipType getShip(Vector2Int pos)
+	/**
+	 * @param cellPos The cell position to get
+	 * @return Returns the ship type of a field on the board or null if out of bounds
+	 */
+	public ShipType getShip(Vector2Int cellPos)
 	{
 		try
 		{
-			return ships[pos.x][pos.y];
+			return ships[cellPos.x][cellPos.y];
 		}
 		catch (IndexOutOfBoundsException ex)
 		{
@@ -89,6 +129,11 @@ public class Board implements IRenderable
 		}
 	}
 
+	/**
+	 * @param x The x cell coordinate to get
+	 * @param y The y cell coordinate to get
+	 * @return Returns the ship type of a field on the board or null if out of bounds
+	 */
 	public ShipType getShip(int x, int y)
 	{
 		try
@@ -101,23 +146,35 @@ public class Board implements IRenderable
 		}
 	}
 
+	/**
+	 * @return Returns the ship type 2D-array
+	 */
 	public ShipType[][] getShips()
 	{
 		return ships;
 	}
 	
-	public FieldState getField(Vector2Int pos)
+	/**
+	 * @param cellPos The cell position to get
+	 * @return Returns the field state of a field on the board or null if out of bounds
+	 */
+	public FieldState getField(Vector2Int cellPos)
 	{
 		try
 		{
-			return fields[pos.x][pos.y];
+			return fields[cellPos.x][cellPos.y];
 		}
 		catch (IndexOutOfBoundsException ex)
 		{
 			return null;
 		}
 	}
-
+	
+	/**
+	 * @param x The x cell coordinate to get
+	 * @param y The y cell coordinate to get
+	 * @return Returns the field state of a field on the board or null if out of bounds
+	 */
 	public FieldState getField(int x, int y)
 	{
 		try
@@ -130,90 +187,106 @@ public class Board implements IRenderable
 		}
 	}
 
+	/**
+	 * @return Returns the field state 2D-array
+	 */
 	public FieldState[][] getFields()
 	{
 		return fields;
 	}
 
+	/**
+	 * @return Returns the cell dimensions of the board
+	 */
 	public Vector2Int getSize()
 	{
 		return size;
 	}
 
-	public boolean canPlace(Vector2Int position, ShipType shipType)
+	/**
+	 * @param cellPos The cell position to check
+	 * @param shipType The ship type to check
+	 * @return Returns whether a ship type can be placed at a field on the board
+	 */
+	public boolean canPlace(Vector2Int cellPos, ShipType shipType)
 	{
 		switch (shipType)
 		{
 			case PATROL:
-				return getField(position) == FieldState.WATER;
+				return getField(cellPos) == FieldState.WATER;
 			case SUPER_PATROL:
-				return getField(position) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right())) == FieldState.WATER;
+				return getField(cellPos) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER;
 			case DESTROYER:
-				return getField(position) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right())) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right().times(2))) == FieldState.WATER;
+				return getField(cellPos) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(2))) == FieldState.WATER;
 			case BATTLESHIP:
-				return getField(position) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right())) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right().times(2))) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right().times(3))) == FieldState.WATER;
+				return getField(cellPos) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(2))) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(3))) == FieldState.WATER;
 			case CARRIER:
-				return getField(position) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right())) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right().times(2))) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right().times(3))) == FieldState.WATER &&
-						getField(position.add(Vector2Int.right().times(4))) == FieldState.WATER;
+				return getField(cellPos) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(2))) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(3))) == FieldState.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(4))) == FieldState.WATER;
 			default:
 				return false;
 		}
 	}
 
-	public void placeShip(Vector2Int position, ShipType shipType)
+	/**
+	 * Places a ship type on the board
+	 * @param cellPos The cell position to place the ship at
+	 * @param shipType The ship type to place
+	 */
+	public void placeShip(Vector2Int cellPos, ShipType shipType)
 	{
-		if (canPlace(position, shipType))
+		if (canPlace(cellPos, shipType))
 		{
 			switch (shipType)
 			{
 				case PATROL:
-					setField(position, FieldState.SHIP);
-					setShip(position, ShipType.PATROL);
+					setField(cellPos, FieldState.SHIP);
+					setShip(cellPos, ShipType.PATROL);
 					break;
 				case SUPER_PATROL:
-					setField(position, FieldState.SHIP);
-					setField(position.add(Vector2Int.right()), FieldState.SHIP);
-					setShip(position, ShipType.SUPER_PATROL_FRONT);
-					setShip(position.add(Vector2Int.right()), ShipType.SUPER_PATROL_BACK);
+					setField(cellPos, FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
+					setShip(cellPos, ShipType.SUPER_PATROL_FRONT);
+					setShip(cellPos.add(Vector2Int.right()), ShipType.SUPER_PATROL_BACK);
 					break;
 				case DESTROYER:
-					setField(position, FieldState.SHIP);
-					setField(position.add(Vector2Int.right()), FieldState.SHIP);
-					setField(position.add(Vector2Int.right().times(2)), FieldState.SHIP);
-					setShip(position, ShipType.DESTROYER_FRONT);
-					setShip(position.add(Vector2Int.right()), ShipType.DESTROYER_MID);
-					setShip(position.add(Vector2Int.right().times(2)), ShipType.DESTROYER_BACK);
+					setField(cellPos, FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right().times(2)), FieldState.SHIP);
+					setShip(cellPos, ShipType.DESTROYER_FRONT);
+					setShip(cellPos.add(Vector2Int.right()), ShipType.DESTROYER_MID);
+					setShip(cellPos.add(Vector2Int.right().times(2)), ShipType.DESTROYER_BACK);
 					break;
 				case BATTLESHIP:
-					setField(position, FieldState.SHIP);
-					setField(position.add(Vector2Int.right()), FieldState.SHIP);
-					setField(position.add(Vector2Int.right().times(2)), FieldState.SHIP);
-					setField(position.add(Vector2Int.right().times(3)), FieldState.SHIP);
-					setShip(position, ShipType.BATTLESHIP_FRONT);
-					setShip(position.add(Vector2Int.right()), ShipType.BATTLESHIP_FRONT_MID);
-					setShip(position.add(Vector2Int.right().times(2)), ShipType.BATTLESHIP_BACK_MID);
-					setShip(position.add(Vector2Int.right().times(3)), ShipType.BATTLESHIP_BACK);
+					setField(cellPos, FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right().times(2)), FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right().times(3)), FieldState.SHIP);
+					setShip(cellPos, ShipType.BATTLESHIP_FRONT);
+					setShip(cellPos.add(Vector2Int.right()), ShipType.BATTLESHIP_FRONT_MID);
+					setShip(cellPos.add(Vector2Int.right().times(2)), ShipType.BATTLESHIP_BACK_MID);
+					setShip(cellPos.add(Vector2Int.right().times(3)), ShipType.BATTLESHIP_BACK);
 					break;
 				case CARRIER:
-					setField(position, FieldState.SHIP);
-					setField(position.add(Vector2Int.right()), FieldState.SHIP);
-					setField(position.add(Vector2Int.right().times(2)), FieldState.SHIP);
-					setField(position.add(Vector2Int.right().times(3)), FieldState.SHIP);
-					setField(position.add(Vector2Int.right().times(4)), FieldState.SHIP);
-					setShip(position, ShipType.CARRIER_FRONT);
-					setShip(position.add(Vector2Int.right()), ShipType.CARRIER_FRONT_MID);
-					setShip(position.add(Vector2Int.right().times(2)), ShipType.CARRIER_MID);
-					setShip(position.add(Vector2Int.right().times(3)), ShipType.CARRIER_BACK_MID);
-					setShip(position.add(Vector2Int.right().times(4)), ShipType.CARRIER_BACK);
+					setField(cellPos, FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right().times(2)), FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right().times(3)), FieldState.SHIP);
+					setField(cellPos.add(Vector2Int.right().times(4)), FieldState.SHIP);
+					setShip(cellPos, ShipType.CARRIER_FRONT);
+					setShip(cellPos.add(Vector2Int.right()), ShipType.CARRIER_FRONT_MID);
+					setShip(cellPos.add(Vector2Int.right().times(2)), ShipType.CARRIER_MID);
+					setShip(cellPos.add(Vector2Int.right().times(3)), ShipType.CARRIER_BACK_MID);
+					setShip(cellPos.add(Vector2Int.right().times(4)), ShipType.CARRIER_BACK);
 					break;
 			default:
 				break;
@@ -221,147 +294,186 @@ public class Board implements IRenderable
 		}
 	}
 
+	/**
+	 * Adds an IBoardListener to the list of observers
+	 * @param listener The listener to add
+	 */
 	public void addListener(IBoardListener listener)
 	{
 		listeners.add(listener);
 	}
 	
+	/**
+	 * Removes an IBoardListener from the list of observers
+	 * @param listener The listener to remove
+	 */
 	public void removeListener(IBoardListener listener)
 	{
 		listeners.remove(listener);
 	}
 
-	private void invokeFieldChanged(Vector2Int pos, FieldState state)
+	/**
+	 * Invokes the FieldChanged event
+	 * @param cellPos The cell position that changed
+	 * @param state The new field state of the field
+	 */
+	private void invokeFieldChanged(Vector2Int cellPos, FieldState state)
 	{
-		for(var listener:listeners)
+		for (var listener : listeners)
 		{
-			listener.onFieldChanged(this, pos, state);
+			listener.onFieldChanged(this, cellPos, state);
 		}
 	}
 	
+	/**
+	 * Invokes the ShipDestroyed event
+	 */
 	private void invokeShipDestroyed()
 	{
-		for(var listener:listeners)
+		for (var listener : listeners)
 		{
 			listener.onShipDestroyed(this);
 		}
 	}
 	
-	public boolean canGuess(Vector2Int pos)
+	/**
+	 * @param cellPos The cell position to check
+	 * @return Returns whether a field is guessable
+	 */
+	public boolean canGuess(Vector2Int cellPos)
 	{
-		return getField(pos) == FieldState.WATER || getField(pos) == FieldState.SHIP;
+		return getField(cellPos) == FieldState.WATER || getField(cellPos) == FieldState.SHIP;
 	}
 
-	public boolean guessField(Vector2Int pos) 
+	/**
+	 * Guesses a field on the board
+	 * @param cellPos The cell position to guess
+	 * @return Returns whether a ship was hit
+	 */
+	public boolean guessField(Vector2Int cellPos) 
 	{
-		switch(getField(pos)) 
+		switch(getField(cellPos)) 
     	{
-	    	case WATER:
-	    		setField(pos, FieldState.WATER_GUESSED);
-	    		return false;
-	    	case SHIP:
-	    		setField(pos, FieldState.SHIP_GUESSED);
-	    		if(isLastShipField(pos)) invokeShipDestroyed();
+			case WATER:
 
-	    		setShip(pos, ShipType.SHIP_DESTROYED);
+				setField(cellPos, FieldState.WATER_GUESSED);
+				
+				return false;
+				
+			case SHIP:
+
+				setField(cellPos, FieldState.SHIP_GUESSED);
+				
+	    		if (isLastShipField(cellPos)) invokeShipDestroyed();
+
+	    		setShip(cellPos, ShipType.SHIP_DESTROYED);
 	    		
-	    		return true;
+				return true;
+				
 	    	default:
 	    		return false;
     	}
 		
 	}
 	
-	private boolean isLastShipField(Vector2Int pos)
+	/**
+	 * @param cellPos The cell position to check
+	 * @return Returns whether a field is the last remaining part of a ship
+	 */
+	private boolean isLastShipField(Vector2Int cellPos)
 	{
-		var startField = getShip(pos);
+		var startField = getShip(cellPos);
 		
 		if(startField == ShipType.PATROL) return true;
 		
 		if(startField == ShipType.SUPER_PATROL_FRONT) {
-			if(getShip(pos.add(Vector2Int.right())) != ShipType.SUPER_PATROL_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.right())) != ShipType.SUPER_PATROL_BACK) return true;
 		}
 		
 		if(startField == ShipType.SUPER_PATROL_BACK) {
-			if(getShip(pos.add(Vector2Int.left())) != ShipType.SUPER_PATROL_FRONT) return true;
+			if(getShip(cellPos.add(Vector2Int.left())) != ShipType.SUPER_PATROL_FRONT) return true;
 		}
 		
 		if(startField == ShipType.DESTROYER_FRONT) {
-			if(getShip(pos.add(Vector2Int.right())) != ShipType.DESTROYER_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.DESTROYER_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.right())) != ShipType.DESTROYER_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.DESTROYER_BACK) return true;
 		}
 		
 		if(startField == ShipType.DESTROYER_MID) {
-			if(getShip(pos.add(Vector2Int.right())) != ShipType.DESTROYER_BACK &&
-					getShip(pos.add(Vector2Int.left())) != ShipType.DESTROYER_FRONT) return true;
+			if(getShip(cellPos.add(Vector2Int.right())) != ShipType.DESTROYER_BACK &&
+					getShip(cellPos.add(Vector2Int.left())) != ShipType.DESTROYER_FRONT) return true;
 		}
 		
 		if(startField == ShipType.DESTROYER_BACK) {
-			if(getShip(pos.add(Vector2Int.left())) != ShipType.DESTROYER_MID &&
-					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.DESTROYER_FRONT) return true;
+			if(getShip(cellPos.add(Vector2Int.left())) != ShipType.DESTROYER_MID &&
+					getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.DESTROYER_FRONT) return true;
 		}
 		
 		if(startField == ShipType.BATTLESHIP_FRONT) {
-			if(getShip(pos.add(Vector2Int.right())) != ShipType.BATTLESHIP_FRONT_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.BATTLESHIP_BACK_MID &&
-					getShip(pos.add(Vector2Int.right().times(3))) != ShipType.BATTLESHIP_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.right())) != ShipType.BATTLESHIP_FRONT_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.BATTLESHIP_BACK_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(3))) != ShipType.BATTLESHIP_BACK) return true;
 		}
 		
 		if(startField == ShipType.BATTLESHIP_FRONT_MID) {
-			if(getShip(pos.add(Vector2Int.left())) != ShipType.BATTLESHIP_FRONT &&
-					getShip(pos.add(Vector2Int.right())) != ShipType.BATTLESHIP_BACK_MID &&
-					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.left())) != ShipType.BATTLESHIP_FRONT &&
+					getShip(cellPos.add(Vector2Int.right())) != ShipType.BATTLESHIP_BACK_MID &&
+					getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_BACK) return true;
 		}
 		
 		if(startField == ShipType.BATTLESHIP_BACK_MID) {
-			if(getShip(pos.add(Vector2Int.left())) != ShipType.BATTLESHIP_FRONT_MID &&
-					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_FRONT &&
-					getShip(pos.add(Vector2Int.right())) != ShipType.BATTLESHIP_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.left())) != ShipType.BATTLESHIP_FRONT_MID &&
+					getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_FRONT &&
+					getShip(cellPos.add(Vector2Int.right())) != ShipType.BATTLESHIP_BACK) return true;
 		}
 		
 		if(startField == ShipType.BATTLESHIP_BACK) {
-			if(getShip(pos.add(Vector2Int.left())) != ShipType.BATTLESHIP_BACK_MID &&
-					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_FRONT_MID &&
-					getShip(pos.add(Vector2Int.left().times(3))) != ShipType.BATTLESHIP_FRONT) return true;
+			if(getShip(cellPos.add(Vector2Int.left())) != ShipType.BATTLESHIP_BACK_MID &&
+					getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_FRONT_MID &&
+					getShip(cellPos.add(Vector2Int.left().times(3))) != ShipType.BATTLESHIP_FRONT) return true;
 		}
 		
 		if(startField == ShipType.CARRIER_FRONT) {
-			if(getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_FRONT_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_MID &&
-					getShip(pos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK_MID &&
-					getShip(pos.add(Vector2Int.right().times(4))) != ShipType.CARRIER_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_FRONT_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(4))) != ShipType.CARRIER_BACK) return true;
 		}
 		
 		if(startField == ShipType.CARRIER_FRONT_MID) {
-			if(getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
-					getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK_MID &&
-					getShip(pos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
+					getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK) return true;
 		}
 		
 		if(startField == ShipType.CARRIER_MID) {
-			if(getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
-					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
-					getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_BACK_MID &&
-					getShip(pos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
+					getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
+					getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_BACK_MID &&
+					getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK) return true;
 		}
 		
 		if(startField == ShipType.CARRIER_BACK_MID) {
-			if(getShip(pos.add(Vector2Int.left().times(3))) != ShipType.CARRIER_FRONT &&
-					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
-					getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_MID &&
-					getShip(pos.add(Vector2Int.right())) != ShipType.CARRIER_BACK) return true;
+			if(getShip(cellPos.add(Vector2Int.left().times(3))) != ShipType.CARRIER_FRONT &&
+					getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
+					getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_MID &&
+					getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_BACK) return true;
 		}
 		
 		if(startField == ShipType.CARRIER_BACK) {
-			if(getShip(pos.add(Vector2Int.left().times(4))) != ShipType.CARRIER_FRONT &&
-					getShip(pos.add(Vector2Int.left().times(3))) != ShipType.CARRIER_FRONT_MID &&
-					getShip(pos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_MID &&
-					getShip(pos.add(Vector2Int.left())) != ShipType.CARRIER_BACK_MID) return true;
+			if(getShip(cellPos.add(Vector2Int.left().times(4))) != ShipType.CARRIER_FRONT &&
+					getShip(cellPos.add(Vector2Int.left().times(3))) != ShipType.CARRIER_FRONT_MID &&
+					getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_MID &&
+					getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_BACK_MID) return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Gets invoked every render frame
+	 * @param renderer The renderer context
+	 */
 	@Override
 	public void render(BoardRenderer renderer)
 	{
@@ -418,12 +530,20 @@ public class Board implements IRenderable
 		}
 	}
 
+	/**
+	 * @param worldPos The world position to check
+	 * @return Returns whether a world position is inside the bounds of the board
+	 */
     public boolean inBounds(Vector2 worldPos)
     {
         return (worldPos.x >  offset.x && worldPos.x < offset.x + size.x * tileSize) &&
                 (worldPos.y > offset.y && worldPos.y < offset.y + size.y * tileSize);
     }
 
+	/**
+	 * @param worldPos The world position to convert
+	 * @return Returns the converted world position in cell space
+	 */
     public Vector2Int worldToCell(Vector2 worldPos)
     {
         if (inBounds(worldPos))

@@ -2,5 +2,5 @@ package game.core;
 
 public interface IRenderable
 {
-    void render(BoardRenderer renderer);
+    default void render(BoardRenderer renderer) { }
 }

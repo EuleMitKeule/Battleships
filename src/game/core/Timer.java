@@ -6,11 +6,12 @@ public class Timer
     private long thisTime;
     private double deltaTime = 0.0;
 
-    public Timer() {
-
-    }
-
-    public void update() {
+    /**
+     * Updates the timer to the new current time
+     * and calculates the elapsed time since last update call
+     */
+    public void update() 
+    {
         thisTime = System.currentTimeMillis();
         deltaTime += (thisTime - lastTime) / 1000f;
         lastTime = thisTime;

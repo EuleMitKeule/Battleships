@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class Resources {
+public class Resources 
+{
     public static BufferedImage SPRITE_NULL;
     public static BufferedImage WATER_DUMMY;
     public static BufferedImage SHIP_DUMMY;
@@ -30,7 +31,12 @@ public class Resources {
     public static BufferedImage CARRIER_BACK_MID;
     public static BufferedImage CARRIER_BACK;
 
-    public static void Initialize() throws IOException {
+    /**
+     * Loads the sprite assets
+     * @throws IOException
+     */
+    public static void Initialize() throws IOException 
+    {
         SPRITE_NULL = ImageIO.read(new File("Resources\\null.png"));
         WATER_DUMMY = ImageIO.read(new File("Resources\\water.png"));
         SHIP_DUMMY = ImageIO.read(new File("Resources\\ship.png"));
@@ -55,6 +61,11 @@ public class Resources {
 
     }
 
+    /**
+     * @return Returns a linked list containing the ship queue
+     * that was defined in the shipQueue.txt file
+     * or null if the file can not be loaded
+     */
     public static LinkedList<ShipType> getShipQueue() 
     {
         try 
