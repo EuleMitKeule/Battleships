@@ -4,7 +4,7 @@ import game.core.Vector2Int;
 
 public interface IBoardListener
 {
-	public void onFieldChanged(Board board, Vector2Int pos, FieldState state);
+	default void onFieldChanged(Board board, Vector2Int pos, FieldState state) { }
 	
-	public void onShipDestroyed(Board board);
+	default void onShipDestroyed(Board board) { }
 }

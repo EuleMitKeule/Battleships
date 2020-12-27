@@ -3,23 +3,18 @@ package game.core;
 import game.IMatchListener;
 import game.Match;
 import game.Player;
-import game.ShipType;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class UI implements IMatchListener
-{
-    private Game game;
-    
+{    
     private JLabel shipCount;
     private JLabel leftPlayerName;
     private JLabel rightPlayerName;
 
-    public UI (Game game)
+    public UI (Game game, Match match)
     {
-        this.game = game;
-
         var labelFont = new JLabel().getFont();
 
         leftPlayerName = new JLabel("");
@@ -38,9 +33,8 @@ public class UI implements IMatchListener
         game.add(rightPlayerName);
         game.add(shipCount);
 
-        Match.addListener(this);
+        match.addListener(this);
     }
-
 
     @Override
     public void onPlayerAdded(Player player, boolean isLeftPlayer)

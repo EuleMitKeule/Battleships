@@ -8,21 +8,21 @@ public class Board implements IRenderable
 {
 	private ShipType[][] ships;
 	private FieldState[][] fields;
+
 	private final Vector2Int size;
+	private final Vector2Int offset;
+	private final int tileSize;
 	private boolean owned;
 
 	private ArrayList<IBoardListener> listeners = new ArrayList<IBoardListener>();
 
-	public Board(int sizeX, int sizeY, boolean owned)
-	{
-		this(new Vector2Int(sizeX, sizeY), owned);
-	}
-
-	public Board(Vector2Int size, boolean owned)
+	public Board(Vector2Int size, Vector2Int offset, int tileSize, boolean owned)
 	{
 		Game.addRenderable(this);
 
 		this.size = size;
+		this.offset = offset;
+		this.tileSize = tileSize;
 		this.owned = owned;
 
 		fields = new FieldState[size.x][size.y];
@@ -417,4 +417,20 @@ public class Board implements IRenderable
 			}
 		}
 	}
+
+    public boolean inBounds(Vector2 worldPos)
+    {
+        return (worldPos.x >  offset.x && worldPos.x < offset.x + size.x * tileSize) &&
+                (worldPos.y > offset.y && worldPos.y < offset.y + size.y * tileSize);
+    }
+
+    public Vector2Int worldToCell(Vector2 worldPos)
+    {
+        if (inBounds(worldPos))
+        {
+            return new Vector2Int((int)Math.floor((worldPos.x - offset.x) / tileSize),
+                                    (int)Math.floor((worldPos.y - offset.y) / tileSize));
+        }
+        else return null;
+    }
 }

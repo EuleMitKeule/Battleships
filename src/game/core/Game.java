@@ -11,6 +11,11 @@ import java.util.ArrayList;
 
 public class Game extends JComponent implements IRenderable, IUpdatable
 {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -6081721995438708904L;
+
 	public static final Vector2Int GAME_SIZE = new Vector2Int(1472, 768);
 	public static final Vector2Int BOARD_SIZE = new Vector2Int(10, 10);
 
@@ -18,12 +23,6 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	private static ArrayList<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	private static Input input;
-	private static UI ui;
-
-	private String title;
-
-	private int targetUpdates;
-	private int targetRenders;
 
 	private JFrame frame;
 	private Timer updateTimer;
@@ -33,10 +32,6 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 
 	public Game(String title, int targetUpdates, int targetRenders)
 	{
-		this.title = title;
-		this.targetUpdates = targetUpdates;
-		this.targetRenders = targetRenders;
-
 		try
 		{
 			Resources.Initialize();
@@ -47,7 +42,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 		}
 
 		input = new Input();
-		ui = new UI(this);
+		new Match(this, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE);
 
 		frame = new JFrame(title);
 
@@ -106,12 +101,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 
 	public void paintComponent(Graphics g)
 	{
-		render(new BoardRenderer(g, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE));
-	}
-
-	public void StartMatch()
-	{
-		var match = new Match(BOARD_SIZE);
+		render(new BoardRenderer(g, new Vector2Int(64, 64), new Vector2Int(768, 64), 64));
 	}
 
 	public static void addRenderable(IRenderable renderable)

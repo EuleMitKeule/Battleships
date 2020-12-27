@@ -4,7 +4,6 @@ import game.core.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class Match implements IUpdatable, IPlayerListener, IBoardListener
 {
@@ -19,19 +18,28 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
     private int leftShipCount;
     private int rightShipCount;
     
-    private final LinkedList<ShipType> leftShipQueue = new LinkedList<ShipType>();
-    private final LinkedList<ShipType> rightShipQueue = new LinkedList<ShipType>();
+    private LinkedList<ShipType> leftShipQueue = new LinkedList<ShipType>();
+    private LinkedList<ShipType> rightShipQueue = new LinkedList<ShipType>();
 
+    private ArrayList<IMatchListener> listeners = new ArrayList<IMatchListener>();
 
-    private static ArrayList<IMatchListener> listeners = new ArrayList<IMatchListener>();
-
-    public Match(Vector2Int boardSize)
+    /**
+     * 
+     * @param game The game context
+     * @param leftOffset The pixel offset of the left board
+     * @param rightOffset The pixel offset of the right board
+     * @param tileSize The pixel size of tiles
+     * @param boardSize The cell dimensions of the board
+     */
+    public Match(Game game, Vector2Int leftOffset, Vector2Int rightOffset, int tileSize, Vector2Int boardSize)
     {
         this.boardSize = boardSize;
 
-        leftBoard = new Board(boardSize, true);
+		new UI(game, this);
+
+        leftBoard = new Board(boardSize, leftOffset, tileSize, true);
         leftBoard.addListener(this);
-        rightBoard = new Board(boardSize, false);
+        rightBoard = new Board(boardSize, rightOffset, tileSize, false);
         rightBoard.addListener(this);
         
         leftPlayer = new Human("eule", this);
@@ -46,96 +54,134 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
 
         Game.addUpdatable(this);
         
-        for(int i = 0; i < 2; i++)
-        {
-        	leftShipQueue.add(ShipType.CARRIER);
-        	rightShipQueue.add(ShipType.CARRIER);
-        }
-        for(int i = 0; i < 3; i++)
-        {
-        	leftShipQueue.add(ShipType.BATTLESHIP);
-        	rightShipQueue.add(ShipType.BATTLESHIP);
-        }
-        for(int i = 0; i < 5; i++)
-        {
-        	leftShipQueue.add(ShipType.DESTROYER);
-        	rightShipQueue.add(ShipType.DESTROYER);
-        }
-        for(int i = 0; i < 8; i++)
-        {
-        	leftShipQueue.add(ShipType.SUPER_PATROL);
-        	rightShipQueue.add(ShipType.SUPER_PATROL);
-        }
-        for(int i = 0; i < 10; i++)
-        {
-        	leftShipQueue.add(ShipType.PATROL);
-        	rightShipQueue.add(ShipType.PATROL);
-        }
+        leftShipQueue = Resources.getShipQueue();
+        rightShipQueue = Resources.getShipQueue();
         
         rightShipCount = rightShipQueue.size();
-        leftShipCount = leftShipQueue.size();
         invokeShipCountChanged(rightShipCount, false);
+
+        leftShipCount = leftShipQueue.size();
         invokeShipCountChanged(leftShipCount, true);
 
         invokePlacingPlayerChanged(leftPlayer, leftShipQueue.pop());
     }
-
-    @Override
-    public void update(long elapsedMillis)
-    {
-
-    }
     
     /**
-     * Gets invoked when a player placed a ship.
+     * Gets invoked when a player placed a ship
      */
     @Override
     public void onShipPlaced(Player player, Vector2Int position, ShipType shipType)
     {
     	var isLeftPlayer = player == leftPlayer;
         var board = isLeftPlayer ? leftBoard : rightBoard;
+
         board.placeShip(position, shipType);
-        if(leftShipQueue.size() == 0 && rightShipQueue.size() == 0)
+
+        if (leftShipQueue.size() == 0 && rightShipQueue.size() == 0)
         {
         	invokeGuessingPlayerChanged(leftPlayer);
         }
-        else invokePlacingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer, isLeftPlayer ? rightShipQueue.pop() : leftShipQueue.pop());
-        
+        else
+        {
+            invokePlacingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer, 
+                                        isLeftPlayer ? rightShipQueue.pop() : leftShipQueue.pop());
+        }
     }
 
+    /**
+     * Gets invoked when a player guessed a field
+     * @param player The player to have guessed
+     * @param cellPos The cell position that was guessed
+     */
     @Override
-    public void onGuess(Player player, Vector2Int pos)
+    public void onFieldGuessed(Player player, Vector2Int cellPos)
     {
     	var isLeftPlayer = player == leftPlayer;
     	var board = isLeftPlayer ? rightBoard : leftBoard;
 
-    	if (canGuess(player, pos))
+    	if (canGuess(player, cellPos))
         {
-            var shipHit = board.guessField(pos);
-            if(shipHit) invokeGuessingPlayerChanged(isLeftPlayer ? leftPlayer : rightPlayer);
-            else invokeGuessingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer);
+            var shipHit = board.guessField(cellPos);
+
+            if (shipHit) 
+                invokeGuessingPlayerChanged(isLeftPlayer ? leftPlayer : rightPlayer);
+            else 
+                invokeGuessingPlayerChanged(isLeftPlayer ? rightPlayer : leftPlayer);
         }
     }
     
-    public boolean canGuess(Player player, Vector2Int pos)
+    /**
+     * 
+     * @param player The player wanting to guess
+     * @param cellPos The cell position to be guessed
+     * @return Returns whether the field is guessable
+     */
+    public boolean canGuess(Player player, Vector2Int cellPos)
     {
     	var isLeftPlayer = player == leftPlayer;
         var board = isLeftPlayer ? rightBoard : leftBoard;
-        return board.canGuess(pos);
+        return board.canGuess(cellPos);
     }
     
-    public boolean canPlace(Player player, Vector2Int pos, ShipType shipType)
+    /**
+     * 
+     * @param player The player wanting to place
+     * @param cellPos The cell position to be placed at
+     * @param shipType The ship type to be placed
+     * @return Returns whether the ship can be placed at that field
+     */
+    public boolean canPlace(Player player, Vector2Int cellPos, ShipType shipType)
     {
     	var isLeftPlayer = player == leftPlayer;
         var board = isLeftPlayer ? leftBoard : rightBoard;
-        return board.canPlace(pos, shipType);
+        return board.canPlace(cellPos, shipType);
     }
 
+    /**
+     * 
+     * @param position The world position to check
+     * @return Returns whether the given position is inside the bounds of the left board
+     */
+    public boolean inLeftBounds(Vector2 position)
+    {
+        return leftBoard.inBounds(position); 
+    }
+
+    /**
+     * 
+     * @param position The world position to check
+     * @return Returns whether the given position is inside the bounds of the right board
+     */
+    public boolean inRightBounds(Vector2 position)
+    {
+        return rightBoard.inBounds(position);
+    }
+
+    /**
+     * 
+     * @param position The world position to convert
+     * @return Returns the converted cell position or null if the given position is not inside any board
+     */
+    public Vector2Int worldToCell(Vector2 position)
+    {
+        if (inLeftBounds(position)) return leftBoard.worldToCell(position);
+        else if (inRightBounds(position)) return rightBoard.worldToCell(position);
+        else return null;
+    }
+
+    /**
+     * 
+     * @return The size of the game boards
+     */
     public Vector2Int getBoardSize()
     {
     	return boardSize;
     }
     
+    /**
+     * Invokes the GuessingPlayerChanged event
+     * @param player The player that guesses next
+     */
     private void invokeGuessingPlayerChanged(Player player)
     {
         for (var listener : listeners)
@@ -144,6 +190,11 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         }
     }
 
+    /**
+     * Invokes the PlacingPlayerChanged event
+     * @param player The player that places next
+     * @param shipType The ship to be placed
+     */
     private void invokePlacingPlayerChanged(Player player, ShipType shipType)
     {
         for (var listener : listeners)
@@ -152,6 +203,11 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         }
     }
 
+    /**
+     * Invokes the PlayerAdded event
+     * @param player The added player
+     * @param isLeftPlayer Whether the player is the left player
+     */
     private void invokePlayerAdded(Player player, boolean isLeftPlayer)
     {
         for (var listener : listeners)
@@ -160,6 +216,11 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         }
     }
     
+    /**
+     * Invokes the ShipCountChanged event
+     * @param shipCount The new ship count
+     * @param isLeft Whether the ship count is for the left or right side
+     */
     private void invokeShipCountChanged(int shipCount, boolean isLeft)
     {
     	for (var listener : listeners)
@@ -168,28 +229,35 @@ public class Match implements IUpdatable, IPlayerListener, IBoardListener
         }
     }
 
-    public static void addListener(IMatchListener listener)
+    /**
+     * Adds an IMatchListener to the match observer list
+     * @param listener The listener to add
+     */
+    public void addListener(IMatchListener listener)
     {
         listeners.add(listener);
     }
 
-    public static void removeListener(IMatchListener listener)
+    /**
+     * Removes an IMatchListener from the match observer list
+     * @param listener The listener to remove
+     */
+    public void removeListener(IMatchListener listener)
     {
         listeners.remove(listener);
     }
 
-    @Override
-    public void onFieldChanged(Board board, Vector2Int pos, FieldState state)
-    {
-
-    }
-
+    /**
+     * Gets invoked when a ship is completely guessed
+     */
 	@Override
 	public void onShipDestroyed(Board board) 
 	{
-		var isLeftBoard = board == leftBoard;
-		if(isLeftBoard) leftShipCount -= 1;
-		else rightShipCount -= 1;
+        var isLeftBoard = board == leftBoard;
+
+		if (isLeftBoard) leftShipCount -= 1;
+        else rightShipCount -= 1;
+        
 		invokeShipCountChanged(isLeftBoard ? leftShipCount : rightShipCount, isLeftBoard);
-	}
+    }
 }

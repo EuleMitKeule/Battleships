@@ -2,5 +2,5 @@ package game.core;
 
 public interface IUpdatable
 {
-    void update(long elapsedMillis);
+    default void update(long elapsedMillis) { }
 }

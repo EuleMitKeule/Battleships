@@ -21,7 +21,7 @@ public abstract class Player implements IMatchListener
 		this.name = name;
 		this.match = match;
 
-		Match.addListener(this);
+		match.addListener(this);
 	}
 
 	public String getName()
@@ -51,7 +51,7 @@ public abstract class Player implements IMatchListener
 	{
 		for (var listener : listeners)
 		{
-			listener.onGuess(this, position);
+			listener.onFieldGuessed(this, position);
 		}
 	}
 

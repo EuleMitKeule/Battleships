@@ -1,14 +1,12 @@
 package game.core;
 
-import java.security.Key;
-
 public interface IInputListener
 {
-    void onKeyDown(int keyCode);
+    default void onKeyDown(int keyCode) { }
 
-    void onKeyUp(int keyCode);
+    default void onKeyUp(int keyCode) { }
 
-    void onMouseDown(Vector2 mousePos);
+    default void onMouseDown(Vector2 mousePos) { }
 
-    void onMouseUp(Vector2 mousePos);
+    default void onMouseUp(Vector2 mousePos) { }
 }

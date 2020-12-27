@@ -3,10 +3,12 @@ package game;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Scanner;
 
-public class Resources
-{
+public class Resources {
     public static BufferedImage SPRITE_NULL;
     public static BufferedImage WATER_DUMMY;
     public static BufferedImage SHIP_DUMMY;
@@ -28,8 +30,7 @@ public class Resources
     public static BufferedImage CARRIER_BACK_MID;
     public static BufferedImage CARRIER_BACK;
 
-    public static void Initialize() throws IOException
-    {
+    public static void Initialize() throws IOException {
         SPRITE_NULL = ImageIO.read(new File("Resources\\null.png"));
         WATER_DUMMY = ImageIO.read(new File("Resources\\water.png"));
         SHIP_DUMMY = ImageIO.read(new File("Resources\\ship.png"));
@@ -51,5 +52,34 @@ public class Resources
         CARRIER_MID = ImageIO.read(new File("Resources\\carrier_mid.png"));
         CARRIER_BACK_MID = ImageIO.read(new File("Resources\\carrier_back_mid.png"));
         CARRIER_BACK = ImageIO.read(new File("Resources\\carrier_back.png"));
+
+    }
+
+    public static LinkedList<ShipType> getShipQueue() 
+    {
+        try 
+        {
+            var scanner = new Scanner(new File("Resources\\shipQueue.txt"));
+            var ships = new LinkedList<String>();
+            var shipQueue = new LinkedList<ShipType>();
+    
+            while (scanner.hasNext())
+            {
+                ships.add(scanner.next());
+            }
+    
+            scanner.close();
+    
+            for (var ship : ships)
+            {
+                shipQueue.add(ShipType.valueOf(ship));
+            }
+
+            return shipQueue;
+        } 
+        catch (FileNotFoundException e) 
+        {
+            return null;
+        }
     }
 }
