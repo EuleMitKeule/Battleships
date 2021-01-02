@@ -8,7 +8,7 @@ public class Computer extends Player
 {
     public Vector2Int lastGuessPos;
 
-    private AiState _aiStartState;
+    public AiState aiStartState;
     
     private AiState _state;
     /**
@@ -18,7 +18,10 @@ public class Computer extends Player
     public Computer(String name, Match match)
     {
         super(name, match);
-        _aiStartState = new AiStartState(this);
+
+        aiStartState = new AiStartState(this);
+
+        setState(aiStartState);
     }
 
     public void setState(AiState state) 
@@ -67,54 +70,40 @@ public class Computer extends Player
     {
         super.onGuessingPlayerChanged(player, hasHit);
 
-        _state.onGuessingPlayerChanged(player, hasHit);
-
     	if (isGuessing)
     	{
-            // try
-            // {
-            //     Thread.sleep(1000);
-            // }
-            // catch (Exception ex) { }
+            _state.onGuess();
+        }
 
-            if (lastGuessPos == null)
-            {
-                var guessPos = getRandomGuessPos();
-                lastGuessPos = guessPos;
-                invokeFieldGuessed(guessPos);
-            }
-            else
-            {
-                if (hasHit)
-                {
-                    var rightPos = lastGuessPos.add(Vector2Int.right());
-                    var leftPos = lastGuessPos.add(Vector2Int.left());
+        //     if (hasHit)
+        //     {
+        //         var rightPos = lastGuessPos.add(Vector2Int.right());
+        //         var leftPos = lastGuessPos.add(Vector2Int.left());
 
-                    if (match.inBounds(rightPos) && match.canGuess(this, rightPos))
-                    {
-                        lastGuessPos = rightPos;
-                        invokeFieldGuessed(rightPos);
-                    }
-                    else if (match.inBounds(leftPos) && match.canGuess(this, leftPos))
-                    {
-                        lastGuessPos = leftPos;
-                        invokeFieldGuessed(leftPos);
-                    }
-                    else
-                    {
-                        var guessPos = getRandomGuessPos();
-                        lastGuessPos = guessPos;
-                        invokeFieldGuessed(guessPos);
-                    }
-                }
-                else
-                {
-                    var guessPos = getRandomGuessPos();
-                    lastGuessPos = guessPos;
-                    invokeFieldGuessed(guessPos);
-                }
-            }
-    	}
+        //         if (match.inBounds(rightPos) && match.canGuess(this, rightPos))
+        //         {
+        //             lastGuessPos = rightPos;
+        //             invokeFieldGuessed(rightPos);
+        //         }
+        //         else if (match.inBounds(leftPos) && match.canGuess(this, leftPos))
+        //         {
+        //             lastGuessPos = leftPos;
+        //             invokeFieldGuessed(leftPos);
+        //         }
+        //         else
+        //         {
+        //             var guessPos = getRandomGuessPos();
+        //             lastGuessPos = guessPos;
+        //             invokeFieldGuessed(guessPos);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         var guessPos = getRandomGuessPos();
+        //         lastGuessPos = guessPos;
+        //         invokeFieldGuessed(guessPos);
+        //     }
+    	// }
     }
     
     public Vector2Int getRandomGuessPos()
