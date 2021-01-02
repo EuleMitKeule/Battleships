@@ -6,8 +6,11 @@ import java.util.Random;
 
 public class Computer extends Player
 {
-    private Vector2Int lastGuessPos;
+    public Vector2Int lastGuessPos;
 
+    private AiState _aiStartState;
+    
+    private AiState _state;
     /**
      * @param name The name of the player
      * @param match The match context
@@ -15,6 +18,20 @@ public class Computer extends Player
     public Computer(String name, Match match)
     {
         super(name, match);
+        _aiStartState = new AiStartState(this);
+    }
+
+    public void setState(AiState state) 
+    {
+        if (state == null) return;
+        
+        if (this._state != null) 
+        {
+            state.exitState();
+        }
+
+        this._state = state;
+        state.enterState();
     }
 
     /**
@@ -49,6 +66,8 @@ public class Computer extends Player
     public void onGuessingPlayerChanged(Player player, boolean hasHit)
     {
         super.onGuessingPlayerChanged(player, hasHit);
+
+        _state.onGuessingPlayerChanged(player, hasHit);
 
     	if (isGuessing)
     	{
@@ -98,7 +117,7 @@ public class Computer extends Player
     	}
     }
     
-    private Vector2Int getRandomGuessPos()
+    public Vector2Int getRandomGuessPos()
     {
         var rand = new Random();
         var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
