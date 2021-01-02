@@ -4,9 +4,6 @@ import game.core.Vector2Int;
 
 import java.util.Random;
 
-import javax.lang.model.util.ElementScanner14;
-import javax.swing.text.DefaultStyledDocument.ElementSpec;
-
 public class Computer extends Player
 {
     private Vector2Int lastGuessPos;
