@@ -33,22 +33,22 @@ public class AiHasGuessedCorrectlyState implements IAiState
         var upPos = _computer.lastGuessPos.add(Vector2Int.up());
         var downPos = _computer.lastGuessPos.add(Vector2Int.down());
 
-        if (_computer.match.inBounds(rightPos) && _computer.match.canGuess(_computer, rightPos))
+        if (_computer.ownBoard.canGuess(rightPos))
         {
             _computer.lastGuessPos = rightPos;
             _computer.invokeMove(rightPos);
         }
-        else if (_computer.match.inBounds(leftPos) && _computer.match.canGuess(_computer, leftPos))
+        else if (_computer.ownBoard.canGuess(leftPos))
         {
             _computer.lastGuessPos = leftPos;
             _computer.invokeMove(leftPos);
         }
-        else if (_computer.match.inBounds(upPos) && _computer.match.canGuess(_computer, upPos))
+        else if (_computer.ownBoard.canGuess(upPos))
         {
             _computer.lastGuessPos = upPos;
             _computer.invokeMove(upPos);
         }
-        else if (_computer.match.inBounds(downPos) && _computer.match.canGuess(_computer, downPos))
+        else if (_computer.ownBoard.canGuess(downPos))
         {
             _computer.lastGuessPos = downPos;
             _computer.invokeMove(downPos);

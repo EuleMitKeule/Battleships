@@ -81,11 +81,11 @@ public class Computer extends Player
     public Vector2Int getRandomGuessPos()
     {
         var rand = new Random();
-        var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+        var cellPos = new Vector2Int(rand.nextInt(GameConstants.boardSize.x), rand.nextInt(GameConstants.boardSize.y));
         
-        while (!match.canGuess(this, cellPos))
+        while (!ownBoard.canGuess(cellPos))
         {
-            cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+            cellPos = new Vector2Int(rand.nextInt(GameConstants.boardSize.x), rand.nextInt(GameConstants.boardSize.y));
         }
 
         return cellPos;
@@ -98,11 +98,11 @@ public class Computer extends Player
             curShipType = shipQueue.pop();
             
             var rand = new Random();
-            var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+            var cellPos = new Vector2Int(rand.nextInt(GameConstants.boardSize.x), rand.nextInt(GameConstants.boardSize.y));
     
             while (!ownBoard.canPlace(cellPos, curShipType))
             {
-                cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+                cellPos = new Vector2Int(rand.nextInt(GameConstants.boardSize.x), rand.nextInt(GameConstants.boardSize.y));
             }
     
             ownBoard.placeShip(cellPos, curShipType);

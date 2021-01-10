@@ -296,7 +296,7 @@ public class Board implements IRenderable
 	 */
 	public boolean canGuess(Vector2Int cellPos)
 	{
-		return getField(cellPos) == FieldState.WATER || getField(cellPos) == FieldState.SHIP;
+		return inBounds(cellPos) && (getField(cellPos) == FieldState.WATER || getField(cellPos) == FieldState.SHIP);
 	}
 
 	/**
@@ -513,6 +513,16 @@ public class Board implements IRenderable
     {
         return (worldPos.x >  offset.x && worldPos.x < offset.x + size.x * tileSize) &&
                 (worldPos.y > offset.y && worldPos.y < offset.y + size.y * tileSize);
+	}
+	
+	/**
+	 * @param worldPos The world position to check
+	 * @return Returns whether a world position is inside the bounds of the board
+	 */
+    public boolean inBounds(Vector2Int cellPos)
+    {
+        return (cellPos.x >=  0 && cellPos.x < size.x) &&
+                (cellPos.y >= 0 && cellPos.y < size.y);
     }
 
 	/**

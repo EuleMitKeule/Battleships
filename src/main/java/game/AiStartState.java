@@ -24,7 +24,6 @@ public class AiStartState implements IAiState
     @Override
     public void onUpdate(Player player, Vector2Int position, boolean isHit, boolean isSunk)
     {
-
         var guessPos = _computer.getRandomGuessPos();
         _computer.lastGuessPos = guessPos;
         _computer.lastStartGuessPos = guessPos;
