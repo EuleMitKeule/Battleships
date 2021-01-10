@@ -23,11 +23,13 @@ public class AiHasGuessedIncorrectlyState implements IAiState
 
         if (_computer.ownBoard.canGuess(nextPos))
         {
+            System.out.println("went left");
             _computer.lastGuessPos = nextPos;
             _computer.invokeMove(nextPos);
         }
         else
         {
+            System.out.println("random new pos");
             _computer.setState(_computer.aiStartState);
             _computer.state.onUpdate(player, cellPos, false, false);
             return;
