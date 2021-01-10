@@ -2,35 +2,37 @@ package game;
 
 import game.core.IInputListener;
 import game.core.Input;
+
+import java.awt.event.*;
+import java.util.concurrent.TimeUnit;
+
 import game.core.*;
 
-
-public class Human extends Player implements IInputListener
-{
+public class Human extends Player implements IInputListener {
     private boolean isPlacing = true;
 
     /**
      * 
-     * @param name The name for the player
+     * @param name  The name for the player
      * @param match The match context
      */
-    public Human(String name, Match match)
-    {
+    public Human(String name, Match match) {
         super(name, match);
         this.ownBoard = new Board(GameConstants.boardSize, new Vector2Int(64, 64), 64, true, true);
-        
-		curShipType = shipQueue.pop();
+
+        curShipType = shipQueue.pop();
 
         Input.addListener(this);
     }
 
     @Override
-    public void onUpdate(Player player, Vector2Int cellPos, boolean isHit, boolean isSunk)
-    {
+    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk) {
         // TODO Auto-generated method stub
-        super.onUpdate(player, cellPos, isHit, isSunk);
-        
-        if (player != this && isHit || player == this && !isHit) ownBoard.guessField(cellPos);
+        super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
+
+        if (lastPlayer != this) ownBoard.guessField(cellPos);
+        else enemyBoard.guessField(cellPos);
+
     }
 
     /**
@@ -70,7 +72,7 @@ public class Human extends Player implements IInputListener
             if (enemyBoard.inBounds(mousePos))
             {
                 var cellPos = enemyBoard.worldToCell(mousePos);
-                if (cellPos != null) invokeMove(cellPos);
+                if (cellPos != null && enemyBoard.canGuess(cellPos)) invokeMove(cellPos);
             }
         }
     }

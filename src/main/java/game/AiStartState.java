@@ -22,9 +22,11 @@ public class AiStartState implements IAiState
     }
 
     @Override
-    public void onUpdate(Player player, Vector2Int position, boolean isHit, boolean isSunk)
+    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk)
     {
+        System.out.println("Startet von vorne");
         var guessPos = _computer.getRandomGuessPos();
+
         _computer.lastGuessPos = guessPos;
         _computer.lastStartGuessPos = guessPos;
         _computer.invokeMove(guessPos);

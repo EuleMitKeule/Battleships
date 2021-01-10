@@ -5,7 +5,7 @@ public interface IMatchListener
 {
     default void onGameSetup(Player player) { }
 
-    default void onUpdate(Player player, Vector2Int position, boolean isHit, boolean isSunk) { }
+    default void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk) { }
 
     default void onPlayerAdded(Player player, boolean isLeftPlayer) { }
 }

@@ -1,9 +1,7 @@
 package game;
 
 import game.core.Vector2Int;
-import java.util.concurrent.TimeUnit;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class Computer extends Player
 {
@@ -43,6 +41,8 @@ public class Computer extends Player
     {
         if (state == null) return;
         
+        System.out.println("AI jetzt in state: " + state.getClass().getName());
+        
         if (this.state != null) 
         {
             state.exitState();
@@ -57,24 +57,18 @@ public class Computer extends Player
      * @param player The new placing player
      */
     @Override
-    public void onUpdate(Player player, Vector2Int cellPos, boolean isHit, boolean isSunk)
+    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk)
     {
-        super.onUpdate(player, cellPos, isHit, isSunk);
+        super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
 
-        if (player != this && isHit || player == this && !isHit) ownBoard.guessField(cellPos);
+        if (lastPlayer != this) ownBoard.guessField(cellPos);
+        else enemyBoard.guessField(cellPos);
 
         if (isGuessing && isHit) setState(aiHasGuessedCorrectlyState);
 
         if (isGuessing)
         {
-            // try {
-            //     TimeUnit.SECONDS.sleep(2);
-                
-            // } catch (Exception e) {
-            //     //TODO: handle exception
-            // }
-            System.out.println("computer guessed jetzt im " + state.getClass().getName());
-            state.onUpdate(player, cellPos, isHit, isSunk);
+            state.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
         } 
     }
     
@@ -83,7 +77,7 @@ public class Computer extends Player
         var rand = new Random();
         var cellPos = new Vector2Int(rand.nextInt(GameConstants.boardSize.x), rand.nextInt(GameConstants.boardSize.y));
         
-        while (!ownBoard.canGuess(cellPos))
+        while (!enemyBoard.canGuess(cellPos))
         {
             System.out.println("wrong pos");
             cellPos = new Vector2Int(rand.nextInt(GameConstants.boardSize.x), rand.nextInt(GameConstants.boardSize.y));
