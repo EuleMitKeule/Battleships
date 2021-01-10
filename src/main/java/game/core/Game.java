@@ -1,6 +1,6 @@
 package game.core;
 
-import game.Match;
+import game.*;
 import game.Resources;
 
 import java.awt.Dimension;
@@ -46,7 +46,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 		}
 
 		input = new Input();
-		new Match(this, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE);
+		new LocalMatch(this, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE);
 
 		frame = new JFrame(title);
 

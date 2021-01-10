@@ -1,12 +1,11 @@
 package game;
 
+import game.core.Vector2Int;
 public interface IMatchListener
 {
-    default void onPlacingPlayerChanged(Player player, ShipType shipType) { }
+    default void onGameSetup(Player player) { }
 
-    default void onGuessingPlayerChanged(Player player, boolean hasHit) { }
+    default void onUpdate(Player player, Vector2Int position, boolean isHit, boolean isSunk) { }
 
     default void onPlayerAdded(Player player, boolean isLeftPlayer) { }
-    
-    default void onShipCountChanged(int shipCount, boolean isLeft) { }
 }

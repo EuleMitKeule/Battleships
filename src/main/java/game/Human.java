@@ -2,10 +2,13 @@ package game;
 
 import game.core.IInputListener;
 import game.core.Input;
-import game.core.Vector2;
+import game.core.*;
+
 
 public class Human extends Player implements IInputListener
 {
+    private boolean isPlacing = true;
+
     /**
      * 
      * @param name The name for the player
@@ -14,8 +17,23 @@ public class Human extends Player implements IInputListener
     public Human(String name, Match match)
     {
         super(name, match);
+        this.ownBoard = new Board(GameConstants.boardSize, new Vector2Int(64, 64), 64, true, true);
+        
+		curShipType = shipQueue.pop();
 
         Input.addListener(this);
+    }
+
+    @Override
+    public void onUpdate(Player player, Vector2Int cellPos, boolean isHit, boolean isSunk)
+    {
+        // TODO Auto-generated method stub
+        super.onUpdate(player, cellPos, isHit, isSunk);
+
+        if (player == this)
+        {
+            ownBoard.guessField(cellPos);  
+        } 
     }
 
     /**
@@ -27,24 +45,35 @@ public class Human extends Player implements IInputListener
     {
         if (isPlacing)
         {
-            if (match.inLeftBounds(mousePos))
+            if (ownBoard.inBounds(mousePos))
             {
-                var cellPos = match.worldToCell(mousePos);
+                var cellPos = ownBoard.worldToCell(mousePos);
+
                 if (cellPos != null)
                 {
-                    if (match.canPlace(this, cellPos, curShipType))
+                    if (ownBoard.canPlace(cellPos, curShipType))
                     {
-                        invokeShipPlaced(cellPos, curShipType);
+                        ownBoard.placeShip(cellPos, curShipType);
+
+                        if (shipQueue.size() == 0)
+                        {
+                            isPlacing = false;
+                            invokeClientBoard(this, ownBoard);
+                        }
+                        else
+                        {
+                            curShipType = shipQueue.pop();
+                        }
                     }
                 }
             }
         }
         else if (isGuessing)
         {
-            if (match.inRightBounds(mousePos))
+            if (enemyBoard.inBounds(mousePos))
             {
-                var cellPos = match.worldToCell(mousePos);
-                if (cellPos != null) invokeFieldGuessed(cellPos);
+                var cellPos = enemyBoard.worldToCell(mousePos);
+                if (cellPos != null) invokeMove(cellPos);
             }
         }
     }

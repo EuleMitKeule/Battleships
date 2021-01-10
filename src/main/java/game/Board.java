@@ -13,8 +13,7 @@ public class Board implements IRenderable
 	private final Vector2Int offset;
 	private final int tileSize;
 	private boolean owned;
-
-	private ArrayList<IBoardListener> listeners = new ArrayList<IBoardListener>();
+	private boolean isRendered;
 
 	/**
 	 * @param size The cell dimensions of the board
@@ -22,7 +21,7 @@ public class Board implements IRenderable
 	 * @param tileSize The pixel size of one tile
 	 * @param owned Whether the board is assigned to the player running the application
 	 */
-	public Board(Vector2Int size, Vector2Int offset, int tileSize, boolean owned)
+	public Board(Vector2Int size, Vector2Int offset, int tileSize, boolean owned, boolean isRendered)
 	{
 		Game.addRenderable(this);
 
@@ -30,6 +29,7 @@ public class Board implements IRenderable
 		this.offset = offset;
 		this.tileSize = tileSize;
 		this.owned = owned;
+		this.isRendered = isRendered;
 
 		fields = new FieldState[size.x][size.y];
 		ships = new ShipType[size.x][size.y];
@@ -45,7 +45,6 @@ public class Board implements IRenderable
 	public void setField(Vector2Int cellPos, FieldState state)
 	{
 		fields[cellPos.x][cellPos.y] = state;
-		invokeFieldChanged(cellPos, state);
 	}
 
 	/**
@@ -57,7 +56,6 @@ public class Board implements IRenderable
 	public void setField(int x, int y, FieldState state)
 	{
 		fields[x][y] = state;
-		invokeFieldChanged(new Vector2Int(x, y), state);
 	}
 
 	/**
@@ -83,7 +81,6 @@ public class Board implements IRenderable
 	public void setShip(Vector2Int cellPos, ShipType shipType)
 	{
 		ships[cellPos.x][cellPos.y] = shipType;
-		//TODO: Invoke FieldStateChanged event
 	}
 
 	/**
@@ -95,7 +92,6 @@ public class Board implements IRenderable
 	public void setShip(int x, int y, ShipType shipType)
 	{
 		ships[x][y] = shipType;
-		//TODO: Invoke FieldStateChanged event
 	}
 
 	/**
@@ -293,48 +289,6 @@ public class Board implements IRenderable
 			}
 		}
 	}
-
-	/**
-	 * Adds an IBoardListener to the list of observers
-	 * @param listener The listener to add
-	 */
-	public void addListener(IBoardListener listener)
-	{
-		listeners.add(listener);
-	}
-	
-	/**
-	 * Removes an IBoardListener from the list of observers
-	 * @param listener The listener to remove
-	 */
-	public void removeListener(IBoardListener listener)
-	{
-		listeners.remove(listener);
-	}
-
-	/**
-	 * Invokes the FieldChanged event
-	 * @param cellPos The cell position that changed
-	 * @param state The new field state of the field
-	 */
-	private void invokeFieldChanged(Vector2Int cellPos, FieldState state)
-	{
-		for (var listener : listeners)
-		{
-			listener.onFieldChanged(this, cellPos, state);
-		}
-	}
-	
-	/**
-	 * Invokes the ShipDestroyed event
-	 */
-	private void invokeShipDestroyed()
-	{
-		for (var listener : listeners)
-		{
-			listener.onShipDestroyed(this);
-		}
-	}
 	
 	/**
 	 * @param cellPos The cell position to check
@@ -350,7 +304,28 @@ public class Board implements IRenderable
 	 * @param cellPos The cell position to guess
 	 * @return Returns whether a ship was hit
 	 */
-	public boolean guessField(Vector2Int cellPos) 
+	public void guessField(Vector2Int cellPos) 
+	{
+		switch(getField(cellPos)) 
+    	{
+			case WATER:
+
+				setField(cellPos, FieldState.WATER_GUESSED);
+				
+				break;
+			case SHIP:
+
+				setField(cellPos, FieldState.SHIP_GUESSED);
+	    		setShip(cellPos, ShipType.SHIP_DESTROYED);
+				
+				break;
+	    	default:
+	    		break;
+    	}
+		
+	}
+
+	public boolean isHit(Vector2Int cellPos)
 	{
 		switch(getField(cellPos)) 
     	{
@@ -363,8 +338,6 @@ public class Board implements IRenderable
 			case SHIP:
 
 				setField(cellPos, FieldState.SHIP_GUESSED);
-				
-	    		if (isLastShipField(cellPos)) invokeShipDestroyed();
 
 	    		setShip(cellPos, ShipType.SHIP_DESTROYED);
 	    		
@@ -380,7 +353,7 @@ public class Board implements IRenderable
 	 * @param cellPos The cell position to check
 	 * @return Returns whether a field is the last remaining part of a ship
 	 */
-	private boolean isLastShipField(Vector2Int cellPos)
+	public boolean isSinking(Vector2Int cellPos)
 	{
 		var startField = getShip(cellPos);
 		
@@ -477,6 +450,8 @@ public class Board implements IRenderable
 	@Override
 	public void render(BoardRenderer renderer)
 	{
+		if (!isRendered) return;
+
 		for (int x = 0; x < size.x; x++)
 		{
 			for (int y = 0; y < size.y; y++)
@@ -552,5 +527,5 @@ public class Board implements IRenderable
                                     (int)Math.floor((worldPos.y - offset.y) / tileSize));
         }
         else return null;
-    }
+	}
 }

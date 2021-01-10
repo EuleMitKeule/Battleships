@@ -3,16 +3,19 @@ package game;
 import game.core.Vector2Int;
 
 import java.util.ArrayList;
-
+import java.util.LinkedList;
 public abstract class Player implements IMatchListener
 {
 	protected String name;
 	protected Match match;
 
-	protected boolean isPlacing;
+	protected Board ownBoard;
+	protected Board enemyBoard;
+
 	protected boolean isGuessing;
 
 	protected ShipType curShipType;
+    protected LinkedList<ShipType> shipQueue = new LinkedList<ShipType>();
 
 	private ArrayList<IPlayerListener> listeners = new ArrayList<IPlayerListener>();
 
@@ -26,7 +29,28 @@ public abstract class Player implements IMatchListener
 		this.name = name;
 		this.match = match;
 
+		shipQueue = Resources.getShipQueue();
+
+		enemyBoard = new Board(GameConstants.boardSize, GameConstants.rightOffset, GameConstants.tileSize, false, false);
+
+		addListener(match);
 		match.addListener(this);
+	}
+
+	@Override
+	public void onGameSetup(Player player)
+	{
+		if (player == this) isGuessing = true;
+	}
+
+	/**
+	 * Gets invoked when the guessing player has changed
+	 * @param player The new guessing player
+	 */
+	@Override
+	public void onUpdate(Player player, Vector2Int position, boolean isHit, boolean isSunk)
+	{
+		isGuessing = player == this;
 	}
 
 	/**
@@ -36,6 +60,31 @@ public abstract class Player implements IMatchListener
 	public String getName()
 	{
 		return this.name;
+	}
+
+	/**
+	 * Invokes the ShipPlaced event
+	 * @param cellPos The cell position the ship was placed at 
+	 * @param shipType The ship type that was placed
+	 */
+	protected void invokeClientBoard(Player player, Board board)
+	{
+		for (var listener : listeners)
+		{
+			listener.onClientBoard(player, board);
+		}
+	}
+
+	/**
+	 * Invokes the FieldGuessed event
+	 * @param cellPos The cell position that was guessed
+	 */
+	protected void invokeMove(Vector2Int cellPos)
+	{
+		for (var listener : listeners)
+		{
+			listener.onMove(this, cellPos);
+		}
 	}
 
 	/**
@@ -54,55 +103,5 @@ public abstract class Player implements IMatchListener
 	public void removeListener(IPlayerListener listener)
 	{
 		listeners.remove(listener);
-	}
-
-	/**
-	 * Invokes the ShipPlaced event
-	 * @param cellPos The cell position the ship was placed at 
-	 * @param shipType The ship type that was placed
-	 */
-	protected void invokeShipPlaced(Vector2Int cellPos, ShipType shipType)
-	{
-		for (var listener : listeners)
-		{
-			listener.onShipPlaced(this, cellPos, shipType);
-		}
-	}
-
-	/**
-	 * Invokes the FieldGuessed event
-	 * @param cellPos The cell position that was guessed
-	 */
-	protected void invokeFieldGuessed(Vector2Int cellPos)
-	{
-		for (var listener : listeners)
-		{
-			listener.onFieldGuessed(this, cellPos);
-		}
-	}
-
-	/**
-	 * Gets invoked when the placing player has changed
-	 * @param player The new placing player
-	 * @param shipType The new ship type to be placed 
-	 */
-	@Override
-	public void onPlacingPlayerChanged(Player player, ShipType shipType)
-	{
-		isPlacing = player == this;
-		isGuessing = false;
-
-		if (isPlacing) curShipType = shipType;
-	}
-
-	/**
-	 * Gets invoked when the guessing player has changed
-	 * @param player The new guessing player
-	 */
-	@Override
-	public void onGuessingPlayerChanged(Player player, boolean hasHit)
-	{
-		isGuessing = player == this;
-		isPlacing = false;
 	}
 }

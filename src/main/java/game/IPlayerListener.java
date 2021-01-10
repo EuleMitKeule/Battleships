@@ -4,7 +4,7 @@ import game.core.Vector2Int;
 
 public interface IPlayerListener
 {
-    default void onShipPlaced(Player player, Vector2Int position, ShipType shipType) { }
+    default void onClientBoard(Player player, Board board) { }
 
-    default void onFieldGuessed(Player player, Vector2Int position) { }
+    default void onMove(Player player, Vector2Int position) { }
 }

@@ -8,12 +8,14 @@ public class Computer extends Player
 {
     public Vector2Int lastGuessPos;
     public Vector2Int lastStartGuessPos;
+    public Direction curDirection;
 
-    private AiState _aiStartState;
-    private AiState _aiHasGuessedCorrectyState;
-    private AiState _aiHasGuessedIncorrectlyState;
+    public IAiState aiStartState;
+    public IAiState aiHasGuessedCorrectyState;
+    public IAiState aiHasGuessedIncorrectlyState;
+
     
-    private AiState _state;
+    private IAiState _state;
     /**
      * @param name The name of the player
      * @param match The match context
@@ -22,12 +24,21 @@ public class Computer extends Player
     {
         super(name, match);
 
-        _aiStartState = new AiStartState(this);
+        aiStartState = new AiStartState(this);
+        aiHasGuessedCorrectyState = new AiHasGuessedCorrectlyState(this);
+        aiHasGuessedIncorrectlyState = new AiHasGuessedIncorrectlyState(this);
 
-        setState(_aiStartState);
+        ownBoard = new Board(GameConstants.boardSize, GameConstants.rightOffset, GameConstants.tileSize, false, true);
+
+        setState(aiStartState);
     }
 
-    public void setState(AiState state) 
+    public void Start()
+    {
+        assignRandomBoard();
+    }
+
+    public void setState(IAiState state) 
     {
         if (state == null) return;
         
@@ -41,77 +52,23 @@ public class Computer extends Player
     }
 
     /**
-     * Gets invoked when the placing player has changed
-     * @param player The new placing player
-     * @param shipType The new ship type to be placed
-     */
-    @Override
-    public void onPlacingPlayerChanged(Player player, ShipType shipType)
-    {
-        super.onPlacingPlayerChanged(player, shipType);
-
-        if (player == this)
-        {
-            var rand = new Random();
-            var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
-
-            while (!match.canPlace(this, cellPos, curShipType))
-            {
-                cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
-            }
-
-            invokeShipPlaced(cellPos, shipType);
-        }
-    }
-
-    /**
      * Gets invoked when the guessing player has changed
      * @param player The new placing player
      */
     @Override
-    public void onGuessingPlayerChanged(Player player, boolean hasHit)
+    public void onUpdate(Player player, Vector2Int cellPos, boolean isHit, boolean isSunk)
     {
-        super.onGuessingPlayerChanged(player, hasHit);
+        super.onUpdate(player, cellPos, isHit, isSunk);
 
-    	if (isGuessing)
-    	{
-            _state.onGuessingPlayerChanged(player, hasHit);
-            // try
-            // {
-            //     Thread.sleep(1000);
-            // }
-            // catch (Exception ex) { }
+        if (player == this) ownBoard.guessField(cellPos);
 
-        //     if (hasHit)
-        //     {
-        //         var rightPos = lastGuessPos.add(Vector2Int.right());
-        //         var leftPos = lastGuessPos.add(Vector2Int.left());
+        if (isGuessing && isHit) setState(aiHasGuessedCorrectyState);
 
-        //         if (match.inBounds(rightPos) && match.canGuess(this, rightPos))
-        //         {
-        //             lastGuessPos = rightPos;
-        //             invokeFieldGuessed(rightPos);
-        //         }
-        //         else if (match.inBounds(leftPos) && match.canGuess(this, leftPos))
-        //         {
-        //             lastGuessPos = leftPos;
-        //             invokeFieldGuessed(leftPos);
-        //         }
-        //         else
-        //         {
-        //             var guessPos = getRandomGuessPos();
-        //             lastGuessPos = guessPos;
-        //             invokeFieldGuessed(guessPos);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         var guessPos = getRandomGuessPos();
-        //         lastGuessPos = guessPos;
-        //         invokeFieldGuessed(guessPos);
-        //     }
-        // }
-        }
+        if (isGuessing)
+        {
+            System.out.println("computer guessed jetzt");
+            _state.onUpdate(player, cellPos, isHit, isSunk);
+        } 
     }
     
     public Vector2Int getRandomGuessPos()
@@ -125,5 +82,27 @@ public class Computer extends Player
         }
 
         return cellPos;
+    }
+
+    void assignRandomBoard()
+    {
+        do
+        {
+            curShipType = shipQueue.pop();
+            
+            var rand = new Random();
+            var cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+    
+            while (!ownBoard.canPlace(cellPos, curShipType))
+            {
+                cellPos = new Vector2Int(rand.nextInt(match.getBoardSize().x), rand.nextInt(match.getBoardSize().y));
+            }
+    
+            ownBoard.placeShip(cellPos, curShipType);
+
+        }
+        while (shipQueue.size() != 0);
+
+        invokeClientBoard(this, ownBoard);
     }
 }

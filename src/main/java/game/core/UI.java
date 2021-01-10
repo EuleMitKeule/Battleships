@@ -53,14 +53,14 @@ public class UI implements IMatchListener
         label.setText(player.getName());
     }
     
-    /**
-     * Gets invoked when either ship count has changed
-     * @param shipCount The new ship count
-     * @param isLeft Whether the ship count is on the left or the right side
-     */
-    @Override
-    public void onShipCountChanged(int shipCount, boolean isLeft)
-    {
-    	if(!isLeft) this.shipCount.setText("" + shipCount);
-    }
+    // /**
+    //  * Gets invoked when either ship count has changed
+    //  * @param shipCount The new ship count
+    //  * @param isLeft Whether the ship count is on the left or the right side
+    //  */
+    // @Override
+    // public void onShipCountChanged(int shipCount, boolean isLeft)
+    // {
+    // 	if(!isLeft) this.shipCount.setText("" + shipCount);
+    // }
 }
