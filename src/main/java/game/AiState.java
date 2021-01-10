@@ -2,7 +2,7 @@ package game;
 
 public interface AiState
 {
-    void onGuess();
+    void onGuessingPlayerChanged(Player player, boolean hasHit);
 
     void enterState();
 
