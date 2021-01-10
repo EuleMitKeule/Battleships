@@ -1,8 +1,9 @@
 package game;
 
 import game.core.Vector2Int;
-
+import java.util.concurrent.TimeUnit;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Computer extends Player
 {
@@ -11,11 +12,11 @@ public class Computer extends Player
     public Direction curDirection;
 
     public IAiState aiStartState;
-    public IAiState aiHasGuessedCorrectyState;
+    public IAiState aiHasGuessedCorrectlyState;
     public IAiState aiHasGuessedIncorrectlyState;
 
     
-    private IAiState _state;
+    public IAiState state;
     /**
      * @param name The name of the player
      * @param match The match context
@@ -25,7 +26,7 @@ public class Computer extends Player
         super(name, match);
 
         aiStartState = new AiStartState(this);
-        aiHasGuessedCorrectyState = new AiHasGuessedCorrectlyState(this);
+        aiHasGuessedCorrectlyState = new AiHasGuessedCorrectlyState(this);
         aiHasGuessedIncorrectlyState = new AiHasGuessedIncorrectlyState(this);
 
         ownBoard = new Board(GameConstants.boardSize, GameConstants.rightOffset, GameConstants.tileSize, false, true);
@@ -42,12 +43,12 @@ public class Computer extends Player
     {
         if (state == null) return;
         
-        if (this._state != null) 
+        if (this.state != null) 
         {
             state.exitState();
         }
 
-        this._state = state;
+        this.state = state;
         state.enterState();
     }
 
@@ -60,14 +61,20 @@ public class Computer extends Player
     {
         super.onUpdate(player, cellPos, isHit, isSunk);
 
-        if (player == this) ownBoard.guessField(cellPos);
+        if (player != this && isHit || player == this && !isHit) ownBoard.guessField(cellPos);
 
-        if (isGuessing && isHit) setState(aiHasGuessedCorrectyState);
+        if (isGuessing && isHit) setState(aiHasGuessedCorrectlyState);
 
         if (isGuessing)
         {
+            // try {
+            //     TimeUnit.SECONDS.sleep(2);
+                
+            // } catch (Exception e) {
+            //     //TODO: handle exception
+            // }
             System.out.println("computer guessed jetzt");
-            _state.onUpdate(player, cellPos, isHit, isSunk);
+            state.onUpdate(player, cellPos, isHit, isSunk);
         } 
     }
     

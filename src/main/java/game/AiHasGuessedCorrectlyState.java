@@ -17,14 +17,14 @@ public class AiHasGuessedCorrectlyState implements IAiState
         if (isSunk)
         {
             _computer.setState(_computer.aiStartState);
-            _computer.onUpdate(player, cellPos, isHit, isSunk);
+            _computer.state.onUpdate(player, cellPos, false, false);
             return;
         }
 
         if (!isHit)
         {
             _computer.setState(_computer.aiHasGuessedIncorrectlyState);
-            _computer.onUpdate(player, cellPos, isHit, isSunk);
+            _computer.state.onUpdate(player, cellPos, isHit, isSunk);
             return;
         }
 

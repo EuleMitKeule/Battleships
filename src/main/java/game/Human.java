@@ -29,11 +29,8 @@ public class Human extends Player implements IInputListener
     {
         // TODO Auto-generated method stub
         super.onUpdate(player, cellPos, isHit, isSunk);
-
-        if (player == this)
-        {
-            ownBoard.guessField(cellPos);  
-        } 
+        
+        if (player != this && isHit || player == this && !isHit) ownBoard.guessField(cellPos);
     }
 
     /**

@@ -78,10 +78,14 @@ public abstract class Match implements IUpdatable, IPlayerListener
             var isSunk = board.isSinking(cellPos);
             var isHit = board.isHit(cellPos);
 
+            var nextPlayer = isHit ? player : (isLeftPlayer ? rightPlayer : leftPlayer);
+            
+            System.out.println(nextPlayer.name + " is now guessing");
+
             if (isHit) 
-                invokeUpdate(isLeftPlayer ? leftPlayer : rightPlayer, cellPos, isHit, isSunk);
+                invokeUpdate(nextPlayer, cellPos, isHit, isSunk);
             else 
-                invokeUpdate(isLeftPlayer ? rightPlayer : leftPlayer, cellPos, isHit, isSunk);
+                invokeUpdate(nextPlayer, cellPos, isHit, isSunk);
         }
     }
     
