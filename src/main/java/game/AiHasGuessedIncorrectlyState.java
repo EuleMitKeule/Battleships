@@ -14,10 +14,10 @@ public class AiHasGuessedIncorrectlyState implements IAiState
     }
 
     @Override
-    public void onUpdate(Player player, Vector2Int position, boolean isHit, boolean isSunk)
+    public void onUpdate(Player player, Vector2Int cellPos, boolean isHit, boolean isSunk)
     {
         var lastStartGuessPos = _computer.lastStartGuessPos;
-        
+
         var direction = Direction.ToVector(_computer.curDirection);
         var nextPos = lastStartGuessPos.add(direction);
 
@@ -26,7 +26,12 @@ public class AiHasGuessedIncorrectlyState implements IAiState
             _computer.lastGuessPos = nextPos;
             _computer.invokeMove(nextPos);
         }
-        
+        else
+        {
+            _computer.setState(_computer.aiStartState);
+            _computer.state.onUpdate(player, cellPos, false, false);
+            return;
+        }
     }
 
     @Override

@@ -55,9 +55,9 @@ public class AiHasGuessedCorrectlyState implements IAiState
         }
         else
         {
-            var guessPos = _computer.getRandomGuessPos();
-            _computer.lastGuessPos = guessPos;
-            _computer.invokeMove(guessPos);
+            _computer.setState(_computer.aiStartState);
+            _computer.state.onUpdate(player, cellPos, false, false);
+            return;
         }
     }
 

@@ -73,7 +73,7 @@ public class Computer extends Player
             // } catch (Exception e) {
             //     //TODO: handle exception
             // }
-            System.out.println("computer guessed jetzt");
+            System.out.println("computer guessed jetzt im " + state.getClass().getName());
             state.onUpdate(player, cellPos, isHit, isSunk);
         } 
     }
