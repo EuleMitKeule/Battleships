@@ -521,8 +521,8 @@ public class Board implements IRenderable
 	 */
     public boolean inBounds(Vector2Int cellPos)
     {
-        return (cellPos.x >=  0 && cellPos.x < size.x) &&
-                (cellPos.y >= 0 && cellPos.y < size.y);
+        return (cellPos.x >=  0 && cellPos.x < GameConstants.boardSize.x) &&
+                (cellPos.y >= 0 && cellPos.y < GameConstants.boardSize.x);
     }
 
 	/**
