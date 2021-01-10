@@ -9,7 +9,7 @@ public class AiStartState implements AiState
         this._computer = computer;
     }
     
-    public void onGuessingPlayerChanged(Player player, boolean hasHit)
+    public void onGuess()
     {
         var guessPos = _computer.getRandomGuessPos();
         _computer.lastGuessPos = guessPos;
