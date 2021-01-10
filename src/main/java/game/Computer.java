@@ -7,8 +7,11 @@ import java.util.Random;
 public class Computer extends Player
 {
     public Vector2Int lastGuessPos;
+    public Vector2Int lastStartGuessPos;
 
     private AiState _aiStartState;
+    private AiState _aiHasGuessedCorrectyState;
+    private AiState _aiHasGuessedIncorrectlyState;
     
     private AiState _state;
     /**
@@ -67,10 +70,9 @@ public class Computer extends Player
     {
         super.onGuessingPlayerChanged(player, hasHit);
 
-        _state.onGuessingPlayerChanged(player, hasHit);
-
     	if (isGuessing)
     	{
+            _state.onGuessingPlayerChanged(player, hasHit);
             // try
             // {
             //     Thread.sleep(1000);
