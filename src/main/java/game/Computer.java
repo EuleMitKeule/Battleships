@@ -79,7 +79,6 @@ public class Computer extends Player
         
         while (!enemyBoard.canGuess(cellPos))
         {
-            System.out.println("wrong pos");
             cellPos = new Vector2Int(rand.nextInt(GameConstants.boardSize.x), rand.nextInt(GameConstants.boardSize.y));
         }
 

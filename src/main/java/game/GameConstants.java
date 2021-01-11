@@ -11,4 +11,6 @@ public class GameConstants
     public static Vector2Int rightOffset = new Vector2Int(768, 64);
 
     public static int tileSize = 64;
+
+    public static int port = 25555;
 }
