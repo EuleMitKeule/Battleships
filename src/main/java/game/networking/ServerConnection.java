@@ -22,7 +22,7 @@ public class ServerConnection
         try
         {
             _socket = new ServerSocket(GameConstants.port);
-            System.out.println("Server gestartet!");
+            System.out.println("Server started");
 
             
             _leftClientSocket = _socket.accept();
@@ -41,7 +41,7 @@ public class ServerConnection
         } 
         catch (Exception e)
         {
-            System.out.println("server yok");
+            System.out.println("Connection failed");
             e.printStackTrace();
         }
     }
