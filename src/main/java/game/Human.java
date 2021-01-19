@@ -3,9 +3,6 @@ package game;
 import game.core.IInputListener;
 import game.core.Input;
 
-import java.awt.event.*;
-import java.util.concurrent.TimeUnit;
-
 import game.core.*;
 
 public class Human extends Player implements IInputListener {
@@ -16,18 +13,23 @@ public class Human extends Player implements IInputListener {
      * @param name  The name for the player
      * @param match The match context
      */
-    public Human(String name, Match match) {
+    public Human(String name, Match match) 
+    {
         super(name, match);
-        this.ownBoard = new Board(GameConstants.boardSize, GameConstants.leftOffset, GameConstants.tileSize, true, true);
+
+        this.ownBoard = new Board(GameConstants.boardSize, GameConstants.leftOffset, GameConstants.tileSize);
 
         curShipType = shipQueue.pop();
+
+        new BoardRenderer(ownBoard, GameConstants.leftOffset, GameConstants.tileSize);
+        new BoardRenderer(enemyBoard, GameConstants.rightOffset, GameConstants.tileSize);
 
         Input.addListener(this);
     }
 
     @Override
-    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk) {
-        // TODO Auto-generated method stub
+    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk) 
+    {
         super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
 
         if (lastPlayer != this) ownBoard.guessField(cellPos);

@@ -1,6 +1,7 @@
 package game.core;
 
+import java.awt.Graphics;
 public interface IRenderable
 {
-    default void render(BoardRenderer renderer) { }
+    default void render(Graphics graphics) { }
 }

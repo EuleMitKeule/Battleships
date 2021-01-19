@@ -1,6 +1,5 @@
 package game.core;
 
-import game.*;
 import game.Resources;
 
 import java.awt.Dimension;
@@ -23,7 +22,6 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	private static ArrayList<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	private static Input input;
-	private static UI ui;
 
 	private JFrame frame;
 	private Timer updateTimer;
@@ -37,18 +35,11 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	 */
 	public Game(String title, int targetUpdates, int targetRenders)
 	{
-		try
-		{
-			Resources.Initialize();
-		}
-		catch (Exception ex)
-		{
-			System.out.println("Resources could not be loaded");
-		}
+		try { Resources.Initialize(); }
+		catch (Exception ex) { System.out.println("Resources could not be loaded"); }
 
-		input = new Input();
-		ui = new UI(this);
-		//new LocalMatch(this, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE);
+		new Input();
+		new UI(this);
 
 		frame = new JFrame(title);
 
@@ -111,7 +102,8 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	 */
 	public void paintComponent(Graphics graphics)
 	{
-		render(new BoardRenderer(graphics, GameConstants.leftOffset, GameConstants.rightOffset, GameConstants.tileSize));
+		super.paintComponent(graphics);
+        render(graphics);
 	}
 
 	/**
@@ -155,11 +147,11 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	 * @param renderer The renderer context
 	 */
 	@Override
-	public void render(BoardRenderer renderer)
+	public void render(Graphics graphics)
 	{
 		for (var renderable : renderables)
 		{
-			renderable.render(renderer);
+			renderable.render(graphics);
 		}
 	}
 

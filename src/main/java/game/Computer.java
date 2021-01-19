@@ -27,7 +27,7 @@ public class Computer extends Player
         aiHasGuessedCorrectlyState = new AiHasGuessedCorrectlyState(this);
         aiHasGuessedIncorrectlyState = new AiHasGuessedIncorrectlyState(this);
 
-        ownBoard = new Board(GameConstants.boardSize, GameConstants.rightOffset, GameConstants.tileSize, false, true);
+        ownBoard = new Board(GameConstants.boardSize, GameConstants.rightOffset, GameConstants.tileSize);
 
         setState(aiStartState);
     }

@@ -24,7 +24,7 @@ public enum ShipType
     SUPER_PATROL,
     DESTROYER,
     BATTLESHIP,
-    CARRIER,
+    CARRIER;
 
     public static boolean isShip(ShipType shipType)
     {

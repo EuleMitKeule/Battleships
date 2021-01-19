@@ -31,7 +31,7 @@ public abstract class Player implements IMatchListener
 
 		shipQueue = Resources.getShipQueue();
 
-		enemyBoard = new Board(GameConstants.boardSize, GameConstants.rightOffset, GameConstants.tileSize, false, false);
+		enemyBoard = new Board(GameConstants.boardSize, GameConstants.rightOffset, GameConstants.tileSize);
 
 		addListener(match);
 		match.addListener(this);

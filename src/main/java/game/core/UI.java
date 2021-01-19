@@ -1,10 +1,7 @@
 package game.core;
 
 import game.GameConstants;
-import game.IMatchListener;
 import game.LocalMatch;
-import game.Match;
-import game.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +11,6 @@ public class UI
 {    
     private JLabel shipCount;
     private Game game;
-    private Match match;
 
     /**
      * @param game The game window context
@@ -45,11 +41,11 @@ public class UI
         
         var startServerButton = new JButton("Start Server");
         startServerButton.setBounds(650, 425, 300, 50);
-        startServerButton.addActionListener(e -> onStartLocalButton(e));
+        startServerButton.addActionListener(e -> onStartServerButton(e));
         
         var joinServerButton = new JButton("Join Server");
         joinServerButton.setBounds(650, 500, 300, 50);
-        joinServerButton.addActionListener(e -> onStartLocalButton(e));
+        joinServerButton.addActionListener(e -> onJoinServerButton(e));
         
         game.add(joinServerButton);
         game.add(startServerButton);

@@ -16,6 +16,8 @@ public abstract class Match implements IUpdatable, IPlayerListener
     
     protected int leftShipCount;
     protected int rightShipCount;
+
+    private RoundTimer roundTimer;
     
     protected ArrayList<IMatchListener> listeners = new ArrayList<IMatchListener>();
 
@@ -32,24 +34,8 @@ public abstract class Match implements IUpdatable, IPlayerListener
         this.boardSize = boardSize;
 
         Game.addUpdatable(this);
+        roundTimer = new RoundTimer(this);
     }
-    
-    /**
-     * Gets invoked when a player placed a ship
-     */
-    // @Override
-    // public void onShipPlaced(Player player, Vector2Int position, ShipType shipType)
-    // {
-    	// var isLeftPlayer = player == leftPlayer;
-        // var board = isLeftPlayer ? leftBoard : rightBoard;
-
-        // board.placeShip(position, shipType);
-
-        // if (leftShipQueue.size() == 0 && rightShipQueue.size() == 0)
-        // {
-        // 	invokeUpdate(leftPlayer, false);
-        // }
-    // }
 
     @Override
     public void onClientBoard(Player player, Board board)
@@ -82,18 +68,24 @@ public abstract class Match implements IUpdatable, IPlayerListener
         }
 
         invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk);
+
+        roundTimer.start();
         
         if (leftShipCount == 0) 
         {
-                
+            invokeGameOver(Result.WIN_RIGHT);
         }
         else if (rightShipCount == 0) 
         {
-
+            invokeGameOver(Result.WIN_LEFT);
         }
-        
     }
     
+    public void onRoundTimerStopped()
+    {
+        System.out.println("Round timer stopped!");
+    }
+
     /**
      * Invokes the GuessingPlayerChanged event
      * @param player The player that guesses next
@@ -103,6 +95,14 @@ public abstract class Match implements IUpdatable, IPlayerListener
         for (var listener : listeners)
         {
             listener.onUpdate(lastPlayer, nextPlayer, position, isHit, isSunk);
+        }
+    }
+
+    protected void invokeGameOver(Result result)
+    {
+        for (var listener : listeners)
+        {
+            listener.onGameOver(result);
         }
     }
 

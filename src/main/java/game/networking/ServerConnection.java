@@ -15,11 +15,6 @@ public class ServerConnection
     private PrintWriter _outRight;
     private BufferedReader _inRight;
 
-    public final int port = GameConstants.port;
-
-    private String player1;
-    private String player2;
-    
     public ServerConnection()
     {
         try
@@ -32,8 +27,6 @@ public class ServerConnection
             _outLeft = new PrintWriter(_leftClientSocket.getOutputStream(), true);
             _inLeft = new BufferedReader(new InputStreamReader(_leftClientSocket.getInputStream()));
             System.out.println("left client joined");
-
-           
 
             // _rightClientSocket = _socket.accept();
             // _outRight = new PrintWriter(_rightClientSocket.getOutputStream(), true);
@@ -82,7 +75,7 @@ public class ServerConnection
         } 
         catch (Exception e) 
         {
-            //TODO: handle exception
+            
         }
     }
 }

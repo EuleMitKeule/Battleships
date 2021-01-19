@@ -1,52 +1,89 @@
 package game.core;
 
+import game.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class BoardRenderer
+public class BoardRenderer implements IRenderable
 {
-    private Graphics graphics;
-    private Vector2Int leftOffset;
-    private Vector2Int rightOffset;
+    private Vector2Int offset;
     private int tileSize;
+    private Board board;
 
     /**
-     * @param graphics The graphics context
-     * @param leftOffset The pixel offset of the left board
-     * @param rightOffset The pixel offset of the right board
+     * @param offset The pixel offset of the board
      * @param tileSize The pixel size of a tile
      */
-    public BoardRenderer(Graphics graphics, Vector2Int leftOffset, Vector2Int rightOffset, int tileSize)
+    public BoardRenderer(Board board, Vector2Int offset, int tileSize)
     {
-        this.graphics = graphics;
-        this.leftOffset = leftOffset;
-        this.rightOffset = rightOffset;
+        this.offset = offset;
         this.tileSize = tileSize;
+        this.board = board;
+
+        Game.addRenderable(this);
     }
 
-    /**
-     * Draws one cell of the left board
-     * @param image The sprite to draw
-     * @param cellPos The cell position to draw at
-     */
-    public void drawLeftField(BufferedImage image, Vector2Int cellPos)
+    public void dispose()
     {
-        var posX = cellPos.x * tileSize + leftOffset.x;
-        var posY = cellPos.y * tileSize + leftOffset.y;
-
-        graphics.drawImage(image, posX, posY, image.getWidth()/2, image.getHeight()/2, null);
+        Game.removeRenderable(this);
     }
 
-    /**
-     * Draws one cell of the right board
-     * @param image The sprite to draw
-     * @param position The cell position to draw at
-     */
-    public void drawRightField(BufferedImage image, Vector2Int position)
+    private void drawField(Graphics graphics, BufferedImage sprite, Vector2Int position)
     {
-        var posX = position.x * tileSize + rightOffset.x;
-        var posY = position.y * tileSize + rightOffset.y;
+        var posX = position.x * tileSize + offset.x;
+        var posY = position.y * tileSize + offset.y;
 
-        graphics.drawImage(image, posX, posY, image.getWidth()/2, image.getHeight()/2, null);
+        graphics.drawImage(sprite, posX, posY, sprite.getWidth() / 2, sprite.getHeight() / 2, null);
     }
+
+	/**
+	 * Gets invoked every render frame
+	 * @param renderer The renderer context
+	 */
+
+	@Override
+	public void render(Graphics graphics)
+	{
+		for (int x = 0; x < board.getSize().x; x++)
+		{
+			for (int y = 0; y < board.getSize().y; y++)
+			{
+				var ship = board.getShip(x, y);
+				var position = new Vector2Int(x, y);
+
+				var sprite = Resources.SPRITE_NULL;
+                
+                if (board.isGuessed(position))
+                {
+                    if (ShipType.isShip(ship)) sprite = Resources.SHIP_GUESSED_DUMMY;
+                    else sprite = Resources.WATER_GUESSED_DUMMY;
+                }
+                else
+                {
+                    switch (ship)
+                    {
+                        case WATER -> sprite = Resources.WATER_DUMMY;
+                        case PATROL -> sprite = Resources.PATROL;
+                        case SUPER_PATROL_FRONT -> sprite = Resources.SUPER_PATROL_FRONT;
+                        case SUPER_PATROL_BACK -> sprite = Resources.SUPER_PATROL_BACK;
+                        case DESTROYER_FRONT -> sprite = Resources.DESTROYER_FRONT;
+                        case DESTROYER_MID -> sprite = Resources.DESTROYER_MID;
+                        case DESTROYER_BACK -> sprite = Resources.DESTROYER_BACK;
+                        case BATTLESHIP_FRONT -> sprite = Resources.BATTLESHIP_FRONT;
+                        case BATTLESHIP_FRONT_MID -> sprite = Resources.BATTLESHIP_FRONT_MID;
+                        case BATTLESHIP_BACK_MID -> sprite = Resources.BATTLESHIP_BACK_MID;
+                        case BATTLESHIP_BACK -> sprite = Resources.BATTLESHIP_BACK;
+                        case CARRIER_FRONT -> sprite = Resources.CARRIER_FRONT;
+                        case CARRIER_FRONT_MID -> sprite = Resources.CARRIER_FRONT_MID;
+                        case CARRIER_MID -> sprite = Resources.CARRIER_MID;
+                        case CARRIER_BACK_MID -> sprite = Resources.CARRIER_BACK_MID;
+                        case CARRIER_BACK -> sprite = Resources.CARRIER_BACK;
+                        default -> sprite = Resources.SPRITE_NULL;
+                    }
+                }
+
+                drawField(graphics, sprite, position);
+			}
+		}
+	}
 }
