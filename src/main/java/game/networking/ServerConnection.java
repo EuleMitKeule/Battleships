@@ -17,6 +17,9 @@ public class ServerConnection
 
     public final int port = GameConstants.port;
 
+    private String player1;
+    private String player2;
+    
     public ServerConnection()
     {
         try

@@ -8,4 +8,6 @@ public interface IMatchListener
     default void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk) { }
 
     default void onPlayerAdded(Player player, boolean isLeftPlayer) { }
+
+    default void onGameOver(Result result) { }
 }

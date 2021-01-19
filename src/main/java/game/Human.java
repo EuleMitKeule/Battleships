@@ -18,7 +18,7 @@ public class Human extends Player implements IInputListener {
      */
     public Human(String name, Match match) {
         super(name, match);
-        this.ownBoard = new Board(GameConstants.boardSize, new Vector2Int(64, 64), 64, true, true);
+        this.ownBoard = new Board(GameConstants.boardSize, GameConstants.leftOffset, GameConstants.tileSize, true, true);
 
         curShipType = shipQueue.pop();
 

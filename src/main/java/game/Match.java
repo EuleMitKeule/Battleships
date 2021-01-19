@@ -31,8 +31,6 @@ public abstract class Match implements IUpdatable, IPlayerListener
     {
         this.boardSize = boardSize;
 
-		new UI(game, this);
-
         Game.addUpdatable(this);
     }
     
@@ -77,10 +75,23 @@ public abstract class Match implements IUpdatable, IPlayerListener
         
         var nextPlayer = isHit ? player : (isLeftPlayer ? rightPlayer : leftPlayer);
 
-        if (isHit) 
-            invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk);
-        else 
-            invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk);
+        if (isSunk)
+        {
+            if (isLeftPlayer) leftShipCount -= 1;
+            else leftShipCount -= 1;
+        }
+
+        invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk);
+        
+        if (leftShipCount == 0) 
+        {
+                
+        }
+        else if (rightShipCount == 0) 
+        {
+
+        }
+        
     }
     
     /**

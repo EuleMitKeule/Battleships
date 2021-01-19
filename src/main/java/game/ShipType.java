@@ -2,11 +2,8 @@ package game;
 
 public enum ShipType
 {
+    WATER,
     PATROL,
-    SUPER_PATROL,
-    DESTROYER,
-    BATTLESHIP,
-    CARRIER,
     SUPER_PATROL_FRONT,
     SUPER_PATROL_BACK,
     DESTROYER_FRONT,
@@ -21,5 +18,31 @@ public enum ShipType
     CARRIER_MID,
     CARRIER_BACK_MID,
     CARRIER_BACK,
-    SHIP_DESTROYED
+
+    //only used in our client, not for network purposes
+
+    SUPER_PATROL,
+    DESTROYER,
+    BATTLESHIP,
+    CARRIER,
+
+    public static boolean isShip(ShipType shipType)
+    {
+        return 
+            shipType == PATROL ||
+            shipType == SUPER_PATROL_FRONT ||
+            shipType == SUPER_PATROL_BACK ||
+            shipType == DESTROYER_FRONT ||
+            shipType == DESTROYER_MID ||
+            shipType == DESTROYER_BACK ||
+            shipType == BATTLESHIP_FRONT ||
+            shipType == BATTLESHIP_FRONT_MID ||
+            shipType == BATTLESHIP_BACK_MID ||
+            shipType == BATTLESHIP_BACK ||
+            shipType == CARRIER_FRONT ||
+            shipType == CARRIER_FRONT_MID ||
+            shipType == CARRIER_MID ||
+            shipType == CARRIER_BACK_MID ||
+            shipType == CARRIER_BACK;
+    }
 }

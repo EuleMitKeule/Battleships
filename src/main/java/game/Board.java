@@ -7,70 +7,29 @@ import java.util.ArrayList;
 public class Board implements IRenderable
 {
 	private ShipType[][] ships;
-	private FieldState[][] fields;
+	private boolean[][] guessed;
 
 	private final Vector2Int size;
 	private final Vector2Int offset;
 	private final int tileSize;
-	private boolean owned;
-	private boolean isRendered;
 
 	/**
 	 * @param size The cell dimensions of the board
 	 * @param offset The pixel offset of the board
 	 * @param tileSize The pixel size of one tile
-	 * @param owned Whether the board is assigned to the player running the application
 	 */
-	public Board(Vector2Int size, Vector2Int offset, int tileSize, boolean owned, boolean isRendered)
+	public Board(Vector2Int size, Vector2Int offset, int tileSize)
 	{
 		Game.addRenderable(this);
 
 		this.size = size;
 		this.offset = offset;
 		this.tileSize = tileSize;
-		this.owned = owned;
-		this.isRendered = isRendered;
 
-		fields = new FieldState[size.x][size.y];
 		ships = new ShipType[size.x][size.y];
+		guessed = new boolean[size.x][size.y];
 
-		setFields(FieldState.WATER);
-	}
-	
-	/**
-	 * Sets a field on the board to a new field state
-	 * @param cellPos The cell position to set
-	 * @param state The field state to assign
-	 */
-	public void setField(Vector2Int cellPos, FieldState state)
-	{
-		fields[cellPos.x][cellPos.y] = state;
-	}
-
-	/**
-	 * Sets a field on the board to a new field state
-	 * @param x The x cell coordinate
-	 * @param y The y cell coordinate
-	 * @param state The field state to assign
-	 */
-	public void setField(int x, int y, FieldState state)
-	{
-		fields[x][y] = state;
-	}
-
-	/**
-	 * Sets all fields on the board to a new field state
-	 * @param state The field state to assign
-	 */
-	public void setFields(FieldState state)
-	{
-		for(int x = 0; x < size.x; x++)
-		{
-			for (int y = 0; y < size.y; y++)
-			{
-				setField(x, y, state);
-			}
-		}
+		setShips(ShipType.WATER);
 	}
 	
 	/**
@@ -81,17 +40,6 @@ public class Board implements IRenderable
 	public void setShip(Vector2Int cellPos, ShipType shipType)
 	{
 		ships[cellPos.x][cellPos.y] = shipType;
-	}
-
-	/**
-	 * Sets a field on the board to a new ship state
-	 * @param x The x cell coordinate
-	 * @param y The y cell coordinate
-	 * @param shipType The ship type to assign
-	 */
-	public void setShip(int x, int y, ShipType shipType)
-	{
-		ships[x][y] = shipType;
 	}
 
 	/**
@@ -149,55 +97,6 @@ public class Board implements IRenderable
 	{
 		return ships;
 	}
-	
-	/**
-	 * @param cellPos The cell position to get
-	 * @return Returns the field state of a field on the board or null if out of bounds
-	 */
-	public FieldState getField(Vector2Int cellPos)
-	{
-		try
-		{
-			return fields[cellPos.x][cellPos.y];
-		}
-		catch (IndexOutOfBoundsException ex)
-		{
-			return null;
-		}
-	}
-	
-	/**
-	 * @param x The x cell coordinate to get
-	 * @param y The y cell coordinate to get
-	 * @return Returns the field state of a field on the board or null if out of bounds
-	 */
-	public FieldState getField(int x, int y)
-	{
-		try
-		{
-			return fields[x][y];
-		}
-		catch (IndexOutOfBoundsException ex)
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * @return Returns the field state 2D-array
-	 */
-	public FieldState[][] getFields()
-	{
-		return fields;
-	}
-
-	/**
-	 * @return Returns the cell dimensions of the board
-	 */
-	public Vector2Int getSize()
-	{
-		return size;
-	}
 
 	/**
 	 * @param cellPos The cell position to check
@@ -209,25 +108,27 @@ public class Board implements IRenderable
 		switch (shipType)
 		{
 			case PATROL:
-				return getField(cellPos) == FieldState.WATER;
+				return !ShipType.isShip(getShip(cellPos));
 			case SUPER_PATROL:
-				return getField(cellPos) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER;
+				return 
+					!ShipType.isShip(getShip(cellPos)) &&
+					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right()))
+						getField(cellPos.add(Vector2Int.right())) == ShipType.WATER;
 			case DESTROYER:
-				return getField(cellPos) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right().times(2))) == FieldState.WATER;
+				return getField(cellPos) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right())) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(2))) == ShipType.WATER;
 			case BATTLESHIP:
-				return getField(cellPos) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right().times(2))) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right().times(3))) == FieldState.WATER;
+				return getField(cellPos) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right())) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(2))) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(3))) == ShipType.WATER;
 			case CARRIER:
-				return getField(cellPos) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right())) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right().times(2))) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right().times(3))) == FieldState.WATER &&
-						getField(cellPos.add(Vector2Int.right().times(4))) == FieldState.WATER;
+				return getField(cellPos) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right())) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(2))) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(3))) == ShipType.WATER &&
+						getField(cellPos.add(Vector2Int.right().times(4))) == ShipType.WATER;
 			default:
 				return false;
 		}
@@ -245,47 +146,32 @@ public class Board implements IRenderable
 			switch (shipType)
 			{
 				case PATROL:
-					setField(cellPos, FieldState.SHIP);
 					setShip(cellPos, ShipType.PATROL);
 					break;
 				case SUPER_PATROL:
-					setField(cellPos, FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
 					setShip(cellPos, ShipType.SUPER_PATROL_FRONT);
 					setShip(cellPos.add(Vector2Int.right()), ShipType.SUPER_PATROL_BACK);
 					break;
 				case DESTROYER:
-					setField(cellPos, FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right().times(2)), FieldState.SHIP);
 					setShip(cellPos, ShipType.DESTROYER_FRONT);
 					setShip(cellPos.add(Vector2Int.right()), ShipType.DESTROYER_MID);
 					setShip(cellPos.add(Vector2Int.right().times(2)), ShipType.DESTROYER_BACK);
 					break;
 				case BATTLESHIP:
-					setField(cellPos, FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right().times(2)), FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right().times(3)), FieldState.SHIP);
 					setShip(cellPos, ShipType.BATTLESHIP_FRONT);
 					setShip(cellPos.add(Vector2Int.right()), ShipType.BATTLESHIP_FRONT_MID);
 					setShip(cellPos.add(Vector2Int.right().times(2)), ShipType.BATTLESHIP_BACK_MID);
 					setShip(cellPos.add(Vector2Int.right().times(3)), ShipType.BATTLESHIP_BACK);
 					break;
 				case CARRIER:
-					setField(cellPos, FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right()), FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right().times(2)), FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right().times(3)), FieldState.SHIP);
-					setField(cellPos.add(Vector2Int.right().times(4)), FieldState.SHIP);
 					setShip(cellPos, ShipType.CARRIER_FRONT);
 					setShip(cellPos.add(Vector2Int.right()), ShipType.CARRIER_FRONT_MID);
 					setShip(cellPos.add(Vector2Int.right().times(2)), ShipType.CARRIER_MID);
 					setShip(cellPos.add(Vector2Int.right().times(3)), ShipType.CARRIER_BACK_MID);
 					setShip(cellPos.add(Vector2Int.right().times(4)), ShipType.CARRIER_BACK);
 					break;
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	}
@@ -296,33 +182,7 @@ public class Board implements IRenderable
 	 */
 	public boolean canGuess(Vector2Int cellPos)
 	{
-		return inBounds(cellPos) && (getField(cellPos) == FieldState.WATER || getField(cellPos) == FieldState.SHIP);
-	}
-
-	/**
-	 * Guesses a field on the board
-	 * @param cellPos The cell position to guess
-	 * @return Returns whether a ship was hit
-	 */
-	public void guessField(Vector2Int cellPos) 
-	{
-		switch(getField(cellPos)) 
-    	{
-			case WATER:
-
-				setField(cellPos, FieldState.WATER_GUESSED);
-				
-				break;
-			case SHIP:
-
-				setField(cellPos, FieldState.SHIP_GUESSED);
-	    		setShip(cellPos, ShipType.SHIP_DESTROYED);
-				
-				break;
-	    	default:
-	    		break;
-    	}
-		
+		return inBounds(cellPos) && (getShip(cellPos) == ShipType.WATER || getField(cellPos) == ShipType.SHIP);
 	}
 
 	public boolean isHit(Vector2Int cellPos)
@@ -331,13 +191,13 @@ public class Board implements IRenderable
     	{
 			case WATER:
 
-				setField(cellPos, FieldState.WATER_GUESSED);
+				setField(cellPos, ShipType.WATER_GUESSED);
 				
 				return false;
 				
 			case SHIP:
 
-				setField(cellPos, FieldState.SHIP_GUESSED);
+				setField(cellPos, ShipType.SHIP_GUESSED);
 
 	    		setShip(cellPos, ShipType.SHIP_DESTROYED);
 	    		

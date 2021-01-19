@@ -16,13 +16,14 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	 */
 	private static final long serialVersionUID = -6081721995438708904L;
 
-	public static final Vector2Int GAME_SIZE = new Vector2Int(1472, 768);
+	public static final Vector2Int GAME_SIZE = new Vector2Int(1600, 900);
 	public static final Vector2Int BOARD_SIZE = new Vector2Int(10, 10);
 
 	private static ArrayList<IUpdatable> updatables = new ArrayList<IUpdatable>();
 	private static ArrayList<IRenderable> renderables = new ArrayList<IRenderable>();
 
 	private static Input input;
+	private static UI ui;
 
 	private JFrame frame;
 	private Timer updateTimer;
@@ -46,7 +47,8 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 		}
 
 		input = new Input();
-		new LocalMatch(this, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE);
+		ui = new UI(this);
+		//new LocalMatch(this, new Vector2Int(64, 64), new Vector2Int(768, 64), 64, BOARD_SIZE);
 
 		frame = new JFrame(title);
 
@@ -109,7 +111,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	 */
 	public void paintComponent(Graphics graphics)
 	{
-		render(new BoardRenderer(graphics, new Vector2Int(64, 64), new Vector2Int(768, 64), 64));
+		render(new BoardRenderer(graphics, GameConstants.leftOffset, GameConstants.rightOffset, GameConstants.tileSize));
 	}
 
 	/**

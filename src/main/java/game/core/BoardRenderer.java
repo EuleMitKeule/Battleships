@@ -34,7 +34,7 @@ public class BoardRenderer
         var posX = cellPos.x * tileSize + leftOffset.x;
         var posY = cellPos.y * tileSize + leftOffset.y;
 
-        graphics.drawImage(image, posX, posY, image.getWidth(), image.getHeight(), null);
+        graphics.drawImage(image, posX, posY, image.getWidth()/2, image.getHeight()/2, null);
     }
 
     /**
@@ -47,6 +47,6 @@ public class BoardRenderer
         var posX = position.x * tileSize + rightOffset.x;
         var posY = position.y * tileSize + rightOffset.y;
 
-        graphics.drawImage(image, posX, posY, image.getWidth(), image.getHeight(), null);
+        graphics.drawImage(image, posX, posY, image.getWidth()/2, image.getHeight()/2, null);
     }
 }
