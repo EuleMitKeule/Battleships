@@ -50,7 +50,11 @@ public abstract class Player implements IMatchListener
 	@Override
 	public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk)
 	{
-		isGuessing = nextPlayer == this;
+		if (nextPlayer == null)
+		{
+			isGuessing = false;
+		} 
+		else isGuessing = nextPlayer == this;
 	}
 
 	@Override
@@ -75,8 +79,10 @@ public abstract class Player implements IMatchListener
 	 */
 	protected void invokeClientBoard(Player player, Board board)
 	{
-		for (var listener : listeners)
-		{
+        for (int i = 0; i < listeners.size(); i++)
+        {
+            var listener = listeners.get(i);
+            if (listener == null) return;
 			listener.onClientBoard(player, board);
 		}
 	}
@@ -87,8 +93,10 @@ public abstract class Player implements IMatchListener
 	 */
 	protected void invokeMove(Vector2Int cellPos)
 	{
-		for (var listener : listeners)
+		for (int i = 0; i < listeners.size(); i++)
 		{
+			var listener = listeners.get(i);
+			if (listener == null) return;
 			listener.onMove(this, cellPos);
 		}
 	}

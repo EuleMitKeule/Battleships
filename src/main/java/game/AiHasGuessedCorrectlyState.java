@@ -16,7 +16,6 @@ public class AiHasGuessedCorrectlyState implements IAiState
     {
         if (isSunk)
         {
-            System.out.println("Schiff versenkt.");
             _computer.setState(_computer.aiStartState);
             _computer.state.onUpdate(lastPlayer, nextPlayer, cellPos, false, false);
             return;
@@ -24,7 +23,6 @@ public class AiHasGuessedCorrectlyState implements IAiState
 
         if (!isHit)
         {
-            System.out.println("Nicht getroffen.");
             _computer.setState(_computer.aiHasGuessedIncorrectlyState);
             _computer.state.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
             return;
@@ -34,13 +32,11 @@ public class AiHasGuessedCorrectlyState implements IAiState
 
         if (_computer.enemyBoard.canGuess(nextPos))
         {
-            System.out.println("Guess in Richtung " + _computer.curDirection);
             _computer.lastGuessPos = nextPos;
             _computer.invokeMove(nextPos);
         }
         else
         {
-            System.out.println("Kein guess mehr möglich, starte von vorne");
             _computer.setState(_computer.aiStartState);
             _computer.state.onUpdate(lastPlayer, nextPlayer, cellPos, false, false);
             return;

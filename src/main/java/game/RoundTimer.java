@@ -12,7 +12,6 @@ public class RoundTimer
 
     public void start()
     {
-        System.out.println("5 Second Round Timer has started!");
         thread = new Thread(new Runnable()
         {
             @Override
@@ -21,7 +20,6 @@ public class RoundTimer
                 try 
                 {
                     Thread.sleep(5000);
-                    System.out.println("5 Seconds are over!");
                     match.onRoundTimerStopped();
                 } 
                 catch (InterruptedException e)

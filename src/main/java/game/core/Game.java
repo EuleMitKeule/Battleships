@@ -36,7 +36,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	public Game(String title, int targetUpdates, int targetRenders)
 	{
 		try { Resources.Initialize(); }
-		catch (Exception ex) { System.out.println("Resources could not be loaded"); }
+		catch (Exception ex) { System.out.println("Resources could not be loaded"); ex.printStackTrace(); }
 
 		input = new Input();
 		new UI(this);

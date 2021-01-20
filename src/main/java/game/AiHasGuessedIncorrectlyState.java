@@ -25,11 +25,9 @@ public class AiHasGuessedIncorrectlyState implements IAiState
         {
             _computer.lastGuessPos = nextPos;
             _computer.invokeMove(nextPos);
-            System.out.println("Versucht es in die andere Richtung: " + _computer.curDirection);
         }
         else
         {
-            System.out.println("Andere Richtung nicht möglich, startet von vorne");
             _computer.setState(_computer.aiStartState);
             _computer.state.onUpdate(lastPlayer, nextPlayer, cellPos, false, false);
             return;

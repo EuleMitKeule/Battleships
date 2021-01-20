@@ -60,29 +60,26 @@ public abstract class Match implements IPlayerListener
 
         if (leftBoard != null && rightBoard != null)
         {
-            System.out.println("Both players have assigned their board!");
-            System.out.println("Starting the game!");
-
             curPlayer = leftPlayer;
-
-            invokeGameSetup(leftPlayer);
 
             matchTimer.start();
             roundTimer.start();
+            
+            invokeGameSetup(leftPlayer);
         }
     }
 
     @Override
     public void onMove(Player player, Vector2Int cellPos)
     {
-        System.out.println("Player " + player + " made a move!");
-
     	var isLeftPlayer = player == leftPlayer;
     	var board = isLeftPlayer ? rightBoard : leftBoard;
 
         var isSunk = board.isSinking(cellPos);
         var isHit = board.isHit(cellPos);
         
+        board.guessField(cellPos);
+
         if (isHit)
         {
             if (isLeftPlayer) leftScore += 1;
@@ -93,17 +90,17 @@ public abstract class Match implements IPlayerListener
         {
             if (isLeftPlayer) leftScore += 1;
             else rightScore += 1;
+            
+            if (isLeftPlayer) leftShipCount -= 1;
+            else rightShipCount -= 1;
+            
+            System.out.println("Left ship count now at: " + leftShipCount);
+            System.out.println("Right ship count now at: " + rightShipCount);
         }
 
         var nextPlayer = isHit ? player : (isLeftPlayer ? rightPlayer : leftPlayer);
 
         curPlayer = nextPlayer;
-
-        if (isSunk)
-        {
-            if (isLeftPlayer) leftShipCount -= 1;
-            else leftShipCount -= 1;
-        }
 
         roundTimer.restart();
         
@@ -127,8 +124,6 @@ public abstract class Match implements IPlayerListener
     {
         var isLeftPlayer = curPlayer == leftPlayer;
         
-        System.out.println("Player " + curPlayer.name + " didn't make a turn in time!");
-
         invokeLateMove();
         invokeUpdate(curPlayer, isLeftPlayer ? rightPlayer : leftPlayer, null, false, false);
     }
@@ -149,17 +144,22 @@ public abstract class Match implements IPlayerListener
      */
     protected void invokeUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk)
     {
-		System.out.println("Player " + nextPlayer.name + " has to make a turn!");
-        for (var listener : listeners)
+        for (int i = 0; i < listeners.size(); i++)
         {
+            var listener = listeners.get(i);
+            if (listener == null) return;
             listener.onUpdate(lastPlayer, nextPlayer, position, isHit, isSunk);
         }
     }
 
     protected void invokeGameOver(Result result)
     {
-        for (var listener : listeners)
+        System.out.println("The game has ended in a "+ result.toString() + "!");
+
+        for (int i = 0; i < listeners.size(); i++)
         {
+            var listener = listeners.get(i);
+            if (listener == null) return;
             listener.onGameOver(result);
         }
 
@@ -173,24 +173,30 @@ public abstract class Match implements IPlayerListener
      */
     protected void invokePlayerAdded(Player player, boolean isLeftPlayer)
     {
-        for (var listener : listeners)
+        for (int i = 0; i < listeners.size(); i++)
         {
+            var listener = listeners.get(i);
+            if (listener == null) return;
             listener.onPlayerAdded(player, isLeftPlayer);
         }
     }
 
     protected void invokeGameSetup(Player player)
     {
-        for (var listener : listeners)
+        for (int i = 0; i < listeners.size(); i++)
         {
+            var listener = listeners.get(i);
+            if (listener == null) return;
             listener.onGameSetup(player);
         }
     }
 
     protected void invokeLateMove()
     {
-        for (var listener : listeners)
+        for (int i = 0; i < listeners.size(); i++)
         {
+            var listener = listeners.get(i);
+            if (listener == null) return;
             listener.onLateMove();
         }
     }

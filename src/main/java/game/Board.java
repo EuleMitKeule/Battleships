@@ -214,129 +214,132 @@ public class Board implements IRenderable
 	public boolean isSinking(Vector2Int cellPos)
 	{
 		var shipType = getShip(cellPos);
+		var posRight = cellPos.add(Vector2Int.right());
+		var posRightTwo = cellPos.add(Vector2Int.right().times(2));
+		var posRightThree = cellPos.add(Vector2Int.right().times(3));
+		var posRightFour = cellPos.add(Vector2Int.right().times(4));
+		var posLeft = cellPos.add(Vector2Int.left());
+		var posLeftTwo = cellPos.add(Vector2Int.left().times(2));
+		var posLeftThree = cellPos.add(Vector2Int.left().times(3));
+		var posLeftFour = cellPos.add(Vector2Int.left().times(4));
 		
-		if (shipType == ShipType.PATROL) return true;
-		
-		if (shipType == ShipType.SUPER_PATROL_FRONT) 
+		try 
 		{
-			if (getShip(cellPos.add(Vector2Int.right())) != ShipType.SUPER_PATROL_BACK) return true;
-		}
-		
-		if (shipType == ShipType.SUPER_PATROL_BACK) 
+			if (shipType == ShipType.PATROL) return true;
+			
+			if (shipType == ShipType.SUPER_PATROL_FRONT) 
+			{
+				return guessed[posRight.x][posRight.y];
+			}
+			
+			if (shipType == ShipType.SUPER_PATROL_BACK) 
+			{
+				return guessed[posLeft.x][posLeft.y];
+			}
+			
+			if (shipType == ShipType.DESTROYER_FRONT) 
+			{
+				return
+					guessed[posRight.x][posRight.y] &&
+					guessed[posRightTwo.x][posRightTwo.y];
+			}
+				
+			if (shipType == ShipType.DESTROYER_MID) 
+			{
+				return
+					guessed[posRight.x][posRight.y] &&
+					guessed[posLeft.x][posLeft.y];
+			}
+			
+			if (shipType == ShipType.DESTROYER_BACK) 
+			{
+				return
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posLeftTwo.x][posLeftTwo.y];
+			}
+			
+			if (shipType == ShipType.BATTLESHIP_FRONT) 
+			{
+				return
+					guessed[posRight.x][posRight.y] &&
+					guessed[posRightTwo.x][posRightTwo.y] &&
+					guessed[posRightThree.x][posRightThree.y];
+			}
+			
+			if (shipType == ShipType.BATTLESHIP_FRONT_MID) 
+			{
+				return
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posRight.x][posRight.y] &&
+					guessed[posRightTwo.x][posRightTwo.y];
+			}
+			
+			if (shipType == ShipType.BATTLESHIP_BACK_MID) 
+			{
+				return
+					guessed[posRight.x][posRight.y] &&
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posLeftTwo.x][posLeftTwo.y];
+			}
+			
+			if (shipType == ShipType.BATTLESHIP_BACK) 
+			{
+				return
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posLeftTwo.x][posLeftTwo.y] &&
+					guessed[posLeftThree.x][posLeftThree.y];
+			}
+			
+			if (shipType == ShipType.CARRIER_FRONT) 
+			{
+				return
+					guessed[posRight.x][posRight.y] &&
+					guessed[posRightTwo.x][posRightTwo.y] &&
+					guessed[posRightThree.x][posRightThree.y] &&
+					guessed[posRightFour.x][posRightFour.y];
+			}
+			
+			if (shipType == ShipType.CARRIER_FRONT_MID) 
+			{
+				return
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posRight.x][posRight.y] &&
+					guessed[posRightTwo.x][posRightTwo.y] &&
+					guessed[posRightThree.x][posRightThree.y];
+			}
+			
+			if (shipType == ShipType.CARRIER_MID) 
+			{
+				return
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posLeftTwo.x][posLeftTwo.y] &&
+					guessed[posRight.x][posRight.y] &&
+					guessed[posRightTwo.x][posRightTwo.y];
+			}
+			
+			if (shipType == ShipType.CARRIER_BACK_MID) 
+			{
+				return
+					guessed[posRight.x][posRight.y] &&
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posLeftTwo.x][posLeftTwo.y] &&
+					guessed[posLeftThree.x][posLeftThree.y];
+			}
+			
+			if (shipType == ShipType.CARRIER_BACK) 
+			{
+				return
+					guessed[posLeft.x][posLeft.y] &&
+					guessed[posLeftTwo.x][posLeftTwo.y] &&
+					guessed[posLeftThree.x][posLeftThree.y] &&
+					guessed[posLeftFour.x][posLeftFour.y];
+			}
+			return false;
+		} 
+		catch (IndexOutOfBoundsException e) 
 		{
-			if (getShip(cellPos.add(Vector2Int.left())) != ShipType.SUPER_PATROL_FRONT) return true;
+			return false;
 		}
-		
-		if (shipType == ShipType.DESTROYER_FRONT) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.DESTROYER_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.DESTROYER_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.DESTROYER_MID) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.DESTROYER_BACK &&
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.DESTROYER_FRONT
-				) return true;
-		}
-		
-		if (shipType == ShipType.DESTROYER_BACK) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.DESTROYER_MID &&
-				getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.DESTROYER_FRONT
-				) return true;
-		}
-		
-		if (shipType == ShipType.BATTLESHIP_FRONT) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.BATTLESHIP_FRONT_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.BATTLESHIP_BACK_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(3))) != ShipType.BATTLESHIP_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.BATTLESHIP_FRONT_MID) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.BATTLESHIP_FRONT &&
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.BATTLESHIP_BACK_MID &&
-				getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.BATTLESHIP_BACK_MID) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.BATTLESHIP_FRONT_MID &&
-				getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_FRONT &&
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.BATTLESHIP_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.BATTLESHIP_BACK) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.BATTLESHIP_BACK_MID &&
-				getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.BATTLESHIP_FRONT_MID &&
-				getShip(cellPos.add(Vector2Int.left().times(3))) != ShipType.BATTLESHIP_FRONT
-				) return true;
-		}
-		
-		if (shipType == ShipType.CARRIER_FRONT) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_FRONT_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(4))) != ShipType.CARRIER_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.CARRIER_FRONT_MID) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(3))) != ShipType.CARRIER_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.CARRIER_MID) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_FRONT &&
-				getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_BACK_MID &&
-				getShip(cellPos.add(Vector2Int.right().times(2))) != ShipType.CARRIER_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.CARRIER_BACK_MID) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left().times(3))) != ShipType.CARRIER_FRONT &&
-				getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_FRONT_MID &&
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_MID &&
-				getShip(cellPos.add(Vector2Int.right())) != ShipType.CARRIER_BACK
-				) return true;
-		}
-		
-		if (shipType == ShipType.CARRIER_BACK) 
-		{
-			if (
-				getShip(cellPos.add(Vector2Int.left().times(4))) != ShipType.CARRIER_FRONT &&
-				getShip(cellPos.add(Vector2Int.left().times(3))) != ShipType.CARRIER_FRONT_MID &&
-				getShip(cellPos.add(Vector2Int.left().times(2))) != ShipType.CARRIER_MID &&
-				getShip(cellPos.add(Vector2Int.left())) != ShipType.CARRIER_BACK_MID
-				) return true;
-		}
-		return false;
 	}
 
 	/**
@@ -368,8 +371,8 @@ public class Board implements IRenderable
         if (inBounds(worldPos))
         {
             return new Vector2Int(
-				(int)Math.floor((worldPos.x - offset.x) / tileSize),
-				(int)Math.floor((worldPos.y - offset.y) / tileSize)
+				(int)Math.floor((worldPos.x - offset.x) / (tileSize * GameConstants.scale)),
+				(int)Math.floor((worldPos.y - offset.y) / (tileSize * GameConstants.scale))
 				);
         }
         else return null;

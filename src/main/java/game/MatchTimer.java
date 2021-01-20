@@ -12,7 +12,6 @@ public class MatchTimer
 
     public void start()
     {
-        System.out.println("5 Minute Match Timer has started!");
         thread = new Thread(new Runnable()
         {
             @Override
@@ -21,7 +20,6 @@ public class MatchTimer
                 try 
                 {
                     Thread.sleep(300000);
-                    System.out.println("5 Minutes are over!");
                     match.onMatchTimerStopped();
                 } 
                 catch (InterruptedException e)

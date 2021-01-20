@@ -69,7 +69,6 @@ public class Computer extends Player
         
         if (isGuessing)
         {
-            System.out.println("AI is making it's turn!");
             state.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
         } 
     }
