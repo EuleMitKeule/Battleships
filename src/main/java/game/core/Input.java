@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class Input implements KeyListener, MouseListener
 {
+    
     private static ArrayList<IInputListener> listeners = new ArrayList<IInputListener>();
 
     @Override

@@ -46,6 +46,7 @@ public class Board implements IRenderable
 	 */
 	public void setShip(Vector2Int cellPos, ShipType shipType)
 	{
+		if (!inBounds(cellPos)) return;
 		ships[cellPos.x][cellPos.y] = shipType;
 	}
 

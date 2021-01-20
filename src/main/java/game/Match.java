@@ -48,6 +48,12 @@ public abstract class Match implements IUpdatable, IPlayerListener
         {
             rightBoard = board;
         }
+
+        if (leftBoard != null && rightBoard != null)
+        {
+            invokeGameSetup(leftPlayer);
+            roundTimer.start();
+        }
     }
 
     @Override
@@ -67,17 +73,21 @@ public abstract class Match implements IUpdatable, IPlayerListener
             else leftShipCount -= 1;
         }
 
-        invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk);
-
-        roundTimer.start();
+        roundTimer.restart();
         
         if (leftShipCount == 0) 
         {
+            invokeUpdate(player, null, cellPos, isHit, isSunk);
             invokeGameOver(Result.WIN_RIGHT);
         }
         else if (rightShipCount == 0) 
         {
+            invokeUpdate(player, null, cellPos, isHit, isSunk);
             invokeGameOver(Result.WIN_LEFT);
+        }
+        else
+        {
+            invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk);
         }
     }
     

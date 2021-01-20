@@ -16,6 +16,7 @@ public class BoardRenderer implements IRenderable
      */
     public BoardRenderer(Board board, Vector2Int offset, int tileSize)
     {
+        System.out.println("Hier bin ich im constructor");
         this.offset = offset;
         this.tileSize = tileSize;
         this.board = board;
