@@ -35,10 +35,10 @@ public class Board implements IRenderable
 	public boolean isGuessed(Vector2Int cellPos) 
 	{
 		if (!inBounds(cellPos)) return false; 
-
+		
 		return guessed[cellPos.x][cellPos.y]; 
 	}
-
+	
 	/**
 	 * Sets a field on the board to a new ship state
 	 * @param cellPos The cell position to set
@@ -46,6 +46,8 @@ public class Board implements IRenderable
 	 */
 	public void setShip(Vector2Int cellPos, ShipType shipType)
 	{
+		if (!inBounds(cellPos)) return; 
+
 		ships[cellPos.x][cellPos.y] = shipType;
 	}
 
