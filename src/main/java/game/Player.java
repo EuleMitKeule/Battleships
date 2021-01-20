@@ -53,6 +53,12 @@ public abstract class Player implements IMatchListener
 		isGuessing = nextPlayer == this;
 	}
 
+	@Override
+	public void onGameOver(Result result)
+	{
+		dispose();
+	}
+
 	/**
 	 * 
 	 * @return Returns the name of the player
@@ -103,5 +109,10 @@ public abstract class Player implements IMatchListener
 	public void removeListener(IPlayerListener listener)
 	{
 		listeners.remove(listener);
+	}
+
+	public void dispose()
+	{
+		match.removeListener(this);
 	}
 }

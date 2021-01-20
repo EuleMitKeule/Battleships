@@ -9,5 +9,10 @@ public interface IMatchListener
 
     default void onPlayerAdded(Player player, boolean isLeftPlayer) { }
 
+    default void onNameExists() { }
+
+    default void onLateMove() { }
+
     default void onGameOver(Result result) { }
+
 }

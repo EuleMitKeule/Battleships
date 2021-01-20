@@ -32,11 +32,14 @@ public class Human extends Player implements IInputListener {
     {
         super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
 
-        if (lastPlayer != this) ownBoard.guessField(cellPos);
-        else
+        if (cellPos != null)
         {
-            enemyBoard.setShip(cellPos, isHit ? ShipType.PATROL : ShipType.WATER );
-            enemyBoard.guessField(cellPos);
+            if (lastPlayer != this) ownBoard.guessField(cellPos);
+            else
+            {
+                enemyBoard.setShip(cellPos, isHit ? ShipType.PATROL : ShipType.WATER );
+                enemyBoard.guessField(cellPos);
+            }
         }
     }
 

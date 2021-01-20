@@ -40,7 +40,6 @@ public class Input implements KeyListener, MouseListener
     {
         if (e.getButton() == MouseEvent.BUTTON1)
         {
-            System.out.println("maus");
             var mousePos = new Vector2(e.getPoint().x, e.getPoint().y);
             invokeMouseDown(mousePos);
         }

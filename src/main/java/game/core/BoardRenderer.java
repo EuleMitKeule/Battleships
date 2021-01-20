@@ -16,7 +16,6 @@ public class BoardRenderer implements IRenderable
      */
     public BoardRenderer(Board board, Vector2Int offset, int tileSize)
     {
-        System.out.println("Hier bin ich im constructor");
         this.offset = offset;
         this.tileSize = tileSize;
         this.board = board;
@@ -30,11 +29,11 @@ public class BoardRenderer implements IRenderable
     }
 
     private void drawField(Graphics graphics, BufferedImage sprite, Vector2Int position)
-    {
-        var posX = position.x * tileSize + offset.x;
-        var posY = position.y * tileSize + offset.y;
+    {        
+        var posX = (int)(position.x * tileSize * GameConstants.scale  + offset.x);
+        var posY = (int)(position.y * tileSize * GameConstants.scale + offset.y);
 
-        graphics.drawImage(sprite, posX, posY, sprite.getWidth() / 2, sprite.getHeight() / 2, null);
+        graphics.drawImage(sprite, posX, posY, (int)(sprite.getWidth() * GameConstants.scale), (int)(sprite.getHeight() * GameConstants.scale), null);
     }
 
 	/**

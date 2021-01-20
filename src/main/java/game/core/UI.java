@@ -9,8 +9,12 @@ import java.awt.event.*;
 
 public class UI
 {    
-    private JLabel shipCount;
     private Game game;
+    
+    private JLabel leftShipCountLabel;
+    private JLabel rightShipCountLabel;
+    private JLabel leftScoreLabel;
+    private JLabel rightScoreLabel;
 
     /**
      * @param game The game window context
@@ -53,6 +57,20 @@ public class UI
 
     }
 
+    public void loadEnd()
+    {
+        unload();
+
+        var restartGameButton = new JButton("Restart Game");
+        restartGameButton.setBounds(650, 350, 300, 50);
+
+        var exitGameButton = new JButton("Exit");
+        exitGameButton.setBounds(650, 350, 300, 50);
+
+        game.add(restartGameButton);
+        game.add(exitGameButton);
+    }
+
     public void loadGame(String leftPlayerName, String rightPlayerName)
     {
         unload();
@@ -62,18 +80,33 @@ public class UI
         var leftPlayerNameLabel = new JLabel(leftPlayerName);
         leftPlayerNameLabel.setBounds(64, 16, 128, 32);
         leftPlayerNameLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
-
+        
+        leftScoreLabel = new JLabel("0");
+        leftScoreLabel.setBounds(256, 16, 128, 32);
+        leftScoreLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
+        
+        leftShipCountLabel = new JLabel("28");
+        leftShipCountLabel.setBounds(512, 16, 128, 32);
+        leftShipCountLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
+        
         var rightPlayerNameLabel = new JLabel(rightPlayerName);
         rightPlayerNameLabel.setBounds(768, 16, 128, 32);
         rightPlayerNameLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
+
+        rightScoreLabel = new JLabel("0");
+        rightScoreLabel.setBounds(900, 16, 128, 32);
+        rightScoreLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
         
-        shipCount = new JLabel("");
-        shipCount.setBounds(1376, 16, 128, 32);
-        shipCount.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
+        rightShipCountLabel = new JLabel("28");
+        rightShipCountLabel.setBounds(1376, 16, 128, 32);
+        rightShipCountLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
 
         game.add(leftPlayerNameLabel);
         game.add(rightPlayerNameLabel);
-        game.add(shipCount);
+        game.add(leftScoreLabel);
+        game.add(rightScoreLabel);
+        game.add(leftShipCountLabel);
+        game.add(rightShipCountLabel);
     }
 
     private void onStartLocalButton(ActionEvent e)

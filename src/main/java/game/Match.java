@@ -4,7 +4,7 @@ import game.core.*;
 
 import java.util.ArrayList;
 
-public abstract class Match implements IUpdatable, IPlayerListener
+public abstract class Match implements IPlayerListener
 {
     protected Vector2Int boardSize;
 
@@ -17,7 +17,13 @@ public abstract class Match implements IUpdatable, IPlayerListener
     protected int leftShipCount;
     protected int rightShipCount;
 
-    private RoundTimer roundTimer;
+    protected int leftScore;
+    protected int rightScore;
+
+    protected Player curPlayer;
+
+    protected MatchTimer matchTimer;
+    protected RoundTimer roundTimer;
     
     protected ArrayList<IMatchListener> listeners = new ArrayList<IMatchListener>();
 
@@ -33,8 +39,11 @@ public abstract class Match implements IUpdatable, IPlayerListener
     {
         this.boardSize = boardSize;
 
-        Game.addUpdatable(this);
+        matchTimer = new MatchTimer(this);
         roundTimer = new RoundTimer(this);
+
+        leftShipCount = Resources.getShipQueue().size();
+        rightShipCount = Resources.getShipQueue().size();
     }
 
     @Override
@@ -51,7 +60,14 @@ public abstract class Match implements IUpdatable, IPlayerListener
 
         if (leftBoard != null && rightBoard != null)
         {
+            System.out.println("Both players have assigned their board!");
+            System.out.println("Starting the game!");
+
+            curPlayer = leftPlayer;
+
             invokeGameSetup(leftPlayer);
+
+            matchTimer.start();
             roundTimer.start();
         }
     }
@@ -59,13 +75,29 @@ public abstract class Match implements IUpdatable, IPlayerListener
     @Override
     public void onMove(Player player, Vector2Int cellPos)
     {
+        System.out.println("Player " + player + " made a move!");
+
     	var isLeftPlayer = player == leftPlayer;
     	var board = isLeftPlayer ? rightBoard : leftBoard;
 
         var isSunk = board.isSinking(cellPos);
         var isHit = board.isHit(cellPos);
         
+        if (isHit)
+        {
+            if (isLeftPlayer) leftScore += 1;
+            else rightScore += 1;
+        }
+
+        if (isSunk)
+        {
+            if (isLeftPlayer) leftScore += 1;
+            else rightScore += 1;
+        }
+
         var nextPlayer = isHit ? player : (isLeftPlayer ? rightPlayer : leftPlayer);
+
+        curPlayer = nextPlayer;
 
         if (isSunk)
         {
@@ -93,7 +125,22 @@ public abstract class Match implements IUpdatable, IPlayerListener
     
     public void onRoundTimerStopped()
     {
-        System.out.println("Round timer stopped!");
+        var isLeftPlayer = curPlayer == leftPlayer;
+        
+        System.out.println("Player " + curPlayer.name + " didn't make a turn in time!");
+
+        invokeLateMove();
+        invokeUpdate(curPlayer, isLeftPlayer ? rightPlayer : leftPlayer, null, false, false);
+    }
+    
+    public void onMatchTimerStopped()
+    {   
+        var result = 
+        leftScore > rightScore ? Result.WIN_LEFT : 
+        rightScore > leftScore ? Result.WIN_RIGHT : 
+        Result.TIE;
+
+        invokeGameOver(result);
     }
 
     /**
@@ -102,6 +149,7 @@ public abstract class Match implements IUpdatable, IPlayerListener
      */
     protected void invokeUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk)
     {
+		System.out.println("Player " + nextPlayer.name + " has to make a turn!");
         for (var listener : listeners)
         {
             listener.onUpdate(lastPlayer, nextPlayer, position, isHit, isSunk);
@@ -114,6 +162,8 @@ public abstract class Match implements IUpdatable, IPlayerListener
         {
             listener.onGameOver(result);
         }
+
+        dispose();
     }
 
     /**
@@ -137,6 +187,14 @@ public abstract class Match implements IUpdatable, IPlayerListener
         }
     }
 
+    protected void invokeLateMove()
+    {
+        for (var listener : listeners)
+        {
+            listener.onLateMove();
+        }
+    }
+
     /**
      * Adds an IMatchListener to the match observer list
      * @param listener The listener to add
@@ -153,5 +211,14 @@ public abstract class Match implements IUpdatable, IPlayerListener
     public void removeListener(IMatchListener listener)
     {
         listeners.remove(listener);
+    }
+
+    public void dispose()
+    {
+        matchTimer.stop();
+        roundTimer.stop();
+
+        leftPlayer.removeListener(this);
+        rightPlayer.removeListener(this);
     }
 }

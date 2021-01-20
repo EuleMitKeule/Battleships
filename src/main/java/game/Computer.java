@@ -41,8 +41,6 @@ public class Computer extends Player
     {
         if (state == null) return;
         
-        System.out.println("AI jetzt in state: " + state.getClass().getName());
-        
         if (this.state != null) 
         {
             state.exitState();
@@ -61,13 +59,17 @@ public class Computer extends Player
     {
         super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
 
-        if (lastPlayer != this) ownBoard.guessField(cellPos);
-        else enemyBoard.guessField(cellPos);
-
+        if (cellPos != null)
+        {
+            if (lastPlayer != this) ownBoard.guessField(cellPos);
+            else enemyBoard.guessField(cellPos);
+        }
+        
         if (isGuessing && isHit) setState(aiHasGuessedCorrectlyState);
-
+        
         if (isGuessing)
         {
+            System.out.println("AI is making it's turn!");
             state.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
         } 
     }
