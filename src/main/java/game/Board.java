@@ -127,25 +127,35 @@ public class Board implements IRenderable
 			case SUPER_PATROL:
 				return 
 					!ShipType.isShip(getShip(cellPos)) &&
-					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right())));
+					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right()))) &&
+					inBounds(cellPos.add(Vector2Int.right()));
 			case DESTROYER:
 				return 
 					!ShipType.isShip(getShip(cellPos)) &&
 					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right()))) &&
-					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(2))));
+					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(2)))) &&
+					inBounds(cellPos.add(Vector2Int.right())) &&
+					inBounds(cellPos.add(Vector2Int.right().times(2)));
 			case BATTLESHIP:
 				return
 					!ShipType.isShip(getShip(cellPos)) &&
 					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right()))) &&
 					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(2)))) &&
-					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(3))));
+					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(3)))) &&
+					inBounds(cellPos.add(Vector2Int.right())) &&
+					inBounds(cellPos.add(Vector2Int.right().times(2))) &&
+					inBounds(cellPos.add(Vector2Int.right().times(3)));
 			case CARRIER:
 				return
 					!ShipType.isShip(getShip(cellPos)) &&
 					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right()))) &&
 					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(2)))) &&
 					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(3)))) &&
-					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(4))));
+					!ShipType.isShip(getShip(cellPos.add(Vector2Int.right().times(4)))) &&
+					inBounds(cellPos.add(Vector2Int.right())) &&
+					inBounds(cellPos.add(Vector2Int.right().times(2))) &&
+					inBounds(cellPos.add(Vector2Int.right().times(3))) &&
+					inBounds(cellPos.add(Vector2Int.right().times(4)));
 			default:
 				return false;
 		}

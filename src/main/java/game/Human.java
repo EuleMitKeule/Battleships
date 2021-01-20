@@ -5,8 +5,11 @@ import game.core.Input;
 
 import game.core.*;
 
-public class Human extends Player implements IInputListener {
+public class Human extends Player implements IInputListener 
+{
     private boolean isPlacing = true;
+    private BoardRenderer leftBoardRenderer;
+    private BoardRenderer rightBoardRenderer;
 
     /**
      * 
@@ -21,8 +24,8 @@ public class Human extends Player implements IInputListener {
 
         curShipType = shipQueue.pop();
 
-        new BoardRenderer(ownBoard, GameConstants.leftOffset, GameConstants.tileSize);
-        new BoardRenderer(enemyBoard, GameConstants.rightOffset, GameConstants.tileSize);
+        leftBoardRenderer = new BoardRenderer(ownBoard, GameConstants.leftOffset, GameConstants.tileSize);
+        rightBoardRenderer = new BoardRenderer(enemyBoard, GameConstants.rightOffset, GameConstants.tileSize);
 
         Input.addListener(this);
     }
@@ -41,6 +44,15 @@ public class Human extends Player implements IInputListener {
                 enemyBoard.guessField(cellPos);
             }
         }
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        leftBoardRenderer.dispose();
+        rightBoardRenderer.dispose();
     }
 
     /**

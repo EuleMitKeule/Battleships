@@ -17,11 +17,28 @@ public class LocalMatch extends Match
         ((Computer)rightPlayer).Start();
 
         invokePlayerAdded(rightPlayer, false);
+
+        addListener(UI.instance);
+    }
+
+    @Override
+    protected void invokeGameOver(Result result)
+    {
+        super.invokeGameOver(result);
+        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name);
     }
 
     @Override
     public void onMove(Player player, Vector2Int cellPos)
     {
         super.onMove(player, cellPos);
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        removeListener(UI.instance);
     }
 }

@@ -15,4 +15,8 @@ public interface IMatchListener
 
     default void onGameOver(Result result) { }
 
+    default void onScoreChanged(int leftScore, int rightScore) { }
+
+    default void onShipCountChanged(int leftShipCount, int rightShipCount) { }
+
 }

@@ -84,6 +84,8 @@ public abstract class Match implements IPlayerListener
         {
             if (isLeftPlayer) leftScore += 1;
             else rightScore += 1;
+
+            invokeScoreChanged(leftScore, rightScore);
         }
 
         if (isSunk)
@@ -91,9 +93,11 @@ public abstract class Match implements IPlayerListener
             if (isLeftPlayer) leftScore += 1;
             else rightScore += 1;
             
-            if (isLeftPlayer) leftShipCount -= 1;
-            else rightShipCount -= 1;
+            if (isLeftPlayer) rightShipCount -= 1;
+            else leftShipCount -= 1;
             
+            invokeShipCountChanged(leftShipCount, rightShipCount);
+
             System.out.println("Left ship count now at: " + leftShipCount);
             System.out.println("Right ship count now at: " + rightShipCount);
         }
@@ -198,6 +202,26 @@ public abstract class Match implements IPlayerListener
             var listener = listeners.get(i);
             if (listener == null) return;
             listener.onLateMove();
+        }
+    }
+
+    protected void invokeShipCountChanged(int leftShipCount, int rightShipCount)
+    {
+        for (int i = 0; i < listeners.size(); i++)
+        {
+            var listener = listeners.get(i);
+            if (listener == null) return;
+            listener.onShipCountChanged(leftShipCount, rightShipCount);
+        }
+    }
+
+    protected void invokeScoreChanged(int leftScore, int rightScore)
+    {
+        for (int i = 0; i < listeners.size(); i++)
+        {
+            var listener = listeners.get(i);
+            if (listener == null) return;
+            listener.onScoreChanged(leftScore, rightScore);
         }
     }
 
