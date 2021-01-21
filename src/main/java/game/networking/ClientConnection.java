@@ -18,7 +18,7 @@ public class ClientConnection
     private String host;
     private int port;
 
-    private String playerName;
+    private String playerName = "";
 
     public ClientConnection() 
     {
@@ -113,7 +113,7 @@ public class ClientConnection
 
     private void onEnemyName(String enemyName)
     {
-        
+
     }
 
     private void onGameSetup(String nextPlayer)

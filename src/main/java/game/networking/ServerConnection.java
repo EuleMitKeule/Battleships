@@ -71,7 +71,7 @@ public class ServerConnection
             var inputLine = inputStream.readLine();
             var inputSplit = inputLine.split(";");
 
-            while (inputSplit[0] != "c")
+            while (!inputSplit[0].equals("h"))
             {
                 inputLine = inputStream.readLine();
                 inputSplit = inputLine.split(";");
@@ -92,7 +92,7 @@ public class ServerConnection
             if (isAlreadyPresent)
             {
                 System.out.println("The name " + playerName + " is already present in the lobby!");
-                outputStream.println(MessageId.NAME_EXISTS.ordinal() + ";");
+                outputStream.println("ne");
                 return;
             }
 
