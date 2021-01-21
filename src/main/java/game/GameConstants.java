@@ -13,6 +13,4 @@ public class GameConstants
     public static int tileSize = 64;
 
     public static float scale = .766666666f;
-
-    public static int port = 25555;
 }

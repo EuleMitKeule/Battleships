@@ -35,7 +35,7 @@ public class ServerConnection
 
         try
         {
-            serverSocket = new ServerSocket(GameConstants.port);
+            serverSocket = new ServerSocket(port);
         }
         catch (IOException e) { return; }
         

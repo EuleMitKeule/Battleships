@@ -44,7 +44,7 @@ public class ClientConnection
         
         try 
         {
-            socket = new Socket("localhost", GameConstants.port);
+            socket = new Socket(host, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
