@@ -13,7 +13,6 @@ public class Computer extends Player
     public IAiState aiHasGuessedCorrectlyState;
     public IAiState aiHasGuessedIncorrectlyState;
 
-    
     public IAiState state;
     /**
      * @param name The name of the player

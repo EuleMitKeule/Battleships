@@ -2,6 +2,8 @@ package game.core;
 
 import game.GameConstants;
 import game.LocalMatch;
+import game.networking.ClientConnection;
+import game.networking.ServerConnection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,18 +65,34 @@ public class UI implements IMatchListener
 
     }
 
+    public void loadServer()
+    {
+        unload();
+
+        var console = new JConsole(160,90);
+        console.setCursorVisible(true);
+        console.setCursorBlink(true);
+        console.setBounds(0, 0, 1600, 900);
+
+        game.add(console);
+        console.captureStdOut();
+    }
+
     public void loadEnd(Result result, String winner)
     {
         unload();
 
         var labelFont = new JLabel().getFont();
 
-        if(result != Result.TIE)
+        winnerLabel = new JLabel("", JLabel.CENTER);
+
+        if (result != Result.TIE)
         {
-            winnerLabel = new JLabel(winner + " won the game", JLabel.CENTER);
+            winnerLabel.setText(winner + " won the game!");
         }
-        else {
-            winnerLabel = new JLabel("Game has ended in a tie");
+        else 
+        {
+            winnerLabel.setText("The game has ended in a tie!");
         }
         winnerLabel.setBounds(500, 100, 600, 200);
         winnerLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 40));
@@ -138,13 +156,14 @@ public class UI implements IMatchListener
 
     private void onStartServerButton(ActionEvent e)
     {
-        loadGame("leftPlayerName", "rightPlayerName");
-        
+        loadServer(); 
+        new ServerConnection();  
     }
 
     private void onJoinServerButton(ActionEvent e)
     {
-        loadGame("leftPlayerName", "rightPlayerName");
+        unload();
+        new ClientConnection();
     }
 
     private void onRestartGameButton(ActionEvent e)

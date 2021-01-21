@@ -23,7 +23,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 
 	private static Input input;
 
-	private JFrame frame;
+	public static JFrame frame;
 	private Timer updateTimer;
 	private Timer renderTimer;
 	private Timer secondsTimer;
