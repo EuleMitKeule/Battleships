@@ -11,12 +11,14 @@ import java.io.*;
 
 public class ClientConnection 
 {
-    private Socket _socket;
-    private PrintWriter _out;
-    private BufferedReader _in;
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
 
     private String host;
     private int port;
+
+    private String playerName;
 
     public ClientConnection() 
     {
@@ -35,51 +37,100 @@ public class ClientConnection
         }
         while (port < 0 || port > 65535);
 
+        while (playerName.equals(""))
+        {
+            playerName = JOptionPane.showInputDialog(Game.frame, "Please enter your name:");
+        }
+        
         try 
         {
-            _socket = new Socket("localhost", GameConstants.port);
-            _out = new PrintWriter(_socket.getOutputStream(), true);
-            _in = new BufferedReader(new InputStreamReader(_socket.getInputStream()));    
+            socket = new Socket("localhost", GameConstants.port);
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            out.println("h;" + playerName);
         } 
         catch (IOException e) { return; }
 
-        var inThread = new Thread(() -> 
+        var readMessageThread = new Thread(() -> 
         {
             readMessage();
         });
 
-        inThread.start();
+        readMessageThread.start();
     }
 
     public void stop()
     {
         try
         {
-            _socket.close();
-            _in.close();
-            _out.close();
+            socket.close();
+            in.close();
+            out.close();
         } 
-        catch (Exception e)
-        {
-        }
+        catch (IOException e) { }
     }
 
     private void readMessage()
     {
         try 
         {
-            var inputLine = _in.readLine();
-    
-            if (inputLine != null)
+            while (true)
             {
-                System.out.println("Server says " + inputLine);
+                var inputLine = in.readLine();
+    
+                if (inputLine == null) continue;
+
+                var inputSplit = inputLine.split(";");
+
+                switch(inputSplit[0])
+                {
+                    case "ne" -> onNameExists();
+                    case "h" -> onServerHandshake();
+                    case "n" -> onEnemyName(inputSplit[1]);
+                    case "s" -> onGameSetup(inputSplit[1]);
+                    case "u" -> onUpdate(inputSplit[1], inputSplit[2], inputSplit[3], inputSplit[4], inputSplit[5], inputSplit[6], inputSplit[7]);
+                    case "g" -> onGameOver(inputSplit[1]);
+                }
             }
         } 
-        catch (Exception e) 
-        {
-        }
+        catch (IOException e) { }
     }
-    
+
+    private void onNameExists()
+    {
+        while (playerName.equals(""))
+        {
+            playerName = JOptionPane.showInputDialog(Game.frame, "Please enter your name:");
+        }
+        out.println("h;" + playerName);
+    }
+
+    private void onServerHandshake()
+    {
+        System.out.println("You successfully connected to the Server");
+    }
+
+    private void onEnemyName(String enemyName)
+    {
+        
+    }
+
+    private void onGameSetup(String nextPlayer)
+    {
+
+    }
+
+    private void onUpdate(String posX, String posY, String isHit, String isSunk, String isLate, String lastPlayer, String nextPlayer)
+    {
+
+    }
+
+    private void onGameOver(String result)
+    {
+
+    }
+
     private boolean tryParseInt(String value)
     {
         try 

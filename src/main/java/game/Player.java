@@ -48,7 +48,7 @@ public abstract class Player implements IMatchListener
 	 * @param player The new guessing player
 	 */
 	@Override
-	public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk)
+	public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk, boolean isLate)
 	{
 		if (nextPlayer == null)
 		{

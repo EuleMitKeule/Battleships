@@ -16,7 +16,7 @@ public class ServerConnection
 
     private ServerSocket serverSocket;
 
-    private LinkedList<NetPlayer> connectedPlayers = new LinkedList<NetPlayer>();
+    private LinkedList<NetPlayer> waitingPlayers = new LinkedList<NetPlayer>();
 
     private int port;
 
@@ -66,27 +66,44 @@ public class ServerConnection
         try 
         {
             var inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            var inputLine = inputStream.readLine();
-            var inputSplit = inputLine.split(" ");
+            var outputStream = new PrintStream(socket.getOutputStream(), true);
 
-            while (Integer.parseInt(inputSplit[0]) != Protocol.HANDSHAKE.ordinal())
+            var inputLine = inputStream.readLine();
+            var inputSplit = inputLine.split(";");
+
+            while (inputSplit[0] != "c")
             {
                 inputLine = inputStream.readLine();
-                inputSplit = inputLine.split(" ");
+                inputSplit = inputLine.split(";");
             }
 
             System.out.println("Client handshake received!");
-
+            
             var playerName = inputSplit[1];
+            var isAlreadyPresent = false;
 
-            if (connectedPlayers.size() > 0)
+            for (int i = 0; i < waitingPlayers.size(); i++)
             {
-                var leftPlayer = connectedPlayers.pop();
+                var netPlayer = waitingPlayers.get(i);
+                if (netPlayer == null) continue;
+                if (netPlayer.name == playerName) isAlreadyPresent = true;           
+            }
+
+            if (isAlreadyPresent)
+            {
+                System.out.println("The name " + playerName + " is already present in the lobby!");
+                outputStream.println(MessageId.NAME_EXISTS.ordinal() + ";");
+                return;
+            }
+
+            if (waitingPlayers.size() > 0)
+            {
+                var leftPlayer = waitingPlayers.pop();
                 var rightPlayer = new NetPlayer(socket, playerName);
 
                 //new MatchConnection(serverSocket, leftPlayer, rightPlayer);
             }
-            else connectedPlayers.add (new NetPlayer(socket, playerName));
+            else waitingPlayers.add(new NetPlayer(socket, playerName));
         }
         catch (IOException e) { }
     }

@@ -110,17 +110,17 @@ public abstract class Match implements IPlayerListener
         
         if (leftShipCount == 0) 
         {
-            invokeUpdate(player, null, cellPos, isHit, isSunk);
+            invokeUpdate(player, null, cellPos, isHit, isSunk, false);
             invokeGameOver(Result.WIN_RIGHT);
         }
         else if (rightShipCount == 0) 
         {
-            invokeUpdate(player, null, cellPos, isHit, isSunk);
+            invokeUpdate(player, null, cellPos, isHit, isSunk, false);
             invokeGameOver(Result.WIN_LEFT);
         }
         else
         {
-            invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk);
+            invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk, false);
         }
     }
     
@@ -128,8 +128,7 @@ public abstract class Match implements IPlayerListener
     {
         var isLeftPlayer = curPlayer == leftPlayer;
         
-        invokeLateMove();
-        invokeUpdate(curPlayer, isLeftPlayer ? rightPlayer : leftPlayer, null, false, false);
+        invokeUpdate(curPlayer, isLeftPlayer ? rightPlayer : leftPlayer, null, false, false, true);
     }
     
     public void onMatchTimerStopped()
@@ -146,13 +145,13 @@ public abstract class Match implements IPlayerListener
      * Invokes the GuessingPlayerChanged event
      * @param player The player that guesses next
      */
-    protected void invokeUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk)
+    protected void invokeUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk, boolean isLate)
     {
         for (int i = 0; i < listeners.size(); i++)
         {
             var listener = listeners.get(i);
             if (listener == null) return;
-            listener.onUpdate(lastPlayer, nextPlayer, position, isHit, isSunk);
+            listener.onUpdate(lastPlayer, nextPlayer, position, isHit, isSunk, isLate);
         }
     }
 
@@ -192,16 +191,6 @@ public abstract class Match implements IPlayerListener
             var listener = listeners.get(i);
             if (listener == null) return;
             listener.onGameSetup(player);
-        }
-    }
-
-    protected void invokeLateMove()
-    {
-        for (int i = 0; i < listeners.size(); i++)
-        {
-            var listener = listeners.get(i);
-            if (listener == null) return;
-            listener.onLateMove();
         }
     }
 

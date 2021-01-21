@@ -31,9 +31,9 @@ public class Human extends Player implements IInputListener
     }
 
     @Override
-    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk) 
+    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate) 
     {
-        super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
+        super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk, isLate);
 
         if (cellPos != null)
         {

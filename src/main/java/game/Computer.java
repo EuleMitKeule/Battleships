@@ -54,9 +54,9 @@ public class Computer extends Player
      * @param player The new placing player
      */
     @Override
-    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk)
+    public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
-        super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk);
+        super.onUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk, isLate);
 
         if (cellPos != null)
         {
