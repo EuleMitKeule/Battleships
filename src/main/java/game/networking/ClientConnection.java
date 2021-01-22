@@ -129,7 +129,7 @@ public class ClientConnection
 
     public void sendMove(Vector2Int cellPos)
     {
-        out.println("m;" + "");
+        out.println("m;" + cellPos.x + ";" + cellPos.y);
     }
 
     private void onNameExists()
