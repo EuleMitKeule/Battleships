@@ -46,14 +46,17 @@ public class ServerConnection
     {
         try
         {
-            var newPlayerSocket = serverSocket.accept();
+            while (true)
+            {
+                var newPlayerSocket = serverSocket.accept();
+        
+                System.out.println("New player connected! " + newPlayerSocket.getInetAddress());
     
-            System.out.println("New player connected! " + newPlayerSocket.getInetAddress());
-
-            System.out.println("Waiting for client handshake");
-
-            var listenForHandshakeThread = new Thread(() -> listenForHandshake(newPlayerSocket));
-            listenForHandshakeThread.start();
+                System.out.println("Waiting for client handshake");
+    
+                var listenForHandshakeThread = new Thread(() -> listenForHandshake(newPlayerSocket));
+                listenForHandshakeThread.start();
+            }
         }
         catch (IOException e) { }
     }
