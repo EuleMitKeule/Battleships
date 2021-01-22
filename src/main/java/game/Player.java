@@ -50,10 +50,7 @@ public abstract class Player implements IMatchListener
 	@Override
 	public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk, boolean isLate)
 	{
-		if (nextPlayer == null)
-		{
-			isGuessing = false;
-		} 
+		if (nextPlayer == null) isGuessing = false;
 		else isGuessing = nextPlayer == this;
 	}
 
@@ -61,15 +58,6 @@ public abstract class Player implements IMatchListener
 	public void onGameOver(Result result)
 	{
 		dispose();
-	}
-
-	/**
-	 * 
-	 * @return Returns the name of the player
-	 */
-	public String getName()
-	{
-		return this.name;
 	}
 
 	/**

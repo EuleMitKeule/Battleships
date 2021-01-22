@@ -101,7 +101,7 @@ public class ServerConnection
                 var leftPlayer = waitingPlayers.pop();
                 var rightPlayer = new NetPlayer(socket, playerName);
                 
-                out
+                
 
                 //new MatchConnection(serverSocket, leftPlayer, rightPlayer);
             }

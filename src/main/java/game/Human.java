@@ -8,6 +8,7 @@ import game.core.*;
 public class Human extends Player implements IInputListener 
 {
     private boolean isPlacing = true;
+    
     private BoardRenderer leftBoardRenderer;
     private BoardRenderer rightBoardRenderer;
 

@@ -6,8 +6,6 @@ import java.util.ArrayList;
 
 public abstract class Match implements IPlayerListener
 {
-    protected Vector2Int boardSize;
-
     protected Board leftBoard;
     protected Board rightBoard;
     
@@ -27,18 +25,8 @@ public abstract class Match implements IPlayerListener
     
     protected ArrayList<IMatchListener> listeners = new ArrayList<IMatchListener>();
 
-    /**
-     * 
-     * @param game The game context
-     * @param leftOffset The pixel offset of the left board
-     * @param rightOffset The pixel offset of the right board
-     * @param tileSize The pixel size of tiles
-     * @param boardSize The cell dimensions of the board
-     */
-    public Match(Game game, Vector2Int leftOffset, Vector2Int rightOffset, int tileSize, Vector2Int boardSize)
+    public Match()
     {
-        this.boardSize = boardSize;
-
         matchTimer = new MatchTimer(this);
         roundTimer = new RoundTimer(this);
 

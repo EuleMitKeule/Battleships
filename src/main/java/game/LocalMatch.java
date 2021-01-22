@@ -4,9 +4,10 @@ import game.core.*;
 
 public class LocalMatch extends Match
 {
-    public LocalMatch(Game game, Vector2Int leftOffset, Vector2Int rightOffset, int tileSize, Vector2Int boardSize)
+
+    public LocalMatch()
     {
-        super(game, leftOffset, rightOffset, tileSize, boardSize);
+        super();
 
         leftPlayer = new Human("eule", this);
 
