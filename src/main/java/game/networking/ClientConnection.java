@@ -52,11 +52,15 @@ public class ClientConnection
             playerName = JOptionPane.showInputDialog(Game.frame, "Please enter your name:");
         }
         
+        System.out.println("Starting client on port: " + port);
+
         try 
         {
             socket = new Socket(host, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            System.out.println("Sending client handshake with name: " + playerName);
 
             out.println("h;" + playerName);
         } 
@@ -70,17 +74,6 @@ public class ClientConnection
         readMessageThread.start();
     }
 
-    public void stop()
-    {
-        try
-        {
-            socket.close();
-            in.close();
-            out.close();
-        } 
-        catch (IOException e) { }
-    }
-
     private void readMessage()
     {
         try 
@@ -90,6 +83,9 @@ public class ClientConnection
                 var inputLine = in.readLine();
     
                 if (inputLine == null) continue;
+
+                System.out.println("Received message:");
+                System.out.println(inputLine);
 
                 var inputSplit = inputLine.split(";");
 
@@ -148,12 +144,18 @@ public class ClientConnection
     
     private void onEnemyName(String enemyName)
     {
+        System.out.println("Received enemy name: " + enemyName);
+
+        System.out.println("Starting client match!");
+
         match = new ClientMatch(playerName, enemyName);
         addListener(match);
     }
 
     private void onGameSetup(String nextPlayerName)
     {
+        System.out.println("Received game setup, player " + nextPlayerName + " will begin!");
+
         invokeGameSetup(nextPlayerName);
     }
 

@@ -25,9 +25,12 @@ public class MatchConnection
 
     public MatchConnection(NetPlayer leftPlayer, NetPlayer rightPlayer, ServerSocket serverSocket) 
     {
+        System.out.println("New Match started!");
+        System.out.println("Waiting for client boards...");
+
         this.leftPlayer = leftPlayer;
         this.rightPlayer = rightPlayer;
-        
+
         match = new ServerMatch(this);
 
         try
@@ -37,12 +40,15 @@ public class MatchConnection
             
             rightIn = new BufferedReader(new InputStreamReader(rightPlayer.socket.getInputStream()));
             rightOut = new PrintStream(rightPlayer.socket.getOutputStream(), true);
-            
+
             var readLeftThread = new Thread(() -> readMessage(leftPlayer, leftIn));
             var readRightThread = new Thread(() -> readMessage(rightPlayer, rightIn));
 
             readLeftThread.start();
             readRightThread.start();
+
+            leftOut.println("n;" + rightPlayer.name);
+            rightOut.println("n;" + leftPlayer.name);
         }
         catch (IOException e) { }
     }
@@ -56,6 +62,9 @@ public class MatchConnection
                 var inputLine = in.readLine();
     
                 if (inputLine == null) continue;
+
+                System.out.println("Received message from player " + netPlayer.name + ":");
+                System.out.println(inputLine);
 
                 var inputSplit = inputLine.split(";");
 

@@ -50,7 +50,7 @@ public class ServerConnection
     
             System.out.println("New player connected! " + newPlayerSocket.getInetAddress());
 
-            System.out.println("Wait for client handshake");
+            System.out.println("Waiting for client handshake");
 
             var listenForHandshakeThread = new Thread(() -> listenForHandshake(newPlayerSocket));
             listenForHandshakeThread.start();
@@ -74,10 +74,10 @@ public class ServerConnection
                 inputSplit = inputLine.split(";");
             }
 
-            System.out.println("Client handshake received!");
-            
             var playerName = inputSplit[1];
             var isAlreadyPresent = false;
+
+            System.out.println("Client handshake received! Player name :" + playerName);
 
             for (int i = 0; i < waitingPlayers.size(); i++)
             {
@@ -99,10 +99,16 @@ public class ServerConnection
                 var rightPlayer = new NetPlayer(socket, playerName);
                 
                 new MatchConnection(leftPlayer, rightPlayer, serverSocket);
+
+                System.out.println("Player " + leftPlayer.name + " and player " + rightPlayer.name + "got matched");
             }
-            else waitingPlayers.add(new NetPlayer(socket, playerName));
+            else 
+            {
+                waitingPlayers.add(new NetPlayer(socket, playerName));
+                System.out.println("Player " + playerName + " added to match queue");
+            }
         }
-        catch (IOException e) { }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     private boolean tryParseInt(String value)
