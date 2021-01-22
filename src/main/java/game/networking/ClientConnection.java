@@ -133,9 +133,9 @@ public class ClientConnection
     {
         var boardEnc = "";
 
-        for (int x = 0; x < GameConstants.boardSize.x; x++)
+        for (int y = 0; y < GameConstants.boardSize.y; y++)
         {
-            for (int y = 0; y < GameConstants.boardSize.y; y++)
+            for (int x = 0; x < GameConstants.boardSize.x; x++)
             {
                 var shipType = board.getShip(new Vector2Int(x, y));
                 boardEnc += shipType + ";";
@@ -192,7 +192,7 @@ public class ClientConnection
             cellPos.y = Integer.parseInt(yEnc);
         }
         catch (NumberFormatException e) { cellPos = null; }
-        
+
         var isHit = Boolean.parseBoolean(isHitEnc);
         var isSunk = Boolean.parseBoolean(isSunkEnc);
         var isLate = Boolean.parseBoolean(isLateEnc);
