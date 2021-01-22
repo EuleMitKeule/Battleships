@@ -145,7 +145,10 @@ public class ClientConnection
 
     public void sendMove(Vector2Int cellPos)
     {
-        out.println("m;" + cellPos.x + ";" + cellPos.y);
+        var x = (cellPos == null) ? "" : cellPos.x;
+        var y = (cellPos == null) ? "" : cellPos.y;
+
+        out.println("m;" + x + ";" + y);
     }
 
     private void onNameExists()
