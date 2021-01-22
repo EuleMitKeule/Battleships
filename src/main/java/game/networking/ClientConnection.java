@@ -112,6 +112,26 @@ public class ClientConnection
         catch (IOException e) { }
     }
 
+    public void sendClientBoard(Board board)
+    {
+        var boardEnc = "";
+
+        for (int x = 0; x < GameConstants.boardSize.x; x++)
+        {
+            for (int y = 0; y < GameConstants.boardSize.y; y++)
+            {
+                var shipType = board.getShip(new Vector2Int(x, y));
+                boardEnc += shipType + ";";
+            }
+        }
+        out.println("b;" + boardEnc);
+    }
+
+    public void sendMove(Vector2Int cellPos)
+    {
+        out.println("m;" + "");
+    }
+
     private void onNameExists()
     {
         while (playerName.equals(""))

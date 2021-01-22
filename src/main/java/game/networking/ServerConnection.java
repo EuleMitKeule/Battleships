@@ -1,10 +1,7 @@
 package game.networking;
 
-import game.*;
 import game.core.*;
 import java.net.*;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -101,9 +98,7 @@ public class ServerConnection
                 var leftPlayer = waitingPlayers.pop();
                 var rightPlayer = new NetPlayer(socket, playerName);
                 
-                
-
-                //new MatchConnection(serverSocket, leftPlayer, rightPlayer);
+                new MatchConnection(leftPlayer, rightPlayer, serverSocket);
             }
             else waitingPlayers.add(new NetPlayer(socket, playerName));
         }

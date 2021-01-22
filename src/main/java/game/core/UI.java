@@ -151,7 +151,7 @@ public class UI implements IMatchListener
     private void onStartLocalButton(ActionEvent e)
     {
         loadGame("leftPlayerName", "rightPlayerName");
-        new LocalMatch(game, GameConstants.leftOffset, GameConstants.rightOffset, GameConstants.tileSize, GameConstants.boardSize);
+        new LocalMatch();
     }
 
     private void onStartServerButton(ActionEvent e)
@@ -169,7 +169,7 @@ public class UI implements IMatchListener
     private void onRestartGameButton(ActionEvent e)
     {
         loadGame("leftPlayerName", "rightPlayerName");
-        new LocalMatch(game, GameConstants.leftOffset, GameConstants.rightOffset, GameConstants.tileSize, GameConstants.boardSize);
+        new LocalMatch();
     }
 
     private void onExitGameButton(ActionEvent e)

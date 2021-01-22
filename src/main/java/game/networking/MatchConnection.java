@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.ArrayList;
+import game.*;
+import game.core.*;
+import java.util.Arrays;
 
 public class MatchConnection
 {
@@ -16,11 +19,17 @@ public class MatchConnection
     private BufferedReader rightIn;
     private PrintStream rightOut;
 
+    private ArrayList<IMatchConnectionListener> listeners = new ArrayList<IMatchConnectionListener>();
+
+    private ServerMatch match;
+
     public MatchConnection(NetPlayer leftPlayer, NetPlayer rightPlayer, ServerSocket serverSocket) 
     {
         this.leftPlayer = leftPlayer;
         this.rightPlayer = rightPlayer;
         
+        match = new ServerMatch(this);
+
         try
         {
             leftIn = new BufferedReader(new InputStreamReader(leftPlayer.socket.getInputStream()));
@@ -52,7 +61,7 @@ public class MatchConnection
 
                 switch(inputSplit[0])
                 {
-                    case "b": onClientBoard(netPlayer, inputSplit[1]);
+                    case "b": onClientBoard(netPlayer, Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
                     case "m": onMove(netPlayer, inputSplit[1], inputSplit[2]);
                     default: continue;
                 }
@@ -61,18 +70,86 @@ public class MatchConnection
         catch (IOException e) { }
     }
 
-    private void onClientBoard(NetPlayer netPlayer, String boardEnc)
+    public void sendGameSetup(Player nextPlayer)
+    {
+        leftOut.println("s;" + nextPlayer.name);
+        rightOut.println("s;" + nextPlayer.name);
+    }
+
+    public void sendUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
+    {
+        var lastPlayerName = lastPlayer.name;
+        var nextPlayerName = nextPlayer.name;
+
+        leftOut.println("u;" + cellPos.x + ";" + cellPos.y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
+        rightOut.println("u;" + cellPos.x + ";" + cellPos.y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
+    }
+
+    public void sendGameOver(Result result)
     {
 
+    }
+
+    private void onClientBoard(NetPlayer netPlayer, String[] boardEnc)
+    {
+        var isLeftPlayer = netPlayer == leftPlayer;
+        var board = new Board(GameConstants.boardSize, isLeftPlayer ? GameConstants.leftOffset : GameConstants.rightOffset, GameConstants.tileSize);
+
+        for (int x = 0; x < GameConstants.boardSize.x; x++)
+        {
+            for (int y = 0; y < GameConstants.boardSize.y; y++)
+            {
+                var shipType = ShipType.valueOf(boardEnc[y * GameConstants.boardSize.y + x]);
+
+                board.setShip(new Vector2Int(x, y), shipType);
+            }
+        }
+
+        invokeClientBoard(netPlayer.name, board);
     }
 
     private void onMove(NetPlayer netPlayer, String xEnc, String yEnc)
     {
+        var x = Integer.parseInt(xEnc);
+        var y = Integer.parseInt(yEnc);
 
+        invokeMove(netPlayer.name, new Vector2Int(x, y));
+    }
+
+    private void invokeClientBoard(String playerName, Board board)
+    {
+        for (int i = 0; i < listeners.size(); i++)
+        {
+            var listener = listeners.get(i);
+            if (listener == null) continue;
+            listener.onClientBoardReceived(playerName, board);
+        }
+    }
+
+    private void invokeMove(String playerName, Vector2Int cellPos)
+    {
+        for (int i = 0; i < listeners.size(); i++)
+        {
+            var listener = listeners.get(i);
+            if (listener == null) continue;
+            listener.onMoveReceived(playerName, cellPos);
+        }
+    }
+
+    public void addListener(IMatchConnectionListener listener)
+    {
+        listeners.add(listener);
+    }
+
+    public void removeListener(IMatchConnectionListener listener)
+    {
+        listeners.remove(listener);
     }
 
     public void dispose()
     {
+        match.dispose();
+
         try
         {
             leftIn.close();

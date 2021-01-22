@@ -2,7 +2,7 @@ package game;
 
 import game.core.Game;
 import game.core.Vector2Int;
-import game.networking.IClientListener;
+import game.networking.*;
 
 public class ClientMatch extends Match implements IClientListener
 {
@@ -23,6 +23,16 @@ public class ClientMatch extends Match implements IClientListener
     public void onUpdateReceived(String lastPlayerName, String nextPlayerName, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
         invokeUpdate(getPlayer(lastPlayerName), getPlayer(nextPlayerName), cellPos, isHit, isSunk, isLate);
+    }
+
+    public void onClientBoard(Player player, Board board)
+    {
+        ClientConnection.instance.sendClientBoard(board);
+    }
+
+    public void onMove(Player player, Vector2Int cellPos)
+    {
+        ClientConnection.instance.sendMove(cellPos);
     }
 
     public void onGameOverReceived(Result result)

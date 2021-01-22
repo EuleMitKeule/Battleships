@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 public abstract class Player implements IMatchListener
 {
-	protected String name;
+	public String name;
 	protected Match match;
 
 	protected Board ownBoard;
