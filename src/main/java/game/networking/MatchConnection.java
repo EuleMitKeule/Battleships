@@ -70,8 +70,16 @@ public class MatchConnection
 
                 switch(inputSplit[0])
                 {
-                    case "b": onClientBoard(netPlayer, Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
-                    case "m": onMove(netPlayer, inputSplit[1], inputSplit[2]);
+                    case "b":
+                    {
+                        onClientBoard(netPlayer, Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
+                        break;
+                    } 
+                    case "m":
+                    {
+                        onMove(netPlayer, inputSplit[1], inputSplit[2]);
+                        break;
+                    } 
                     default: continue;
                 }
             }

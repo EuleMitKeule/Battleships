@@ -91,11 +91,31 @@ public class ClientConnection
 
                 switch(inputSplit[0])
                 {
-                    case "ne": onNameExists();
-                    case "h": onServerHandshake();
-                    case "n": onEnemyName(inputSplit[1]);
-                    case "s": onGameSetup(inputSplit[1]);
-                    case "u": onUpdate(inputSplit[1], inputSplit[2], inputSplit[3], inputSplit[4], inputSplit[5], inputSplit[6], inputSplit[7]);
+                    case "ne": 
+                    {
+                        onNameExists();
+                        break;
+                    }
+                    case "h":
+                    {
+                        onServerHandshake();
+                        break;
+                    }
+                    case "n":
+                    {
+                        onEnemyName(inputSplit[1]);
+                        break;
+                    }
+                    case "s": 
+                    {
+                        onGameSetup(inputSplit[1]);
+                        break;
+                    }
+                    case "u": 
+                    {
+                        onUpdate(inputSplit[1], inputSplit[2], inputSplit[3], inputSplit[4], inputSplit[5], inputSplit[6], inputSplit[7]);
+                        break;
+                    }
                     case "g": 
                     {
                         onGameOver(inputSplit[1]);
