@@ -80,7 +80,7 @@ public class ServerConnection
             var playerName = inputSplit[1];
             var isAlreadyPresent = false;
 
-            System.out.println("Client handshake received! Player name :" + playerName);
+            System.out.println("Client handshake received! Player name: " + playerName);
 
             for (int i = 0; i < waitingPlayers.size(); i++)
             {
@@ -103,7 +103,7 @@ public class ServerConnection
                 
                 new MatchConnection(leftPlayer, rightPlayer, serverSocket);
 
-                System.out.println("Player " + leftPlayer.name + " and player " + rightPlayer.name + "got matched");
+                System.out.println("Player " + leftPlayer.name + " and player " + rightPlayer.name + " got matched");
             }
             else 
             {
