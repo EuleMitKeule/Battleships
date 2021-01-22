@@ -7,6 +7,7 @@ import game.core.Vector2Int;
 import java.net.*;
 import java.util.ArrayList;
 
+import javax.print.attribute.standard.NumberOfInterveningJobs;
 import javax.swing.JOptionPane;
 
 import java.io.*;
@@ -184,10 +185,14 @@ public class ClientConnection
 
     private void onUpdate(String xEnc, String yEnc, String isHitEnc, String isSunkEnc, String isLateEnc, String lastPlayerName, String nextPlayerName)
     {
-        var x = Integer.parseInt(xEnc);
-        var y = Integer.parseInt(yEnc);
-        var cellPos = new Vector2Int(x, y);
-
+        var cellPos = new Vector2Int(-1, -1);
+        try
+        {
+            cellPos.x = Integer.parseInt(xEnc);
+            cellPos.y = Integer.parseInt(yEnc);
+        }
+        catch (NumberFormatException e) { cellPos = null; }
+        
         var isHit = Boolean.parseBoolean(isHitEnc);
         var isSunk = Boolean.parseBoolean(isSunkEnc);
         var isLate = Boolean.parseBoolean(isLateEnc);
