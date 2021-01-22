@@ -98,8 +98,11 @@ public class MatchConnection
         var lastPlayerName = lastPlayer.name;
         var nextPlayerName = nextPlayer.name;
 
-        leftOut.println("u;" + cellPos.x + ";" + cellPos.y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
-        rightOut.println("u;" + cellPos.x + ";" + cellPos.y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
+        var x = (cellPos == null) ? "" : cellPos.x;
+        var y = (cellPos == null) ? "" : cellPos.y;
+
+        leftOut.println("u;" + x + ";" + y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
+        rightOut.println("u;" + x + ";" + y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
     }
 
     public void sendGameOver(Result result)
