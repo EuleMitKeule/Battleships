@@ -31,7 +31,7 @@ public class MatchConnection
         this.leftPlayer = leftPlayer;
         this.rightPlayer = rightPlayer;
 
-        match = new ServerMatch(this);
+        match = new ServerMatch(leftPlayer.name, rightPlayer.name, this);
 
         try
         {

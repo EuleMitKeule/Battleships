@@ -8,10 +8,13 @@ public class ServerMatch extends Match implements IMatchConnectionListener
 {
     MatchConnection matchConnection;
 
-    public ServerMatch(MatchConnection matchConnection)
+    public ServerMatch(String leftPlayerName, String rightPlayerName, MatchConnection matchConnection)
     {
         super();
         
+        leftPlayer = new Enemy(leftPlayerName, this);
+        rightPlayer = new Enemy(rightPlayerName, this);
+
         this.matchConnection = matchConnection;
         matchConnection.addListener(this);
     }
