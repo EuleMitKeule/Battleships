@@ -19,7 +19,7 @@ public class RoundTimer
             {
                 try 
                 {
-                    Thread.sleep(5000);
+                    Thread.sleep(15000);
                     match.onRoundTimerStopped();
                 } 
                 catch (InterruptedException e)
