@@ -90,6 +90,7 @@ public class Resources
         } 
         catch (FileNotFoundException e) 
         {
+            e.printStackTrace();
             return null;
         }
     }

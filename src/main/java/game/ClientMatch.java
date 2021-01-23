@@ -1,6 +1,5 @@
 package game;
 
-import game.core.Game;
 import game.core.Vector2Int;
 import game.networking.*;
 

@@ -34,7 +34,7 @@ public class ServerConnection
         {
             serverSocket = new ServerSocket(port);
         }
-        catch (IOException e) { return; }
+        catch (IOException e) { e.printStackTrace(); return; }
         
         System.out.println("Waiting for player connections");
         
@@ -58,7 +58,7 @@ public class ServerConnection
                 listenForHandshakeThread.start();
             }
         }
-        catch (IOException e) { }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     private void listenForHandshake(Socket socket)

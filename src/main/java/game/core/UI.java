@@ -76,6 +76,7 @@ public class UI implements IMatchListener
 
         game.add(console);
         console.captureStdOut();
+        console.setAutoscrolls(true);
     }
 
     public void loadEnd(Result result, String winner)

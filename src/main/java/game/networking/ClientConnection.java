@@ -7,7 +7,6 @@ import game.core.Vector2Int;
 import java.net.*;
 import java.util.ArrayList;
 
-import javax.print.attribute.standard.NumberOfInterveningJobs;
 import javax.swing.JOptionPane;
 
 import java.io.*;
@@ -65,7 +64,7 @@ public class ClientConnection
 
             out.println("h;" + playerName);
         } 
-        catch (IOException e) { return; }
+        catch (IOException e) { e.printStackTrace(); }
 
         var readMessageThread = new Thread(() -> 
         {
@@ -126,7 +125,7 @@ public class ClientConnection
                 }
             }
         } 
-        catch (IOException e) { }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     public void sendClientBoard(Board board)
@@ -269,6 +268,6 @@ public class ClientConnection
             out.close();
             socket.close();
         }
-        catch (IOException e) { }
+        catch (IOException e) { e.printStackTrace(); }
     }
 }

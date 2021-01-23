@@ -50,7 +50,7 @@ public class MatchConnection
             leftOut.println("n;" + rightPlayer.name);
             rightOut.println("n;" + leftPlayer.name);
         }
-        catch (IOException e) { }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     private void readMessage(NetPlayer netPlayer, BufferedReader in)
@@ -84,7 +84,7 @@ public class MatchConnection
                 }
             }
         } 
-        catch (IOException e) { }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     public void sendGameSetup(Player nextPlayer)
@@ -179,6 +179,6 @@ public class MatchConnection
             leftPlayer.socket.close();
             rightPlayer.socket.close();
         }
-        catch (IOException e) { }
+        catch (IOException e) { e.printStackTrace(); }
     }
 }
