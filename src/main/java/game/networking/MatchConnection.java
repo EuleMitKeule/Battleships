@@ -25,8 +25,8 @@ public class MatchConnection
 
     public MatchConnection(NetPlayer leftPlayer, NetPlayer rightPlayer, ServerSocket serverSocket) 
     {
-        System.out.println("New Match started!");
-        System.out.println("Waiting for client boards...");
+        UI.instance.log("New Match started!");
+        UI.instance.log("Waiting for client boards...");
 
         this.leftPlayer = leftPlayer;
         this.rightPlayer = rightPlayer;
@@ -63,8 +63,8 @@ public class MatchConnection
     
                 if (inputLine == null) continue;
 
-                System.out.println("Received message from player " + netPlayer.name + ":");
-                System.out.println(inputLine);
+                UI.instance.log("Received message from player " + netPlayer.name + ":");
+                UI.instance.log(inputLine);
 
                 var inputSplit = inputLine.split(";");
 
@@ -95,8 +95,10 @@ public class MatchConnection
 
     public void sendUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
-        var lastPlayerName = lastPlayer.name;
-        var nextPlayerName = nextPlayer.name;
+        var lastPlayerName = "";
+        var nextPlayerName = "";
+        if (lastPlayer != null) lastPlayerName = lastPlayer.name;
+        if (nextPlayer != null) nextPlayerName = nextPlayer.name;
 
         var x = (cellPos == null) ? "" : cellPos.x;
         var y = (cellPos == null) ? "" : cellPos.y;

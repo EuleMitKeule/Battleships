@@ -1,6 +1,5 @@
 package game.core;
 
-import game.GameConstants;
 import game.LocalMatch;
 import game.networking.ClientConnection;
 import game.networking.ServerConnection;
@@ -21,6 +20,9 @@ public class UI implements IMatchListener
     private JLabel leftScoreLabel;
     private JLabel rightScoreLabel;
     private JLabel winnerLabel;
+
+    private JConsole console;
+    private int logs;
 
     /**
      * @param game The game window context
@@ -69,14 +71,27 @@ public class UI implements IMatchListener
     {
         unload();
 
-        var console = new JConsole(160,10000);
+        console = new JConsole(160,10000);
         console.setCursorVisible(true);
         console.setCursorBlink(true);
         console.setBounds(0, 0, 1600, 900);
 
         game.add(console);
-        console.captureStdOut();
+        // console.captureStdOut();
         console.setAutoscrolls(true);
+    }
+
+    public void log(String message)
+    {
+        System.out.println(message);
+
+        if (console == null) return;
+
+        logs += 1;
+
+        if (logs % 5 == 0) console.clearScreen();
+
+        console.writeln(message);
     }
 
     public void loadEnd(Result result, String winner)

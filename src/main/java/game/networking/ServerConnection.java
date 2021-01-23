@@ -28,7 +28,7 @@ public class ServerConnection
         }
         while (port < 0 || port > 65535);
         
-        System.out.println("Starting server on port " + port);
+        UI.instance.log("Starting server on port " + port);
 
         try
         {
@@ -36,7 +36,7 @@ public class ServerConnection
         }
         catch (IOException e) { e.printStackTrace(); return; }
         
-        System.out.println("Waiting for player connections");
+        UI.instance.log("Waiting for player connections");
         
         var listenForConnectionsThread = new Thread(() -> listenForConnections());
         listenForConnectionsThread.start();
@@ -50,9 +50,9 @@ public class ServerConnection
             {
                 var newPlayerSocket = serverSocket.accept();
         
-                System.out.println("New player connected! " + newPlayerSocket.getInetAddress());
+                UI.instance.log("New player connected! " + newPlayerSocket.getInetAddress());
     
-                System.out.println("Waiting for client handshake");
+                UI.instance.log("Waiting for client handshake");
     
                 var listenForHandshakeThread = new Thread(() -> listenForHandshake(newPlayerSocket));
                 listenForHandshakeThread.start();
@@ -80,7 +80,7 @@ public class ServerConnection
             var playerName = inputSplit[1];
             var isAlreadyPresent = false;
 
-            System.out.println("Client handshake received! Player name: " + playerName);
+            UI.instance.log("Client handshake received! Player name: " + playerName);
 
             for (int i = 0; i < waitingPlayers.size(); i++)
             {
@@ -91,7 +91,7 @@ public class ServerConnection
 
             if (isAlreadyPresent)
             {
-                System.out.println("The name " + playerName + " is already present in the lobby!");
+                UI.instance.log("The name " + playerName + " is already present in the lobby!");
                 outputStream.println("ne");
                 return;
             }
@@ -103,12 +103,12 @@ public class ServerConnection
                 
                 new MatchConnection(leftPlayer, rightPlayer, serverSocket);
 
-                System.out.println("Player " + leftPlayer.name + " and player " + rightPlayer.name + " got matched");
+                UI.instance.log("Player " + leftPlayer.name + " and player " + rightPlayer.name + " got matched");
             }
             else 
             {
                 waitingPlayers.add(new NetPlayer(socket, playerName));
-                System.out.println("Player " + playerName + " added to match queue");
+                UI.instance.log("Player " + playerName + " added to match queue");
             }
         }
         catch (IOException e) { e.printStackTrace(); }
