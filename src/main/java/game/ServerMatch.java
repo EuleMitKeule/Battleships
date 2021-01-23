@@ -22,12 +22,6 @@ public class ServerMatch extends Match implements IMatchConnectionListener
     public void onClientBoardReceived(String playerName, Board board)
     {
         super.onClientBoard(getPlayer(playerName), board);
-
-        var player = getPlayer(playerName);
-        var isLeftPlayer = player == leftPlayer;
-        
-        if (isLeftPlayer) leftBoard = board;
-        else rightBoard = board;
     }
 
     public void onMoveReceived(String playerName, Vector2Int cellPos)
@@ -50,6 +44,7 @@ public class ServerMatch extends Match implements IMatchConnectionListener
     protected void invokeGameSetup(Player player)
     {
         super.invokeGameSetup(player);
+
         matchConnection.sendGameSetup(player);
     }
 

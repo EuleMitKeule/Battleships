@@ -69,7 +69,7 @@ public class UI implements IMatchListener
     {
         unload();
 
-        var console = new JConsole(160,90);
+        var console = new JConsole(160,10000);
         console.setCursorVisible(true);
         console.setCursorBlink(true);
         console.setBounds(0, 0, 1600, 900);

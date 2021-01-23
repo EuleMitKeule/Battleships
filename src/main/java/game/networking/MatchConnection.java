@@ -115,11 +115,11 @@ public class MatchConnection
         var isLeftPlayer = netPlayer == leftPlayer;
         var board = new Board(GameConstants.boardSize, isLeftPlayer ? GameConstants.leftOffset : GameConstants.rightOffset, GameConstants.tileSize);
 
-        for (int x = 0; x < GameConstants.boardSize.x; x++)
+        for (int y = 0; y < GameConstants.boardSize.y; y++)
         {
-            for (int y = 0; y < GameConstants.boardSize.y; y++)
+            for (int x = 0; x < GameConstants.boardSize.x; x++)
             {
-                var shipType = ShipType.valueOf(boardEnc[y * GameConstants.boardSize.y + x]);
+                var shipType = ShipType.valueOf(boardEnc[y * GameConstants.boardSize.x + x]);
 
                 board.setShip(new Vector2Int(x, y), shipType);
             }
