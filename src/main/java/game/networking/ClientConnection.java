@@ -118,7 +118,7 @@ public class ClientConnection
                     }
                     case "g": 
                     {
-                        onGameOver(inputSplit[1]);
+                        onGameOver(inputSplit[1], inputSplit[2]);
                         dispose();
                         return;
                     }
@@ -199,9 +199,11 @@ public class ClientConnection
         invokeUpdate(lastPlayerName, nextPlayerName, cellPos, isHit, isSunk, isLate);
     }
 
-    private void onGameOver(String resultEnc)
+    private void onGameOver(String winnerName, String isRegularWinEnc)
     {
-        var result = Result.valueOf(resultEnc);
+        var result = Result.TIE;
+        if (match.leftPlayer.name == winnerName) result = Result.WIN_LEFT;
+        else if (match.rightPlayer.name == winnerName) result = Result.WIN_RIGHT;
         invokeGameOver(result);
     }
 

@@ -9,8 +9,8 @@ public abstract class Match implements IPlayerListener
     protected Board leftBoard;
     protected Board rightBoard;
     
-    protected Player leftPlayer;
-    protected Player rightPlayer;
+    public Player leftPlayer;
+    public Player rightPlayer;
     
     protected int leftShipCount;
     protected int rightShipCount;
