@@ -95,8 +95,8 @@ public class MatchConnection
 
     public void sendUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
-        var lastPlayerName = "";
-        var nextPlayerName = "";
+        var lastPlayerName = " ";
+        var nextPlayerName = " ";
         if (lastPlayer != null) lastPlayerName = lastPlayer.name;
         if (nextPlayer != null) nextPlayerName = nextPlayer.name;
 

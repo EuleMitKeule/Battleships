@@ -1,5 +1,6 @@
 package game;
 
+import game.core.UI;
 import game.core.Vector2Int;
 import game.networking.*;
 
@@ -9,7 +10,8 @@ public class ClientMatch extends Match implements IClientListener
     public ClientMatch(String name, String enemyName)
     {
         super();
-        
+        UI.instance.loadGame(name, enemyName);
+        addListener(UI.instance);
         leftPlayer = new Human(name, this);
         rightPlayer = new Enemy(name, this);
     }
@@ -46,5 +48,13 @@ public class ClientMatch extends Match implements IClientListener
         if (leftPlayer.name.equals(playerName)) return leftPlayer;
         else if (rightPlayer.name.equals(playerName)) return rightPlayer;
         else return null;
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        removeListener(UI.instance);
     }
 }
