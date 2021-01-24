@@ -24,6 +24,28 @@ public class ClientMatch extends Match implements IClientListener
     public void onUpdateReceived(String lastPlayerName, String nextPlayerName, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
         invokeUpdate(getPlayer(lastPlayerName), getPlayer(nextPlayerName), cellPos, isHit, isSunk, isLate);
+        var isLeftPlayer = lastPlayerName == leftPlayer.name;
+        
+        if (isHit)
+        {
+            if (isLeftPlayer) leftScore += 1;
+            else rightScore += 1;
+        }
+        if (isSunk)
+        {
+            if(isLeftPlayer) 
+            {
+                leftScore += 1;
+                rightShipCount -= 1;
+            }
+            else    
+            {
+                rightScore += 1;
+                leftShipCount -= 1;
+            }
+        }
+        invokeShipCountChanged(leftShipCount, rightShipCount);
+        invokeScoreChanged(leftScore, rightScore);
     }
 
     public void onClientBoard(Player player, Board board)
@@ -39,7 +61,7 @@ public class ClientMatch extends Match implements IClientListener
     public void onGameOverReceived(Result result)
     {
         invokeGameOver(result);
-
+        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name);
         dispose();
     }
 

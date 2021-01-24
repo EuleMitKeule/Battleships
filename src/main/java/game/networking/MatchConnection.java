@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import game.*;
 import game.core.*;
@@ -84,7 +85,13 @@ public class MatchConnection
                 }
             }
         } 
-        catch (IOException e) { e.printStackTrace(); }
+        catch (IOException e) 
+        { 
+            var isLeftPlayer = netPlayer == leftPlayer;
+            sendGameOver("", false, isLeftPlayer ? rightOut : leftOut);
+            dispose();
+        }
+        
     }
 
     public void sendGameSetup(Player nextPlayer)
@@ -107,9 +114,16 @@ public class MatchConnection
         rightOut.println("u;" + x + ";" + y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
     }
 
-    public void sendGameOver(Result result)
+    public void sendGameOver(String winnerName, boolean isRegularWin)
     {
+        leftOut.println("g;" + winnerName + ";" + isRegularWin);
+        rightOut.println("g;" + winnerName + ";" + isRegularWin);
+        dispose();
+    }
 
+    public void sendGameOver(String winnerName, boolean isRegularWin, PrintStream out)
+    {
+        out.println("g;" + winnerName + ";" + isRegularWin);
     }
 
     private void onClientBoard(NetPlayer netPlayer, String[] boardEnc)

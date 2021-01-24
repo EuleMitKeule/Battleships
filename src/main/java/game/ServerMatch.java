@@ -38,7 +38,17 @@ public class ServerMatch extends Match implements IMatchConnectionListener
     protected void invokeGameOver(Result result)
     {
         super.invokeGameOver(result);
-        matchConnection.sendGameOver(result);
+        if (result == Result.WIN_LEFT)
+        {
+            matchConnection.sendGameOver(leftPlayer.name, true);
+        }
+        else if (result == Result.WIN_RIGHT) 
+        {
+            matchConnection.sendGameOver(rightPlayer.name, true);
+        }
+        else matchConnection.sendGameOver("", true);
+
+        
     }
 
     protected void invokeGameSetup(Player player)
