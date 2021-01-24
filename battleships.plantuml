@@ -1,0 +1,379 @@
+@startuml
+
+title __BATTLESHIPS's Class Diagram__\n
+
+  namespace game {
+    class game.AiHasGuessedCorrectlyState {
+    }
+  }
+  
+
+  namespace game {
+    class game.AiHasGuessedIncorrectlyState {
+    }
+  }
+  
+
+  namespace game {
+    class game.AiStartState {
+    }
+  }
+  
+
+  namespace game {
+    class game.Board {
+    }
+  }
+  
+
+  namespace game {
+    class game.ClientMatch {
+    }
+  }
+  
+
+  namespace game {
+    class game.Computer {
+    }
+  }
+  
+
+  namespace game {
+    enum Direction {
+    }
+  }
+  
+
+  namespace game {
+    class game.Enemy {
+    }
+  }
+  
+
+  namespace game {
+    class game.GameConstants {
+    }
+  }
+  
+
+  namespace game {
+    class game.Human {
+    }
+  }
+  
+
+  namespace game {
+    interface game.IAiState {
+    }
+  }
+  
+
+  namespace game {
+    interface game.IMatchListener {
+    }
+  }
+  
+
+  namespace game {
+    interface game.IPlayerListener {
+    }
+  }
+  
+
+  namespace game {
+    class game.LocalMatch {
+    }
+  }
+  
+
+  namespace game {
+    class game.Main {
+    }
+  }
+  
+
+  namespace game {
+    abstract class game.Match {
+    }
+  }
+  
+
+  namespace game {
+    class game.MatchTimer {
+    }
+  }
+  
+
+  namespace game {
+    abstract class game.Player {
+    }
+  }
+  
+
+  namespace game {
+    class game.Resources {
+    }
+  }
+  
+
+  namespace game {
+    enum Result {
+    }
+  }
+  
+
+  namespace game {
+    class game.RoundTimer {
+    }
+  }
+  
+
+  namespace game {
+    class game.ServerMatch {
+    }
+  }
+  
+
+  namespace game {
+    enum ShipType {
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.BoardRenderer {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.ConsoleData {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Game {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      interface game.core.IInputListener {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      interface game.core.IRenderable {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      interface game.core.IUpdatable {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Input {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.JConsole {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Timer {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.UI {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Vector2 {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Vector2Int {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace networking {
+      class game.networking.ClientConnection {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace networking {
+      interface game.networking.IClientListener {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace networking {
+      interface game.networking.IMatchConnectionListener {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace networking {
+      class game.networking.MatchConnection {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace networking {
+      enum MessageId {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace networking {
+      class game.networking.NetPlayer {
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace networking {
+      class game.networking.ServerConnection {
+      }
+    }
+  }
+  
+
+  namespace tests {
+    class tests.MatchTests {
+    }
+  }
+  
+
+  namespace tests {
+    class tests.MatchTests {
+    }
+  }
+  
+
+  game.AiHasGuessedCorrectlyState .up.|> game.IAiState
+  game.AiHasGuessedCorrectlyState o-- game.Computer : _computer
+  game.AiHasGuessedIncorrectlyState .up.|> game.IAiState
+  game.AiHasGuessedIncorrectlyState o-- game.Computer : _computer
+  game.AiStartState .up.|> game.IAiState
+  game.AiStartState o-- game.Computer : _computer
+  game.Board .up.|> game.core.IRenderable
+  game.Board o-- game.core.Vector2Int : offset
+  game.Board o-- game.core.Vector2Int : size
+  game.ClientMatch .up.|> game.networking.IClientListener
+  game.ClientMatch -up-|> game.Match
+  game.Computer -up-|> game.Player
+  game.Computer o-- game.IAiState : aiHasGuessedCorrectlyState
+  game.Computer o-- game.IAiState : aiHasGuessedIncorrectlyState
+  game.Computer o-- game.IAiState : aiStartState
+  game.Computer o-- game.Direction : curDirection
+  game.Computer o-- game.core.Vector2Int : lastGuessPos
+  game.Computer o-- game.core.Vector2Int : lastStartGuessPos
+  game.Computer o-- game.IAiState : state
+  game.Enemy -up-|> game.Player
+  game.Human .up.|> game.core.IInputListener
+  game.Human -up-|> game.Player
+  game.Human o-- game.core.BoardRenderer : leftBoardRenderer
+  game.Human o-- game.core.BoardRenderer : rightBoardRenderer
+  game.LocalMatch -up-|> game.Match
+  game.Match .up.|> game.IPlayerListener
+  game.Match o-- game.Player : curPlayer
+  game.Match o-- game.Board : leftBoard
+  game.Match o-- game.Player : leftPlayer
+  game.Match o-- game.MatchTimer : matchTimer
+  game.Match o-- game.Board : rightBoard
+  game.Match o-- game.Player : rightPlayer
+  game.Match o-- game.RoundTimer : roundTimer
+  game.MatchTimer o-- game.Match : match
+  game.Player .up.|> game.IMatchListener
+  game.Player o-- game.ShipType : curShipType
+  game.Player o-- game.Board : enemyBoard
+  game.Player o-- game.Match : match
+  game.Player o-- game.Board : ownBoard
+  game.RoundTimer o-- game.Match : match
+  game.ServerMatch .up.|> game.networking.IMatchConnectionListener
+  game.ServerMatch -up-|> game.Match
+  game.ServerMatch o-- game.networking.MatchConnection : matchConnection
+  game.core.BoardRenderer .up.|> game.core.IRenderable
+  game.core.BoardRenderer o-- game.Board : board
+  game.core.BoardRenderer o-- game.core.Vector2Int : offset
+  game.core.Game .up.|> game.core.IRenderable
+  game.core.Game .up.|> game.core.IUpdatable
+  game.core.Game o-- game.core.Timer : renderTimer
+  game.core.Game o-- game.core.Timer : secondsTimer
+  game.core.Game o-- game.core.Timer : updateTimer
+  game.core.Input .up.|> KeyListener
+  game.core.Input .up.|> MouseListener
+  game.core.JConsole .up.|> HierarchyListener
+  game.core.JConsole o-- game.core.Timer : blinkTimer
+  game.core.JConsole o-- game.core.ConsoleData : data
+  game.core.UI .up.|> game.IMatchListener
+  game.core.UI o-- game.core.JConsole : console
+  game.core.UI o-- game.core.Game : game
+  game.networking.ClientConnection o-- game.ClientMatch : match
+  game.networking.MatchConnection o-- game.networking.NetPlayer : leftPlayer
+  game.networking.MatchConnection o-- game.ServerMatch : match
+  game.networking.MatchConnection o-- game.networking.NetPlayer : rightPlayer
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

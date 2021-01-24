@@ -1,0 +1,367 @@
+@startuml
+
+title __GAME's Class Diagram__\n
+
+  namespace game {
+    class game.AiHasGuessedCorrectlyState {
+        + AiHasGuessedCorrectlyState()
+        + enterState()
+        + exitState()
+        + onUpdate()
+    }
+  }
+  
+
+  namespace game {
+    class game.AiHasGuessedIncorrectlyState {
+        + AiHasGuessedIncorrectlyState()
+        + enterState()
+        + exitState()
+        + onUpdate()
+    }
+  }
+  
+
+  namespace game {
+    class game.AiStartState {
+        + AiStartState()
+        + enterState()
+        + exitState()
+        + onUpdate()
+    }
+  }
+  
+
+  namespace game {
+    class game.Board {
+        - guessed : boolean[][]
+        - ships : ShipType[][]
+        - tileSize : int
+        + Board()
+        + canGuess()
+        + canPlace()
+        + getShip()
+        + getShip()
+        + getShips()
+        + getSize()
+        + guessField()
+        + inBounds()
+        + inBounds()
+        + isGuessed()
+        + isHit()
+        + isSinking()
+        + placeShip()
+        + setShip()
+        + setShips()
+        + worldToCell()
+    }
+  }
+  
+
+  namespace game {
+    class game.ClientMatch {
+        + ClientMatch()
+        + onClientBoard()
+        + onGameOverReceived()
+        + onGameSetupReceived()
+        + onMove()
+        + onUpdateReceived()
+        - getPlayer()
+    }
+  }
+  
+
+  namespace game {
+    class game.Computer {
+        + Computer()
+        + Start()
+        + getRandomGuessPos()
+        + onUpdate()
+        + setState()
+        ~ assignRandomBoard()
+    }
+  }
+  
+
+  namespace game {
+    enum Direction {
+      Down
+      Left
+      Right
+      Up
+    }
+  }
+  
+
+  namespace game {
+    class game.Enemy {
+        + Enemy()
+    }
+  }
+  
+
+  namespace game {
+    class game.GameConstants {
+        {static} + boardSize : Vector2Int
+        {static} + leftOffset : Vector2Int
+        {static} + rightOffset : Vector2Int
+        {static} + scale : float
+        {static} + tileSize : int
+    }
+  }
+  
+
+  namespace game {
+    class game.Human {
+        - isPlacing : boolean
+        + Human()
+        + dispose()
+        + onMouseDown()
+        + onUpdate()
+    }
+  }
+  
+
+  namespace game {
+    interface game.IAiState {
+        {abstract} + enterState()
+        {abstract} + exitState()
+        {abstract} + onUpdate()
+    }
+  }
+  
+
+  namespace game {
+    interface game.IMatchListener {
+        + onGameOver()
+        + onGameSetup()
+        + onNameExists()
+        + onPlayerAdded()
+        + onScoreChanged()
+        + onShipCountChanged()
+        + onUpdate()
+    }
+  }
+  
+
+  namespace game {
+    interface game.IPlayerListener {
+        + onClientBoard()
+        + onMove()
+    }
+  }
+  
+
+  namespace game {
+    class game.LocalMatch {
+        + LocalMatch()
+        + dispose()
+        + onMove()
+        # invokeGameOver()
+    }
+  }
+  
+
+  namespace game {
+    class game.Main {
+        {static} + main()
+    }
+  }
+  
+
+  namespace game {
+    abstract class game.Match {
+        # leftScore : int
+        # leftShipCount : int
+        # listeners : ArrayList<IMatchListener>
+        # rightScore : int
+        # rightShipCount : int
+        + Match()
+        + addListener()
+        + dispose()
+        + onClientBoard()
+        + onMatchTimerStopped()
+        + onMove()
+        + onRoundTimerStopped()
+        + removeListener()
+        # invokeGameOver()
+        # invokeGameSetup()
+        # invokePlayerAdded()
+        # invokeScoreChanged()
+        # invokeShipCountChanged()
+        # invokeUpdate()
+    }
+  }
+  
+
+  namespace game {
+    class game.MatchTimer {
+        - thread : Thread
+        + MatchTimer()
+        + restart()
+        + start()
+        + stop()
+    }
+  }
+  
+
+  namespace game {
+    abstract class game.Player {
+        + name : String
+        # isGuessing : boolean
+        # shipQueue : LinkedList<ShipType>
+        - listeners : ArrayList<IPlayerListener>
+        + Player()
+        + addListener()
+        + dispose()
+        + onGameOver()
+        + onGameSetup()
+        + onUpdate()
+        + removeListener()
+        # invokeClientBoard()
+        # invokeMove()
+    }
+  }
+  
+
+  namespace game {
+    class game.Resources {
+        {static} + BATTLESHIP_BACK : BufferedImage
+        {static} + BATTLESHIP_BACK_MID : BufferedImage
+        {static} + BATTLESHIP_FRONT : BufferedImage
+        {static} + BATTLESHIP_FRONT_MID : BufferedImage
+        {static} + CARRIER_BACK : BufferedImage
+        {static} + CARRIER_BACK_MID : BufferedImage
+        {static} + CARRIER_FRONT : BufferedImage
+        {static} + CARRIER_FRONT_MID : BufferedImage
+        {static} + CARRIER_MID : BufferedImage
+        {static} + DESTROYER_BACK : BufferedImage
+        {static} + DESTROYER_FRONT : BufferedImage
+        {static} + DESTROYER_MID : BufferedImage
+        {static} + PATROL : BufferedImage
+        {static} + SHIP_DUMMY : BufferedImage
+        {static} + SHIP_GUESSED_DUMMY : BufferedImage
+        {static} + SPRITE_NULL : BufferedImage
+        {static} + SUPER_PATROL_BACK : BufferedImage
+        {static} + SUPER_PATROL_FRONT : BufferedImage
+        {static} + WATER_DUMMY : BufferedImage
+        {static} + WATER_GUESSED_DUMMY : BufferedImage
+        {static} + Initialize()
+        {static} + getShipQueue()
+    }
+  }
+  
+
+  namespace game {
+    enum Result {
+      TIE
+      WIN_LEFT
+      WIN_RIGHT
+    }
+  }
+  
+
+  namespace game {
+    class game.RoundTimer {
+        - thread : Thread
+        + RoundTimer()
+        + restart()
+        + start()
+        + stop()
+    }
+  }
+  
+
+  namespace game {
+    class game.ServerMatch {
+        + ServerMatch()
+        + dispose()
+        + onClientBoardReceived()
+        + onMoveReceived()
+        # invokeGameOver()
+        # invokeGameSetup()
+        # invokeUpdate()
+        - getPlayer()
+    }
+  }
+  
+
+  namespace game {
+    enum ShipType {
+      BATTLESHIP
+      BATTLESHIP_BACK
+      BATTLESHIP_BACK_MID
+      BATTLESHIP_FRONT
+      BATTLESHIP_FRONT_MID
+      CARRIER
+      CARRIER_BACK
+      CARRIER_BACK_MID
+      CARRIER_FRONT
+      CARRIER_FRONT_MID
+      CARRIER_MID
+      DESTROYER
+      DESTROYER_BACK
+      DESTROYER_FRONT
+      DESTROYER_MID
+      PATROL
+      SUPER_PATROL
+      SUPER_PATROL_BACK
+      SUPER_PATROL_FRONT
+      WATER
+    }
+  }
+  
+
+  game.AiHasGuessedCorrectlyState .up.|> game.IAiState
+  game.AiHasGuessedCorrectlyState o-- game.Computer : _computer
+  game.AiHasGuessedIncorrectlyState .up.|> game.IAiState
+  game.AiHasGuessedIncorrectlyState o-- game.Computer : _computer
+  game.AiStartState .up.|> game.IAiState
+  game.AiStartState o-- game.Computer : _computer
+  game.Board .up.|> game.core.IRenderable
+  game.Board o-- game.core.Vector2Int : offset
+  game.Board o-- game.core.Vector2Int : size
+  game.ClientMatch .up.|> game.networking.IClientListener
+  game.ClientMatch -up-|> game.Match
+  game.Computer -up-|> game.Player
+  game.Computer o-- game.IAiState : aiHasGuessedCorrectlyState
+  game.Computer o-- game.IAiState : aiHasGuessedIncorrectlyState
+  game.Computer o-- game.IAiState : aiStartState
+  game.Computer o-- game.Direction : curDirection
+  game.Computer o-- game.core.Vector2Int : lastGuessPos
+  game.Computer o-- game.core.Vector2Int : lastStartGuessPos
+  game.Computer o-- game.IAiState : state
+  game.Enemy -up-|> game.Player
+  game.Human .up.|> game.core.IInputListener
+  game.Human -up-|> game.Player
+  game.Human o-- game.core.BoardRenderer : leftBoardRenderer
+  game.Human o-- game.core.BoardRenderer : rightBoardRenderer
+  game.LocalMatch -up-|> game.Match
+  game.Match .up.|> game.IPlayerListener
+  game.Match o-- game.Player : curPlayer
+  game.Match o-- game.Board : leftBoard
+  game.Match o-- game.Player : leftPlayer
+  game.Match o-- game.MatchTimer : matchTimer
+  game.Match o-- game.Board : rightBoard
+  game.Match o-- game.Player : rightPlayer
+  game.Match o-- game.RoundTimer : roundTimer
+  game.MatchTimer o-- game.Match : match
+  game.Player .up.|> game.IMatchListener
+  game.Player o-- game.ShipType : curShipType
+  game.Player o-- game.Board : enemyBoard
+  game.Player o-- game.Match : match
+  game.Player o-- game.Board : ownBoard
+  game.RoundTimer o-- game.Match : match
+  game.ServerMatch .up.|> game.networking.IMatchConnectionListener
+  game.ServerMatch -up-|> game.Match
+  game.ServerMatch o-- game.networking.MatchConnection : matchConnection
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

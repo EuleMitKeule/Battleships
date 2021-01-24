@@ -1,0 +1,305 @@
+@startuml
+
+title __CORE's Class Diagram__\n
+
+  namespace game {
+    namespace core {
+      class game.core.BoardRenderer {
+          - tileSize : int
+          + BoardRenderer()
+          + dispose()
+          + render()
+          - drawField()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.ConsoleData {
+          + background : Color[]
+          + columns : int
+          + font : Font[]
+          + foreground : Color[]
+          + rows : int
+          + text : char[]
+          - capacity : int
+          + fillArea()
+          + getBackgroundAt()
+          + getCharAt()
+          + getFontAt()
+          + getForegroundAt()
+          + setDataAt()
+          ~ ConsoleData()
+          ~ init()
+          - ensureCapacity()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Game {
+          {static} + BOARD_SIZE : Vector2Int
+          {static} + GAME_SIZE : Vector2Int
+          {static} + frame : JFrame
+          {static} - input : Input
+          {static} - renderables : ArrayList<IRenderable>
+          {static} - serialVersionUID : long
+          {static} - updatables : ArrayList<IUpdatable>
+          + Game()
+          {static} + addRenderable()
+          {static} + addUpdatable()
+          + paintComponent()
+          {static} + removeRenderable()
+          {static} + removeUpdatable()
+          + render()
+          + update()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      interface game.core.IInputListener {
+          + onKeyDown()
+          + onKeyUp()
+          + onMouseDown()
+          + onMouseUp()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      interface game.core.IRenderable {
+          + render()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      interface game.core.IUpdatable {
+          + update()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Input {
+          {static} - listeners : ArrayList<IInputListener>
+          {static} + addListener()
+          + keyPressed()
+          + keyReleased()
+          + keyTyped()
+          + mouseClicked()
+          + mouseEntered()
+          + mouseExited()
+          + mousePressed()
+          + mouseReleased()
+          {static} + removeListener()
+          - invokeKeyDown()
+          - invokeKeyUp()
+          - invokeMouseDown()
+          - invokeMouseUp()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.JConsole {
+          {static} - DEFAULT_BACKGROUND : Color
+          {static} - DEFAULT_BLINKRATE : int
+          {static} - DEFAULT_BLINK_ON : boolean
+          {static} - DEFAULT_FONT : Font
+          {static} - DEFAULT_FOREGROUND : Color
+          - currentBackground : Color
+          - currentFont : Font
+          - currentForeground : Color
+          - cursorBlinkOn : boolean
+          - cursorInverted : boolean
+          - cursorVisible : boolean
+          - cursorX : int
+          - cursorY : int
+          - fontHeight : int
+          - fontWidth : int
+          - fontYOffset : int
+          - mainFont : Font
+          {static} - serialVersionUID : long
+          + JConsole()
+          + addNotify()
+          + captureStdOut()
+          + clear()
+          + clearScreen()
+          + fillArea()
+          + getBackground()
+          + getBackgroundAt()
+          + getCharAt()
+          + getColumns()
+          + getCursorX()
+          + getCursorY()
+          + getFontAt()
+          + getFontHeight()
+          + getFontWidth()
+          + getForeground()
+          + getForegroundAt()
+          + getRows()
+          + hierarchyChanged()
+          + paintComponent()
+          + removeNotify()
+          + repaintArea()
+          + resetCursor()
+          + resize()
+          + setBackground()
+          + setBlinkDelay()
+          + setColumns()
+          + setCursorBlink()
+          + setCursorPos()
+          + setCursorVisible()
+          + setFont()
+          + setForeground()
+          + setMainFont()
+          + setRows()
+          + write()
+          + write()
+          + write()
+          + writeln()
+          # init()
+          - clearArea()
+          - getTimer()
+          - moveCursor()
+          - startBlinking()
+          - stopBlinking()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.JConsole.TimerAction {
+          + actionPerformed()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Timer {
+          - deltaTime : double
+          - lastTime : long
+          - thisTime : long
+          + getDeltaTime()
+          + getLastTime()
+          + getThisTime()
+          + reset()
+          + setDeltaTime()
+          + setLastTime()
+          + setThisTime()
+          + update()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.UI {
+          {static} + instance : UI
+          - leftScoreLabel : JLabel
+          - leftShipCountLabel : JLabel
+          - logs : int
+          - rightScoreLabel : JLabel
+          - rightShipCountLabel : JLabel
+          - winnerLabel : JLabel
+          + UI()
+          + loadEnd()
+          + loadGame()
+          + loadMenu()
+          + loadServer()
+          + log()
+          + onScoreChanged()
+          + onShipCountChanged()
+          + unload()
+          - onExitGameButton()
+          - onJoinServerButton()
+          - onRestartGameButton()
+          - onStartLocalButton()
+          - onStartServerButton()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Vector2 {
+          + x : double
+          + y : double
+          + Vector2()
+          {static} + one()
+          + times()
+          {static} + zero()
+      }
+    }
+  }
+  
+
+  namespace game {
+    namespace core {
+      class game.core.Vector2Int {
+          + x : int
+          + y : int
+          + Vector2Int()
+          + add()
+          {static} + down()
+          {static} + left()
+          {static} + one()
+          {static} + right()
+          + times()
+          {static} + up()
+          {static} + zero()
+      }
+    }
+  }
+  
+
+  game.core.BoardRenderer .up.|> game.core.IRenderable
+  game.core.BoardRenderer o-- game.Board : board
+  game.core.BoardRenderer o-- game.core.Vector2Int : offset
+  game.core.Game .up.|> game.core.IRenderable
+  game.core.Game .up.|> game.core.IUpdatable
+  game.core.Game o-- game.core.Timer : renderTimer
+  game.core.Game o-- game.core.Timer : secondsTimer
+  game.core.Game o-- game.core.Timer : updateTimer
+  game.core.Input .up.|> KeyListener
+  game.core.Input .up.|> MouseListener
+  game.core.JConsole .up.|> HierarchyListener
+  game.core.JConsole o-- game.core.Timer : blinkTimer
+  game.core.JConsole o-- game.core.ConsoleData : data
+  game.core.JConsole +-down- game.core.JConsole.TimerAction
+  game.core.JConsole.TimerAction .up.|> ActionListener
+  game.core.UI .up.|> game.IMatchListener
+  game.core.UI o-- game.core.JConsole : console
+  game.core.UI o-- game.core.Game : game
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
