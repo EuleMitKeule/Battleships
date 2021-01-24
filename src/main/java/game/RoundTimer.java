@@ -38,7 +38,7 @@ public class RoundTimer
 
     public void stop()
     {
-        thread.interrupt();
+        if (thread != null) thread.interrupt();
     }
 
     public void restart()
