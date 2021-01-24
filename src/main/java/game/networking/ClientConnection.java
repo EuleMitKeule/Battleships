@@ -202,8 +202,8 @@ public class ClientConnection
     private void onGameOver(String winnerName, String isRegularWinEnc)
     {
         var result = Result.TIE;
-        if (match.leftPlayer.name == winnerName) result = Result.WIN_LEFT;
-        else if (match.rightPlayer.name == winnerName) result = Result.WIN_RIGHT;
+        if (match.leftPlayer.name.equals(winnerName)) result = Result.WIN_LEFT;
+        else if (match.rightPlayer.name.equals(winnerName)) result = Result.WIN_RIGHT;
         invokeGameOver(result);
     }
 
