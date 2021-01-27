@@ -25,7 +25,11 @@ public class ClientMatch extends Match implements IClientListener
     {
         invokeUpdate(getPlayer(lastPlayerName), getPlayer(nextPlayerName), cellPos, isHit, isSunk, isLate);
         var isLeftPlayer = lastPlayerName == leftPlayer.name;
-        
+        System.out.println(leftPlayer.name);
+        System.out.println(rightPlayer.name);
+        System.out.println(lastPlayerName);
+
+
         if (isHit)
         {
             if (!isLeftPlayer) rightScore += 1;
