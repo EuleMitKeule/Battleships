@@ -61,7 +61,7 @@ public class ClientMatch extends Match implements IClientListener
     public void onGameOverReceived(Result result)
     {
         invokeGameOver(result);
-        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name);
+        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name, false);
         dispose();
     }
 

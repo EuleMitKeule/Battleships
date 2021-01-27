@@ -94,7 +94,7 @@ public class UI implements IMatchListener
         console.writeln(message);
     }
 
-    public void loadEnd(Result result, String winner)
+    public void loadEnd(Result result, String winner, boolean isLocal)
     {
         unload();
 
@@ -112,7 +112,6 @@ public class UI implements IMatchListener
         }
         winnerLabel.setBounds(500, 100, 600, 200);
         winnerLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 40));
-        
         var restartGameButton = new JButton("Restart Game");
         restartGameButton.setBounds(650, 385, 300, 50);
         restartGameButton.addActionListener(e -> onRestartGameButton(e));
@@ -120,8 +119,8 @@ public class UI implements IMatchListener
         var exitGameButton = new JButton("Exit");
         exitGameButton.setBounds(650, 525, 300, 50);
         exitGameButton.addActionListener(e -> onExitGameButton(e));
-
-        game.add(restartGameButton);
+        
+        if (isLocal) game.add(restartGameButton);
         game.add(exitGameButton);
         game.add(winnerLabel);
     }
