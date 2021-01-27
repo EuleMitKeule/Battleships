@@ -13,7 +13,7 @@ public class ClientMatch extends Match implements IClientListener
         UI.instance.loadGame(name, enemyName);
         addListener(UI.instance);
         leftPlayer = new Human(name, this);
-        rightPlayer = new Enemy(name, this);
+        rightPlayer = new Enemy(enemyName, this);
     }
 
     public void onGameSetupReceived(String nextPlayerName)
