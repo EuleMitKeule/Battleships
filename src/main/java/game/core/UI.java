@@ -148,7 +148,7 @@ public class UI implements IMatchListener
         rightPlayerNameLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
 
         rightScoreLabel = new JLabel("0 Points", JLabel.RIGHT);
-        rightScoreLabel.setBounds(1142, 16, 256, 32);
+        rightScoreLabel.setBounds(1014, 16, 256, 32);
         rightScoreLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 32));
         
         rightShipCountLabel = new JLabel("28 Ships");
