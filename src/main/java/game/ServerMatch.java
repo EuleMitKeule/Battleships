@@ -47,8 +47,6 @@ public class ServerMatch extends Match implements IMatchConnectionListener
             matchConnection.sendGameOver(rightPlayer.name, true);
         }
         else matchConnection.sendGameOver("", true);
-
-        
     }
 
     protected void invokeGameSetup(Player player)
