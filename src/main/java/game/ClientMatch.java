@@ -28,6 +28,7 @@ public class ClientMatch extends Match implements IClientListener
         System.out.println(leftPlayer.name);
         System.out.println(rightPlayer.name);
         System.out.println(lastPlayerName);
+        System.out.println(isLeftPlayer)
 
 
         if (isHit)
