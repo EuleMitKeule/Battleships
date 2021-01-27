@@ -28,20 +28,20 @@ public class ClientMatch extends Match implements IClientListener
         
         if (isHit)
         {
-            if (!isLeftPlayer) leftScore += 1;
-            else rightScore += 1;
+            if (!isLeftPlayer) rightScore += 1;
+            else leftScore += 1;
         }
         if (isSunk)
         {
             if(!isLeftPlayer) 
             {
-                leftScore += 1;
-                rightShipCount -= 1;
+                rightScore += 1;
+                leftShipCount -= 1;
             }
             else    
             {
-                rightScore += 1;
-                leftShipCount -= 1;
+                leftScore += 1;
+                rightShipCount -= 1;
             }
         }
         invokeShipCountChanged(leftShipCount, rightShipCount);
