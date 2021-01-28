@@ -28,9 +28,12 @@ public class ClientConnection
 
     private ClientMatch match;
 
-    public ClientConnection() 
+    private boolean isComputer;
+
+    public ClientConnection(boolean isComputer) 
     {
         instance = this;
+        this.isComputer = isComputer;
 
         do
         {
@@ -171,7 +174,7 @@ public class ClientConnection
 
         System.out.println("Starting client match!");
 
-        match = new ClientMatch(playerName, enemyName);
+        match = new ClientMatch(playerName, enemyName, isComputer);
         addListener(match);
     }
 

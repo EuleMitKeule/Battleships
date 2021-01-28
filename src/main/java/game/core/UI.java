@@ -60,10 +60,15 @@ public class UI implements IMatchListener
         var joinServerButton = new JButton("Join Server");
         joinServerButton.setBounds(650, 500, 300, 50);
         joinServerButton.addActionListener(e -> onJoinServerButton(e));
+
+        var joinServerAsComputerButton = new JButton("Join Server as Computer");
+        joinServerAsComputerButton.setBounds(650, 575, 300, 50);
+        joinServerAsComputerButton.addActionListener(e -> onJoinServerAsComputerButton(e));
         
         game.add(joinServerButton);
         game.add(startServerButton);
         game.add(startLocalButton);
+        game.add(joinServerAsComputerButton);
 
     }
 
@@ -179,7 +184,7 @@ public class UI implements IMatchListener
     private void onJoinServerButton(ActionEvent e)
     {
         unload();
-        new ClientConnection();
+        new ClientConnection(false);
     }
 
     private void onRestartGameButton(ActionEvent e)
@@ -191,6 +196,12 @@ public class UI implements IMatchListener
     private void onExitGameButton(ActionEvent e)
     {
         loadMenu();
+    }
+
+    private void onJoinServerAsComputerButton(ActionEvent e)
+    {
+        unload();
+        new ClientConnection(true);
     }
 
     public void onShipCountChanged(int leftShipCount, int rightShipCount)

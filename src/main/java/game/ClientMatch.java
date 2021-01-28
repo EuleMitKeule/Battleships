@@ -7,12 +7,12 @@ import game.networking.*;
 public class ClientMatch extends Match implements IClientListener
 {
 
-    public ClientMatch(String name, String enemyName)
+    public ClientMatch(String name, String enemyName, boolean isComputer)
     {
         super();
         UI.instance.loadGame(name, enemyName);
         addListener(UI.instance);
-        leftPlayer = new Human(name, this);
+        leftPlayer = isComputer ? new Computer(name, this) : new Human(name, this);
         rightPlayer = new Enemy(enemyName, this);
     }
 
