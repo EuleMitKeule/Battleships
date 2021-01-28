@@ -86,7 +86,7 @@ public class ServerConnection
             {
                 var netPlayer = waitingPlayers.get(i);
                 if (netPlayer == null) continue;
-                if (netPlayer.name == playerName) isAlreadyPresent = true;           
+                if (netPlayer.name.equals(playerName)) isAlreadyPresent = true;           
             }
 
             if (isAlreadyPresent)
