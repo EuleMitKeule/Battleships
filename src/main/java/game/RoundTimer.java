@@ -5,11 +5,19 @@ public class RoundTimer
     private Match match;
     private Thread thread;
 
+    /**
+     * Assigns the match to this.match
+     * @invariant match != null
+     * @param match the current match
+     */
     public RoundTimer(Match match)
     {
         this.match = match;
     }
 
+    /**
+     * starts the round timer
+     */
     public void start()
     {
         thread = new Thread(new Runnable()
@@ -36,6 +44,9 @@ public class RoundTimer
         thread.start();
     }
 
+    /**
+     * stops the timer.
+     */
     public void stop()
     {
         if (thread != null) thread.interrupt();

@@ -26,6 +26,12 @@ public enum ShipType
     BATTLESHIP,
     CARRIER;
 
+    /**
+     * Returns true if the shipType is indeed a ShipType
+     * @requires shipType
+     * @param shipType
+     * @return which type the ship is
+     */
     public static boolean isShip(ShipType shipType)
     {
         return 

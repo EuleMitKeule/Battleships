@@ -104,6 +104,7 @@ public class UI implements IMatchListener
 
         if (result != Result.TIE)
         {
+            
             winnerLabel.setText(winner + " won the game!");
         }
         else 

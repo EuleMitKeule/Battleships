@@ -37,6 +37,10 @@ public abstract class Player implements IMatchListener
 		match.addListener(this);
 	}
 
+	
+	/** 
+	 * @param player
+	 */
 	@Override
 	public void onGameSetup(Player player)
 	{
@@ -54,6 +58,10 @@ public abstract class Player implements IMatchListener
 		else isGuessing = nextPlayer == this;
 	}
 
+	
+	/** 
+	 * @param result
+	 */
 	@Override
 	public void onGameOver(Result result)
 	{

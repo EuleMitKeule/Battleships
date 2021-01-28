@@ -34,6 +34,15 @@ public abstract class Match implements IPlayerListener
         rightShipCount = Resources.getShipQueue().size();
     }
 
+    
+    /** 
+     * assigns board to player and invokes GameSetup if both boards are null
+     * @ensures 
+     * @requires player != null
+     * @requires player != null
+     * @param player
+     * @param board
+     */
     @Override
     public void onClientBoard(Player player, Board board)
     {
@@ -57,6 +66,16 @@ public abstract class Match implements IPlayerListener
         }
     }
 
+    
+    /** 
+     * invokes when a player makes a move and increases and decreses leftScore, rightScore and leftShipCount, rightShipCount respectively
+     * @ensures invokeShipCountedChanged
+     * @ensures invokeScoreChanged
+     * @requires player != null
+     * @requires player != null
+     * @param player player that made a move before
+     * @param cellPos position of the hit
+     */
     @Override
     public void onMove(Player player, Vector2Int cellPos)
     {
@@ -112,6 +131,9 @@ public abstract class Match implements IPlayerListener
         }
     }
     
+    /**
+     * invokes when round timer stops
+     */
     public void onRoundTimerStopped()
     {
         var isLeftPlayer = curPlayer == leftPlayer;
@@ -119,6 +141,9 @@ public abstract class Match implements IPlayerListener
         invokeUpdate(curPlayer, isLeftPlayer ? rightPlayer : leftPlayer, null, false, false, true);
     }
     
+    /**
+     * invokes when match timer stops
+     */
     public void onMatchTimerStopped()
     {   
         var result = 
@@ -143,6 +168,10 @@ public abstract class Match implements IPlayerListener
         }
     }
 
+    
+    /** 
+     * @param result
+     */
     protected void invokeGameOver(Result result)
     {
         System.out.println("The game has ended in a "+ result.toString() + "!");
@@ -172,6 +201,10 @@ public abstract class Match implements IPlayerListener
         }
     }
 
+    
+    /** 
+     * @param player
+     */
     protected void invokeGameSetup(Player player)
     {
         for (int i = 0; i < listeners.size(); i++)
@@ -182,6 +215,11 @@ public abstract class Match implements IPlayerListener
         }
     }
 
+    
+    /** 
+     * @param leftShipCount
+     * @param rightShipCount
+     */
     protected void invokeShipCountChanged(int leftShipCount, int rightShipCount)
     {
         for (int i = 0; i < listeners.size(); i++)
@@ -192,6 +230,11 @@ public abstract class Match implements IPlayerListener
         }
     }
 
+    
+    /** 
+     * @param leftScore
+     * @param rightScore
+     */
     protected void invokeScoreChanged(int leftScore, int rightScore)
     {
         for (int i = 0; i < listeners.size(); i++)

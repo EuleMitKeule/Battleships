@@ -4,12 +4,15 @@ public class MatchTimer
 {
     private Match match;
     private Thread thread;
-
+    
+    /**
+     * @param match
+     */
     public MatchTimer(Match match)
     {
         this.match = match;
     }
-
+    
     public void start()
     {
         thread = new Thread(new Runnable()

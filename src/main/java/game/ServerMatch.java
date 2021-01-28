@@ -19,22 +19,48 @@ public class ServerMatch extends Match implements IMatchConnectionListener
         matchConnection.addListener(this);
     }
 
+    
+    /** 
+     * @requires playerName != null
+     * @param playerName
+     * @param board
+     */
     public void onClientBoardReceived(String playerName, Board board)
     {
         super.onClientBoard(getPlayer(playerName), board);
     }
 
+    
+    /** 
+     * @requires playerName != null
+     * @requires cellPos != null
+     * @param playerName
+     * @param cellPos
+     */
     public void onMoveReceived(String playerName, Vector2Int cellPos)
     {
         super.onMove(getPlayer(playerName), cellPos);
     }
 
+    
+    /** 
+     * @param lastPlayer
+     * @param nextPlayer
+     * @param cellPos
+     * @param isHit
+     * @param isSunk
+     * @param isLate
+     */
     protected void invokeUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
         super.invokeUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk, isLate);
         matchConnection.sendUpdate(lastPlayer, nextPlayer, cellPos, isHit, isSunk, isLate);
     }
 
+    
+    /** 
+     * @param result
+     */
     protected void invokeGameOver(Result result)
     {
         super.invokeGameOver(result);
@@ -49,6 +75,10 @@ public class ServerMatch extends Match implements IMatchConnectionListener
         else matchConnection.sendGameOver("", true);
     }
 
+    
+    /** 
+     * @param player
+     */
     protected void invokeGameSetup(Player player)
     {
         super.invokeGameSetup(player);
@@ -56,6 +86,11 @@ public class ServerMatch extends Match implements IMatchConnectionListener
         matchConnection.sendGameSetup(player);
     }
 
+    
+    /** 
+     * @param name
+     * @return Player
+     */
     private Player getPlayer(String name)
     {
         if (leftPlayer.name.equals(name)) return leftPlayer;
