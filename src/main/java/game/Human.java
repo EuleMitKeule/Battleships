@@ -13,7 +13,8 @@ public class Human extends Player implements IInputListener
     private BoardRenderer rightBoardRenderer;
 
     /**
-     * 
+     * Creates a Human player and assigns a board to him
+     * @invariant name != null && match != null
      * @param name  The name for the player
      * @param match The match context
      */

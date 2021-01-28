@@ -8,7 +8,7 @@ public class RoundTimer
     /**
      * Assigns the match to this.match
      * @invariant match != null
-     * @param match the current match
+     * @param match The current match
      */
     public RoundTimer(Match match)
     {
@@ -16,7 +16,7 @@ public class RoundTimer
     }
 
     /**
-     * starts the round timer
+     * Starts the round timer
      */
     public void start()
     {
@@ -27,7 +27,7 @@ public class RoundTimer
             {
                 try 
                 {
-                    Thread.sleep(15000);
+                    Thread.sleep(30000);
                     match.onRoundTimerStopped();
                 } 
                 catch (InterruptedException e)
@@ -45,13 +45,16 @@ public class RoundTimer
     }
 
     /**
-     * stops the timer.
+     * Stops the timer.
      */
     public void stop()
     {
         if (thread != null) thread.interrupt();
     }
 
+    /**
+     * Restarts the round timer
+     */
     public void restart()
     {
         stop();
