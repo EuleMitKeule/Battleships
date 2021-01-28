@@ -156,12 +156,14 @@ public class ClientConnection
 
     private void onNameExists()
     {
-        playerName = "";
-        while (playerName.equals(""))
-        {
-            playerName = JOptionPane.showInputDialog(Game.frame, "Please enter your name:");
-        }
-        out.println("h;" + playerName);
+        new ClientConnection(this.isComputer);
+
+        // playerName = "";
+        // while (playerName.equals(""))
+        // {
+        //     playerName = JOptionPane.showInputDialog(Game.frame, "Please enter your name:");
+        // }
+        // out.println("h;" + playerName);
     }
 
     private void onServerHandshake()
