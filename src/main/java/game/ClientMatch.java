@@ -65,10 +65,10 @@ public class ClientMatch extends Match implements IClientListener
         ClientConnection.instance.sendMove(cellPos);
     }
 
-    public void onGameOverReceived(Result result)
+    public void onGameOverReceived(Result result, boolean isRegularWin)
     {
         invokeGameOver(result);
-        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name, false);
+        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name, false, isRegularWin);
         dispose();
     }
 

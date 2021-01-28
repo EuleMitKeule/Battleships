@@ -99,7 +99,7 @@ public class UI implements IMatchListener
         console.writeln(message);
     }
 
-    public void loadEnd(Result result, String winner, boolean isLocal)
+    public void loadEnd(Result result, String winner, boolean isLocal, boolean isRegularWin)
     {
         unload();
 
@@ -110,13 +110,13 @@ public class UI implements IMatchListener
         if (result != Result.TIE)
         {
             
-            winnerLabel.setText(winner + " won the game!");
+            winnerLabel.setText(winner + " won the game" + (isRegularWin ? "!" : "because of a disconnect!"));
         }
         else 
         {
             winnerLabel.setText("The game has ended in a tie!");
         }
-        winnerLabel.setBounds(500, 100, 600, 200);
+        winnerLabel.setBounds(500, 100, 1600, 200);
         winnerLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 40));
         var restartGameButton = new JButton("Restart Game");
         restartGameButton.setBounds(650, 385, 300, 50);

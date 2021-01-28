@@ -208,9 +208,10 @@ public class ClientConnection
     private void onGameOver(String winnerName, String isRegularWinEnc)
     {
         var result = Result.TIE;
+        var isRegularWin = Boolean.parseBoolean(isRegularWinEnc);
         if (match.leftPlayer.name.equals(winnerName)) result = Result.WIN_LEFT;
         else if (match.rightPlayer.name.equals(winnerName)) result = Result.WIN_RIGHT;
-        invokeGameOver(result);
+        invokeGameOver(result, isRegularWin);
     }
 
     private void invokeGameSetup(String nextPlayerName)
@@ -233,13 +234,13 @@ public class ClientConnection
         }
     }
 
-    private void invokeGameOver(Result result)
+    private void invokeGameOver(Result result, boolean isRegularWin)
     {
         for (int i = 0; i < listeners.size(); i++)
         {
             var listener = listeners.get(i);
             if (listener == null) continue;
-            listener.onGameOverReceived(result);
+            listener.onGameOverReceived(result, isRegularWin);
         }
     }
 

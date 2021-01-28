@@ -9,5 +9,5 @@ public interface IClientListener
 
     default void onUpdateReceived(String lastPlayerName, String nextPlayerName, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate) { }
 
-    default void onGameOverReceived(Result result) { }
+    default void onGameOverReceived(Result result, boolean isRegularWin) { }
 }

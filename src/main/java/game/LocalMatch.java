@@ -26,7 +26,7 @@ public class LocalMatch extends Match
     protected void invokeGameOver(Result result)
     {
         super.invokeGameOver(result);
-        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name, true);
+        UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name, true, true);
     }
 
     @Override
