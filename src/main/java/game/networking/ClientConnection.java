@@ -156,6 +156,7 @@ public class ClientConnection
 
     private void onNameExists()
     {
+        playerName = "";
         while (playerName.equals(""))
         {
             playerName = JOptionPane.showInputDialog(Game.frame, "Please enter your name:");
