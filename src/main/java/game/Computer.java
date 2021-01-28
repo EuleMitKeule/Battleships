@@ -49,6 +49,14 @@ public class Computer extends Player
         state.enterState();
     }
 
+    @Override
+    public void onGameSetup(Player player)
+    {
+        super.onGameSetup(player);
+
+        if (isGuessing) state.onUpdate(player, player, null, false, false);
+    }
+
     /**
      * Gets invoked when the guessing player has changed
      * @param player The new placing player
