@@ -88,7 +88,7 @@ public class MatchConnection
         catch (IOException e) 
         { 
             var isLeftPlayer = netPlayer == leftPlayer;
-            sendGameOver("", false, isLeftPlayer ? rightOut : leftOut);
+            sendGameOver(isLeftPlayer ? leftPlayer.name : rightPlayer.name, false, isLeftPlayer ? rightOut : leftOut);
             dispose();
         }
         
