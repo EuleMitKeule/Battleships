@@ -31,7 +31,7 @@ public class Computer extends Player
         setState(aiStartState);
     }
 
-    public void Start()
+    public void start()
     {
         assignRandomBoard();
     }

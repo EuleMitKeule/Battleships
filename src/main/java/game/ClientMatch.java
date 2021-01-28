@@ -14,6 +14,8 @@ public class ClientMatch extends Match implements IClientListener
         addListener(UI.instance);
         leftPlayer = isComputer ? new Computer(name, this) : new Human(name, this);
         rightPlayer = new Enemy(enemyName, this);
+
+        if (isComputer) ((Computer)leftPlayer).start();
     }
 
     public void onGameSetupReceived(String nextPlayerName)

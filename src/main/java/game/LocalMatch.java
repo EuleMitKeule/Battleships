@@ -15,7 +15,7 @@ public class LocalMatch extends Match
 
         rightPlayer = new Computer("com", this);
 
-        ((Computer)rightPlayer).Start();
+        ((Computer)rightPlayer).start();
 
         invokePlayerAdded(rightPlayer, false);
 
