@@ -31,16 +31,6 @@ public class BoardTest
     }
 
     @Test
-    public void shouldAppendShipToTheRight() {
-        var position = new Vector2Int(1, 0);
-        board.setShip(position, ShipType.DESTROYER);
-        // assertEquals(ShipType.WATER, board.getShip(position.left()));
-        assertEquals(ShipType.DESTROYER, board.getShip(position));
-        assertEquals(ShipType.DESTROYER, board.getShip(position.right()));
-        assertEquals(ShipType.WATER, board.getShip(position.right().times(2)));
-    }
-
-    @Test
     public void shouldBeFilledWithWater() {
         board.setShips(ShipType.WATER);
         for(int x = 0; x < GameConstants.boardSize.x; x++)
@@ -53,7 +43,7 @@ public class BoardTest
     }
 
     @Test
-    public void shouldReturnShip() {
+    public void shouldSetAndGetShip() {
         var position = new Vector2Int(0, 0);
         board.setShip(position, ShipType.PATROL);
         assertEquals(ShipType.PATROL, board.getShip(position));
@@ -80,6 +70,21 @@ public class BoardTest
 
         board.placeShip(truePos, ShipType.PATROL);
         assertEquals(ShipType.PATROL, board.getShip(truePos));
+    }
+
+    @Test
+    public void shouldAppendShipToTheRight() {
+        var position = new Vector2Int(1, 0);
+        var rightPos = position.add(Vector2Int.right());
+        var twoRightPos = position.add(Vector2Int.right().times(2));
+        var leftPos = position.add(Vector2Int.left());
+
+        board.placeShip(position, ShipType.DESTROYER);
+        
+        assertEquals(ShipType.DESTROYER_FRONT, board.getShip(position));
+        assertEquals(ShipType.DESTROYER_MID, board.getShip(rightPos));
+        assertEquals(ShipType.DESTROYER_BACK, board.getShip(twoRightPos));
+        assertEquals(ShipType.WATER, board.getShip(leftPos));
     }
 
     @Test
