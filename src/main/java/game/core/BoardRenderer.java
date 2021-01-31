@@ -11,6 +11,7 @@ public class BoardRenderer implements IRenderable
     private Board board;
 
     /**
+     * @param board The board that will be rendered
      * @param offset The pixel offset of the board
      * @param tileSize The pixel size of a tile
      */
@@ -23,11 +24,20 @@ public class BoardRenderer implements IRenderable
         Game.addRenderable(this);
     }
 
+    /**
+     * Event subscription cleanup
+     */
     public void dispose()
     {
         Game.removeRenderable(this);
     }
 
+    /**
+     * Draws a sprite at a grid position
+     * @param graphics The graphics context
+     * @param sprite The sprite to draw
+     * @param position The cell position to draw at
+     */
     private void drawField(Graphics graphics, BufferedImage sprite, Vector2Int position)
     {        
         var posX = (int)(position.x * tileSize * GameConstants.scale  + offset.x);
@@ -37,10 +47,9 @@ public class BoardRenderer implements IRenderable
     }
 
 	/**
-	 * Gets invoked every render frame
-	 * @param renderer The renderer context
+	 * Invoked every render frame
+	 * @param graphics The graphics context
 	 */
-
 	@Override
 	public void render(Graphics graphics)
 	{

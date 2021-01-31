@@ -14,6 +14,7 @@ public class Computer extends Player
     public IAiState aiHasGuessedIncorrectlyState;
 
     public IAiState state;
+
     /**
      * @param name The name of the player
      * @param match The match context
@@ -31,11 +32,18 @@ public class Computer extends Player
         setState(aiStartState);
     }
 
+    /**
+     * Initiates the AI logic
+     */
     public void start()
     {
         assignRandomBoard();
     }
 
+    /**
+     * Sets the state of the AI
+     * @param state The state to enter
+     */
     public void setState(IAiState state) 
     {
         if (state == null) return;
@@ -57,10 +65,6 @@ public class Computer extends Player
         if (isGuessing) state.onUpdate(player, player, null, false, false);
     }
 
-    /**
-     * Gets invoked when the guessing player has changed
-     * @param player The new placing player
-     */
     @Override
     public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
@@ -80,6 +84,9 @@ public class Computer extends Player
         } 
     }
     
+    /**
+     * @return A randomly chosen cell position within the boards bounds
+     */
     public Vector2Int getRandomGuessPos()
     {
         var rand = new Random();
@@ -93,7 +100,10 @@ public class Computer extends Player
         return cellPos;
     }
 
-    void assignRandomBoard()
+    /**
+     * Assigns a random board to the Computer player
+     */
+    private void assignRandomBoard()
     {
         do
         {

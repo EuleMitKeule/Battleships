@@ -30,6 +30,9 @@ public class ClientConnection
 
     private boolean isComputer;
 
+    /**
+     * @param isComputer Whether the client joined the server as a computer player
+     */
     public ClientConnection(boolean isComputer) 
     {
         instance = this;
@@ -77,6 +80,9 @@ public class ClientConnection
         readMessageThread.start();
     }
 
+    /**
+     * Listens for any messages sent by the server
+     */
     private void readMessage()
     {
         try 
@@ -131,6 +137,10 @@ public class ClientConnection
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    /**
+     * Sends the client board message
+     * @param board The board object to encode and send
+     */
     public void sendClientBoard(Board board)
     {
         var boardEnc = "";
@@ -146,6 +156,10 @@ public class ClientConnection
         out.println("b;" + boardEnc);
     }
 
+    /**
+     * Sends the move message
+     * @param cellPos The position the move was made at
+     */
     public void sendMove(Vector2Int cellPos)
     {
         var x = (cellPos == null) ? "" : cellPos.x;
@@ -154,23 +168,26 @@ public class ClientConnection
         out.println("m;" + x + ";" + y);
     }
 
+    /**
+     * Invoked when a name exists message was received
+     */
     private void onNameExists()
     {
         new ClientConnection(this.isComputer);
-
-        // playerName = "";
-        // while (playerName.equals(""))
-        // {
-        //     playerName = JOptionPane.showInputDialog(Game.frame, "Please enter your name:");
-        // }
-        // out.println("h;" + playerName);
     }
 
+    /**
+     * Invoked when a server handshake message was received
+     */
     private void onServerHandshake()
     {
         System.out.println("You successfully connected to the Server");
     }
     
+    /**
+     * Invoked when an enemy name message was received
+     * @param enemyName The enemies name
+     */
     private void onEnemyName(String enemyName)
     {
         System.out.println("Received enemy name: " + enemyName);
@@ -181,6 +198,10 @@ public class ClientConnection
         addListener(match);
     }
 
+    /**
+     * Invoked when a game setup message was received
+     * @param nexPlayerName The name of the beginning player
+     */
     private void onGameSetup(String nextPlayerName)
     {
         System.out.println("Received game setup, player " + nextPlayerName + " will begin!");
@@ -188,6 +209,16 @@ public class ClientConnection
         invokeGameSetup(nextPlayerName);
     }
 
+    /**
+     * Invoked when an update message was received
+     * @param xEnc The encoded x position of the move
+     * @param yEnc The encoded y position of the move
+     * @param isHitEnc Whether the move hit a ship encoded as string
+     * @param isSunkEnc Whether the move sunk a ship encoded as string
+     * @param isLateEnc Whether the move was due to the round timer running out encoded as string
+     * @param lastPlayerName The name of the player that made the move
+     * @param nextPlayername The name of the player who will guess next
+     */
     private void onUpdate(String xEnc, String yEnc, String isHitEnc, String isSunkEnc, String isLateEnc, String lastPlayerName, String nextPlayerName)
     {
         var cellPos = new Vector2Int(-1, -1);
@@ -205,6 +236,11 @@ public class ClientConnection
         invokeUpdate(lastPlayerName, nextPlayerName, cellPos, isHit, isSunk, isLate);
     }
 
+    /**
+     * Invoked when a game over message was received
+     * @param winnerName The name of the player that won the match
+     * @param isRegularWinEnc Whether the game was won by score or due to a player disconnect encoded as string
+     */
     private void onGameOver(String winnerName, String isRegularWinEnc)
     {
         var result = Result.TIE;
@@ -214,6 +250,10 @@ public class ClientConnection
         invokeGameOver(result, isRegularWin);
     }
 
+    /**
+     * Invokes the GameSetup event
+     * @param nexPlayerName The name of the beginning player
+     */
     private void invokeGameSetup(String nextPlayerName)
     {
         for (int i = 0; i < listeners.size(); i++)
@@ -224,6 +264,15 @@ public class ClientConnection
         }
     }
 
+    /**
+     * Invoked when an update message was received
+     * @param lastPlayerName The name of the player that made the move
+     * @param nextPlayername The name of the player who will guess next
+     * @param cellPos The position the move was made at
+     * @param isHit Whether the move hit a ship
+     * @param isSunk Whether the move sunk a ship
+     * @param isLate Whether the move was due to the round timer running out
+     */
     private void invokeUpdate(String lastPlayerName, String nextPlayerName, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
         for (int i = 0; i < listeners.size(); i++)
@@ -234,6 +283,11 @@ public class ClientConnection
         }
     }
 
+    /**
+     * Invokes a GameOver event
+     * @param result The result type of the match
+     * @param isRegularWin Whether the game was won by score or due to a player disconnect
+     */
     private void invokeGameOver(Result result, boolean isRegularWin)
     {
         for (int i = 0; i < listeners.size(); i++)
@@ -244,16 +298,28 @@ public class ClientConnection
         }
     }
 
+    /**
+     * Adds an IClientListener to the list of listeners
+     * @param listener The listener to add
+     */    
     public void addListener(IClientListener listener)
     {
         listeners.add(listener);
     }
 
+    /**
+     * Removes an IClientListener from the list of listeners
+     * @param listener The listener to remove
+     */
     public void removeListener(IClientListener listener)
     {
         listeners.remove(listener);
     }
 
+    /**
+     * @param value The string to parse
+     * @return Whether the string can be parsed to integer
+     */
     private boolean tryParseInt(String value)
     {
         try 
@@ -267,6 +333,9 @@ public class ClientConnection
         }  
     }
 
+    /**
+     * Event subscription cleanup and socket disposing
+     */
     private void dispose()
     {
         if (match != null) removeListener(match);

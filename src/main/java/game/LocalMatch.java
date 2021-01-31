@@ -9,24 +9,56 @@ public class LocalMatch extends Match
     {
         super();
 
-        leftPlayer = new Human("eule", this);
+        leftPlayer = new Human("You", this);
 
         invokePlayerAdded(leftPlayer, true);
 
-        rightPlayer = new Computer("com", this);
+        rightPlayer = new Computer("Enemy", this);
 
         ((Computer)rightPlayer).start();
 
         invokePlayerAdded(rightPlayer, false);
 
+        if (UI.instance != null)
+        {
+            UI.instance.loadGame(leftPlayer.name, rightPlayer.name);
+        }
+        
+    }
+
+    public LocalMatch(IMatchListener listener, boolean debug)
+    {
+        super();
+        
+        addListener(listener);
+
+        leftPlayer = new Human("You", this);
+
+        invokePlayerAdded(leftPlayer, true);
+
+        rightPlayer = debug ? new Enemy("Enemy", this) : new Computer("Enemy", this);
+
+        if (!debug) ((Computer)rightPlayer).start();
+
+        invokePlayerAdded(rightPlayer, false);
+
         addListener(UI.instance);
+
+        if (UI.instance != null)
+        {
+            UI.instance.loadGame(leftPlayer.name, rightPlayer.name);
+        }
+        
     }
 
     @Override
     protected void invokeGameOver(Result result)
     {
         super.invokeGameOver(result);
+        if (UI.instance != null)
+        {
         UI.instance.loadEnd(result, result == Result.WIN_LEFT ? leftPlayer.name : rightPlayer.name, true, true);
+        }
     }
 
     @Override

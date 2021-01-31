@@ -42,6 +42,9 @@ public class ServerConnection
         listenForConnectionsThread.start();
     }
 
+    /**
+     * Listens for any clients attempting to connect to the server
+     */
     private void listenForConnections()
     {
         try
@@ -61,6 +64,10 @@ public class ServerConnection
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    /**
+     * Listens for any handshake messages sent by clients
+     * @param socket The clients socket object
+     */
     private void listenForHandshake(Socket socket)
     {
         try 
@@ -114,6 +121,10 @@ public class ServerConnection
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    /**
+     * @param value The string to parse
+     * @return Whether the string can be parsed to integer
+     */
     private boolean tryParseInt(String value)
     {
         try 

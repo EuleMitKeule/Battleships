@@ -9,6 +9,10 @@ public enum Direction
     Up,
     Down;  
 
+    /**
+     * @param direction The direction type
+     * @return The direction type converted to a vector
+     */
     public static Vector2Int ToVector(Direction direction)
     {
         switch (direction)

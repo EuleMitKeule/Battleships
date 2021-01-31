@@ -6,9 +6,7 @@ public class RoundTimer
     private Thread thread;
 
     /**
-     * Assigns the match to this.match
-     * @invariant match != null
-     * @param match The current match
+     * @param match The match context
      */
     public RoundTimer(Match match)
     {
@@ -45,7 +43,7 @@ public class RoundTimer
     }
 
     /**
-     * Stops the timer.
+     * Stops the round timer
      */
     public void stop()
     {

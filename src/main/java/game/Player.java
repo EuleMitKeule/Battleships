@@ -20,7 +20,6 @@ public abstract class Player implements IMatchListener
 	private ArrayList<IPlayerListener> listeners = new ArrayList<IPlayerListener>();
 
 	/**
-	 * @invariant name != null && match != null
 	 * @param name The name of the player
 	 * @param match The match context
 	 */
@@ -37,26 +36,12 @@ public abstract class Player implements IMatchListener
 		match.addListener(this);
 	}
 
-	
-	/** 
-	 * Gets invoked when game is getting set up
-	 * @param player The current player
-	 */
 	@Override
 	public void onGameSetup(Player player)
 	{
 		if (player == this) isGuessing = true;
 	}
-	
-	/** 
-	 * Gets invoked when the guessing player has changed
-	 * @param lastPlayer The player who had the last turn
-	 * @param nextPlayer The player who has the next turn
-	 * @param position The position of the lastPlayer's guess
-	 * @param isHit If a ship was hit
-	 * @param isSunk If a ship sunk 
-	 * @param isLate If the lastPlayer took more then 30s
-	 */
+
 	@Override
 	public void onUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk, boolean isLate)
 	{
@@ -64,11 +49,6 @@ public abstract class Player implements IMatchListener
 		else isGuessing = nextPlayer == this;
 	}
 
-	
-	/** 
-	 * Gets invoked when player has lost/won
-	 * @param result The reuslt of the game
-	 */
 	@Override
 	public void onGameOver(Result result)
 	{
@@ -122,6 +102,9 @@ public abstract class Player implements IMatchListener
 		listeners.remove(listener);
 	}
 
+	/**
+	 * Event subscription cleanup
+	 */
 	public void dispose()
 	{
 		match.removeListener(this);

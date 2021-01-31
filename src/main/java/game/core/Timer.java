@@ -17,6 +17,9 @@ public class Timer
         lastTime = thisTime;
     }
 
+    /**
+     * Resets the delta time to zero
+     */
     public void reset() {
         deltaTime = 0.0;
     }

@@ -10,9 +10,6 @@ import java.util.ArrayList;
 
 public class Game extends JComponent implements IRenderable, IUpdatable
 {
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -6081721995438708904L;
 
 	public static final Vector2Int GAME_SIZE = new Vector2Int(1600, 900);
@@ -97,7 +94,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 	}
 
 	/**
-	 * Gets invoked every render frame
+	 * Invoked every render frame
 	 * @param graphics The graphics context
 	 */
 	public void paintComponent(Graphics graphics)

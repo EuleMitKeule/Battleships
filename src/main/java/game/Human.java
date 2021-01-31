@@ -13,9 +13,7 @@ public class Human extends Player implements IInputListener
     private BoardRenderer rightBoardRenderer;
 
     /**
-     * Creates a Human player and assigns a board to him
-     * @invariant name != null && match != null
-     * @param name  The name for the player
+     * @param name The name for the player
      * @param match The match context
      */
     public Human(String name, Match match) 
@@ -57,10 +55,6 @@ public class Human extends Player implements IInputListener
         rightBoardRenderer.dispose();
     }
 
-    /**
-     * Gets invoked when the left mouse button is pressed down
-     * @param mousePos The current mouse position
-     */
     @Override
     public void onMouseDown(Vector2 mousePos)
     {

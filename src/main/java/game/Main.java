@@ -5,9 +5,8 @@ import game.core.Game;
 public class Main
 {
   /**
-   * Starts the main application 
-   * @ensures new Game()
-   * @param args the arguments given for this main method
+   * Starts the main application
+   * @param args The arguments given for this main method
    */
   public static void main(String args[])  
   {

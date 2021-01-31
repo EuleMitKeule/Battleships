@@ -6,8 +6,9 @@ public class AiHasGuessedIncorrectlyState implements IAiState
 {
     private Computer _computer;
 
-    
-
+    /**
+     * @param computer The computer object the state belongs to
+     */
     public AiHasGuessedIncorrectlyState(Computer computer)
     {
         this._computer = computer;

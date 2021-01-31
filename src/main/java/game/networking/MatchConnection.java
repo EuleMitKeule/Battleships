@@ -23,6 +23,11 @@ public class MatchConnection
 
     private ServerMatch match;
 
+    /**
+     * @param leftPlayer The net player object of the left player
+     * @param rightPlayer The net player object of the right player
+     * @param serverSocket The server socket object
+     */
     public MatchConnection(NetPlayer leftPlayer, NetPlayer rightPlayer, ServerSocket serverSocket) 
     {
         UI.instance.log("New Match started!");
@@ -53,6 +58,11 @@ public class MatchConnection
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    /**
+     * Listens for any messages sent by either client
+     * @param netPlayer The net player object that send the message
+     * @param in The input stream that read the message
+     */
     private void readMessage(NetPlayer netPlayer, BufferedReader in)
     {
         try 
@@ -93,12 +103,25 @@ public class MatchConnection
         
     }
 
+    /**
+     * Sends a game setup message to both clients
+     * @param nextPlayer The player object of the beginning player
+     */
     public void sendGameSetup(Player nextPlayer)
     {
         leftOut.println("s;" + nextPlayer.name);
         rightOut.println("s;" + nextPlayer.name);
     }
 
+    /**
+     * Sends an update message to both clients
+     * @param lastPlayer The player that made the move
+     * @param nextPlayer The player that will guess next
+     * @param cellPos The position the move was made at
+     * @param isHit Whether the move hit a ship
+     * @param isSunk Whether the move sunk a ship
+     * @param isLate Whether the move was made due to the round timer running out
+     */
     public void sendUpdate(Player lastPlayer, Player nextPlayer, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
         var lastPlayerName = " ";
@@ -113,6 +136,11 @@ public class MatchConnection
         rightOut.println("u;" + x + ";" + y + ";" + isHit + ";" + isSunk + ";" + isLate + ";" + lastPlayerName + ";" + nextPlayerName);
     }
 
+    /**
+     * Sends a game over message to both clients
+     * @param winnerName The name of the winning player
+     * @param isRegularWin Whether the match was won by score or due to the match timer running out
+     */
     public void sendGameOver(String winnerName, boolean isRegularWin)
     {
         leftOut.println("g;" + winnerName + ";" + isRegularWin);
@@ -120,11 +148,22 @@ public class MatchConnection
         dispose();
     }
 
+    /**
+     * Sends a game over message to a single client
+     * @param winnerName The name of the winning player
+     * @param isRegularWin Whether the match was won by score or due to the match timer running out
+     * @param out The print stream object to write the message to
+     */
     public void sendGameOver(String winnerName, boolean isRegularWin, PrintStream out)
     {
         out.println("g;" + winnerName + ";" + isRegularWin);
     }
 
+    /**
+     * Invoked when a client board message was received
+     * @param netPlayer The net player object that sent the message
+     * @param boardEnc The board object encoded as string
+     */
     private void onClientBoard(NetPlayer netPlayer, String[] boardEnc)
     {
         var isLeftPlayer = netPlayer == leftPlayer;
@@ -143,6 +182,12 @@ public class MatchConnection
         invokeClientBoard(netPlayer.name, board);
     }
 
+    /**
+     * Invoked when a move message was received
+     * @param netPlayer The net player object that sent the message
+     * @param xEnc The x position the move was made at encoded as string
+     * @param yEnc The y position the move was made at encoded as string
+     */
     private void onMove(NetPlayer netPlayer, String xEnc, String yEnc)
     {
         var x = Integer.parseInt(xEnc);
@@ -151,6 +196,11 @@ public class MatchConnection
         invokeMove(netPlayer.name, new Vector2Int(x, y));
     }
 
+    /**
+     * Invokes the ClientBoard event
+     * @param playerName The name of the player that owns the board
+     * @param board The board that the player assigned
+     */
     private void invokeClientBoard(String playerName, Board board)
     {
         for (int i = 0; i < listeners.size(); i++)
@@ -161,6 +211,11 @@ public class MatchConnection
         }
     }
 
+    /**
+     * Invokes the Move event
+     * @param playerName The name of the player that made the move
+     * @param cellPos The position the move was made at
+     */
     private void invokeMove(String playerName, Vector2Int cellPos)
     {
         for (int i = 0; i < listeners.size(); i++)
@@ -171,16 +226,27 @@ public class MatchConnection
         }
     }
 
+    /**
+     * Adds an IMatchConnectionListener to the list of listeners
+     * @param listener The listener to add
+     */
     public void addListener(IMatchConnectionListener listener)
     {
         listeners.add(listener);
     }
 
+    /**
+     * Removes an IMatchConnectionListener from the list of listeners
+     * @param listener The listener to remove
+     */
     public void removeListener(IMatchConnectionListener listener)
     {
         listeners.remove(listener);
     }
 
+    /**
+     * Event subscription cleanup and socket disposing
+     */
     public void dispose()
     {
         match.dispose();

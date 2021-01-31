@@ -32,6 +32,10 @@ public class Board implements IRenderable
 	
 	public Vector2Int getSize() { return size; }
 
+	/**
+	 * @param cellPos The position to check
+	 * @return Whether the cell has already been guessed
+	 */
 	public boolean isGuessed(Vector2Int cellPos) 
 	{
 		if (!inBounds(cellPos)) return false; 
@@ -67,7 +71,7 @@ public class Board implements IRenderable
 
 	/**
 	 * @param cellPos The cell position to get
-	 * @return Returns the ship type of a field on the board or null if out of bounds
+	 * @return The ship type of a field on the board or null if out of bounds
 	 */
 	public ShipType getShip(Vector2Int cellPos)
 	{
@@ -84,7 +88,7 @@ public class Board implements IRenderable
 	/**
 	 * @param x The x cell coordinate to get
 	 * @param y The y cell coordinate to get
-	 * @return Returns the ship type of a field on the board or null if out of bounds
+	 * @return The ship type of a field on the board or null if out of bounds
 	 */
 	public ShipType getShip(int x, int y)
 	{
@@ -99,7 +103,7 @@ public class Board implements IRenderable
 	}
 
 	/**
-	 * @return Returns the ship type 2D-array
+	 * @return The ship type 2D-array
 	 */
 	public ShipType[][] getShips()
 	{
@@ -116,7 +120,7 @@ public class Board implements IRenderable
 	/**
 	 * @param cellPos The cell position to check
 	 * @param shipType The ship type to check
-	 * @return Returns whether a ship type can be placed at a field on the board
+	 * @return Whether a ship type can be placed at a field on the board
 	 */
 	public boolean canPlace(Vector2Int cellPos, ShipType shipType)
 	{
@@ -204,22 +208,29 @@ public class Board implements IRenderable
 	}
 	
 	/**
+	 * Checks if the move can be guessed
 	 * @param cellPos The cell position to check
-	 * @return Returns whether a field is guessable
+	 * @return Whether a field is guessable
 	 */
 	public boolean canGuess(Vector2Int cellPos)
 	{
 		return inBounds(cellPos) && !guessed[cellPos.x][cellPos.y];
 	}
 
+	/**
+	 * Checks if the given move hits a ship
+	 * @param cellPos The cell position to check
+	 * @return Whether a ship is hit
+	 */
 	public boolean isHit(Vector2Int cellPos)
 	{
 		return ShipType.isShip(getShip(cellPos));		
 	}
 	
 	/**
+	 * Checks if the given move destroys an entire ship
 	 * @param cellPos The cell position to check
-	 * @return Returns whether a field is the last remaining part of a ship
+	 * @return Whether a field is the last remaining part of a ship
 	 */
 	public boolean isSinking(Vector2Int cellPos)
 	{
@@ -353,8 +364,9 @@ public class Board implements IRenderable
 	}
 
 	/**
+	 * Checks if the move is in the bounds of the board
 	 * @param worldPos The world position to check
-	 * @return Returns whether a world position is inside the bounds of the board
+	 * @return Whether a world position is inside the bounds of the board
 	 */
     public boolean inBounds(Vector2 worldPos)
     {
@@ -363,8 +375,9 @@ public class Board implements IRenderable
 	}
 	
 	/**
-	 * @param worldPos The world position to check
-	 * @return Returns whether a world position is inside the bounds of the board
+	 * Checks if the move is in the bounds of the board
+	 * @param worldPos The cell position to check
+	 * @return Whether a world position is inside the bounds of the board
 	 */
     public boolean inBounds(Vector2Int cellPos)
     {
@@ -374,7 +387,7 @@ public class Board implements IRenderable
 
 	/**
 	 * @param worldPos The world position to convert
-	 * @return Returns the converted world position in cell space
+	 * @return The converted world position in cell space
 	 */
     public Vector2Int worldToCell(Vector2 worldPos)
     {

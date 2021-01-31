@@ -6,16 +6,21 @@ public class AiStartState implements IAiState
 {
     private Computer _computer;
 
+    /**
+     * @param computer The computer object the state belongs to
+     */
     public AiStartState(Computer computer)
     {
         this._computer = computer;
     }
 
+    @Override
     public void enterState()
     {
         _computer.curDirection = Direction.Right;
     }
 
+    @Override
     public void exitState()
     {
 

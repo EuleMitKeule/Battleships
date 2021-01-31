@@ -7,6 +7,12 @@ import game.networking.*;
 public class ClientMatch extends Match implements IClientListener
 {
 
+    /**
+     * Creates a client match object for the online mode
+     * @param name The name of the first player
+     * @param enemyName The name of the second Player
+     * @param isComputer Whether one of the players is a computer player
+     */
     public ClientMatch(String name, String enemyName, boolean isComputer)
     {
         super();
@@ -18,11 +24,13 @@ public class ClientMatch extends Match implements IClientListener
         if (isComputer) ((Computer)leftPlayer).start();
     }
 
+    @Override
     public void onGameSetupReceived(String nextPlayerName)
     {
         invokeGameSetup(getPlayer(nextPlayerName));
     }
 
+    @Override
     public void onUpdateReceived(String lastPlayerName, String nextPlayerName, Vector2Int cellPos, boolean isHit, boolean isSunk, boolean isLate)
     {
         invokeUpdate(getPlayer(lastPlayerName), getPlayer(nextPlayerName), cellPos, isHit, isSunk, isLate);
@@ -55,16 +63,19 @@ public class ClientMatch extends Match implements IClientListener
         invokeScoreChanged(leftScore, rightScore);
     }
 
+    @Override
     public void onClientBoard(Player player, Board board)
     {
         ClientConnection.instance.sendClientBoard(board);
     }
-
+    
+    @Override
     public void onMove(Player player, Vector2Int cellPos)
     {
         ClientConnection.instance.sendMove(cellPos);
     }
 
+    @Override
     public void onGameOverReceived(Result result, boolean isRegularWin)
     {
         invokeGameOver(result);
@@ -72,6 +83,10 @@ public class ClientMatch extends Match implements IClientListener
         dispose();
     }
 
+    /**
+     * @param playerName The name of the player
+     * @return The player object with the specified name or null if none is found
+     */
     private Player getPlayer(String playerName)
     {
         if (leftPlayer.name.equals(playerName)) return leftPlayer;

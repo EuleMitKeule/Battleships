@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 import game.*;
+import game.core.Vector2;
 import game.core.Vector2Int;
 
 public class BoardTest
@@ -18,22 +19,25 @@ public class BoardTest
     }
 
     @Test
-    public void shouldEqualSizeConstant() {
+    public void shouldEqualSizeConstant() 
+    {
         var size = board.getSize();
         assertEquals(GameConstants.boardSize, size);
     }
 
     @Test
-    public void shouldNotBeGuessed() {
+    public void shouldNotBeGuessed() 
+    {
         var position = new Vector2Int(0, 0);
         board.setShip(position, ShipType.PATROL);
         assertEquals(false, board.isGuessed(position));
     }
 
     @Test
-    public void shouldBeFilledWithWater() {
+    public void shouldBeFilledWithWater() 
+    {
         board.setShips(ShipType.WATER);
-        for(int x = 0; x < GameConstants.boardSize.x; x++)
+        for (int x = 0; x < GameConstants.boardSize.x; x++)
 		{
 			for (int y = 0; y < GameConstants.boardSize.y; y++)
 			{
@@ -43,7 +47,8 @@ public class BoardTest
     }
 
     @Test
-    public void shouldSetAndGetShip() {
+    public void shouldSetAndGetShip() 
+    {
         var position = new Vector2Int(0, 0);
         board.setShip(position, ShipType.PATROL);
         assertEquals(ShipType.PATROL, board.getShip(position));
@@ -51,7 +56,8 @@ public class BoardTest
     }
 
     @Test
-    public void shouldCompareBoard() {
+    public void shouldCompareBoard() 
+    {
         for(int x = 0; x < GameConstants.boardSize.x; x++)
 		{
 			for (int y = 0; y < GameConstants.boardSize.y; y++)
@@ -62,7 +68,8 @@ public class BoardTest
     }
 
     @Test
-    public void shouldCheckIfPlaceShipPossibleAndPlace() {
+    public void shouldCheckIfPlaceShipPossibleAndPlace() 
+    {
         var truePos = new Vector2Int(2, 9);
         var falsePos = new Vector2Int(-1, 2);
         assertTrue(board.canGuess(truePos));
@@ -73,7 +80,8 @@ public class BoardTest
     }
 
     @Test
-    public void shouldAppendShipToTheRight() {
+    public void shouldAppendShipToTheRight() 
+    {
         var position = new Vector2Int(1, 0);
         var rightPos = position.add(Vector2Int.right());
         var twoRightPos = position.add(Vector2Int.right().times(2));
@@ -88,12 +96,62 @@ public class BoardTest
     }
 
     @Test
-    public void shouldCheckIfCanGuessAndIfInBounds() {
+    public void shouldCheckIfCanGuessAndIfInBounds() 
+    {
         var pos1 = new Vector2Int(5, 5);
         var pos2 = new Vector2Int(5, 15);
         var pos3 = new Vector2Int(-5, 5);
+
         assertTrue(board.canGuess(pos1));
         assertFalse(board.canGuess(pos2));
         assertFalse(board.canGuess(pos3));
+    }
+
+    @Test
+    public void shouldHitTheShip() 
+    {
+        var position1 = new Vector2Int(1, 0);
+        var position2 = new Vector2Int(9, 7);
+        var position3 = new Vector2Int(10, 6);
+
+        board.placeShip(position1, ShipType.PATROL);
+        board.placeShip(position2, ShipType.PATROL);
+
+        assertTrue(board.isHit(position1));
+        assertTrue(board.isHit(position2));
+        assertFalse(board.isHit(position3));
+    }
+
+    @Test
+    public void shouldDetermineThatShipSinks() 
+    {
+        var position1 = new Vector2Int(1, 0);
+        var position2 = new Vector2Int(9, 7);
+        var position3 = new Vector2Int(10, 6);
+
+        board.placeShip(position1, ShipType.PATROL);
+        board.placeShip(position2, ShipType.SUPER_PATROL);
+        board.placeShip(position3, ShipType.SUPER_PATROL);
+
+
+        board.guessField(position1);
+        board.guessField(position2);
+        board.guessField(position2.add(Vector2Int.right()));
+
+        assertTrue(board.isSinking(position1));
+        assertTrue(board.isSinking(position2));
+        assertTrue(board.isSinking(position2.add(Vector2Int.right())));
+        assertFalse(board.isSinking(position3));
+        assertFalse(board.isSinking(position3.add(Vector2Int.right())));
+    }
+
+    @Test
+    public void shouldConvertCorrectly()
+    {
+        var worldPos = new Vector2(150, 100);
+        var actual = board.worldToCell(worldPos);
+
+        assertEquals(2, actual.x);
+        assertEquals(0, actual.y);
     }
 }

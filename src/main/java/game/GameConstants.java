@@ -3,7 +3,7 @@ package game;
 import game.core.*;
 
 /**
- * This class defines all game constants existing wirthin this game. 
+ * This class defines all constant values existing within this game. 
  * Those constants are static so they can be acessed everywhere.
  */
 public class GameConstants 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public abstract class Match implements IPlayerListener
 {
-    protected Board leftBoard;
+    public Board leftBoard;
     protected Board rightBoard;
     
     public Player leftPlayer;
@@ -34,15 +34,6 @@ public abstract class Match implements IPlayerListener
         rightShipCount = Resources.getShipQueue().size();
     }
 
-    
-    /** 
-     * assigns board to player and invokes GameSetup if both boards are null
-     * @ensures 
-     * @requires player != null
-     * @requires player != null
-     * @param player
-     * @param board
-     */
     @Override
     public void onClientBoard(Player player, Board board)
     {
@@ -65,20 +56,14 @@ public abstract class Match implements IPlayerListener
             invokeGameSetup(leftPlayer);
         }
     }
-
-    
-    /** 
-     * invokes when a player makes a move and increases and decreses leftScore, rightScore and leftShipCount, rightShipCount respectively
-     * @ensures invokeShipCountedChanged
-     * @ensures invokeScoreChanged
-     * @requires player != null
-     * @requires player != null
-     * @param player player that made a move before
-     * @param cellPos position of the hit
-     */
+   
     @Override
     public void onMove(Player player, Vector2Int cellPos)
     {
+        System.out.println("the player is " + player);
+        if (player == null) return;
+        if (cellPos == null) return;
+
     	var isLeftPlayer = player == leftPlayer;
     	var board = isLeftPlayer ? rightBoard : leftBoard;
 
@@ -104,6 +89,7 @@ public abstract class Match implements IPlayerListener
             else leftShipCount -= 1;
             
             invokeShipCountChanged(leftShipCount, rightShipCount);
+            invokeScoreChanged(leftScore, rightScore);
 
             System.out.println("Left ship count now at: " + leftShipCount);
             System.out.println("Right ship count now at: " + rightShipCount);
@@ -114,25 +100,27 @@ public abstract class Match implements IPlayerListener
         curPlayer = nextPlayer;
 
         roundTimer.restart();
-        
         if (leftShipCount == 0) 
         {
+            System.out.println("a1");
             invokeUpdate(player, null, cellPos, isHit, isSunk, false);
             invokeGameOver(Result.WIN_RIGHT);
         }
         else if (rightShipCount == 0) 
         {
+            System.out.println("a2");
             invokeUpdate(player, null, cellPos, isHit, isSunk, false);
             invokeGameOver(Result.WIN_LEFT);
         }
         else
         {
+            System.out.println("a3");
             invokeUpdate(player, nextPlayer, cellPos, isHit, isSunk, false);
         }
     }
     
     /**
-     * invokes when round timer stops
+     * Invoked when the round timer has stopped
      */
     public void onRoundTimerStopped()
     {
@@ -142,7 +130,7 @@ public abstract class Match implements IPlayerListener
     }
     
     /**
-     * invokes when match timer stops
+     * Invoked when the match timer has stopped
      */
     public void onMatchTimerStopped()
     {   
@@ -154,9 +142,14 @@ public abstract class Match implements IPlayerListener
         invokeGameOver(result);
     }
 
-    /**
-     * Invokes the GuessingPlayerChanged event
-     * @param player The player that guesses next
+    /** 
+     * Invokes the Update event
+     * @param lastPlayer The player that guessed before
+     * @param nextPlayer The player that will be guessing next
+     * @param position The position that was guessed at
+     * @param isHit Whether the guess hit a ship
+     * @param isSunk Whether the guess sunk a ship
+     * @param isLate Whether the move was made due to the round timer running out
      */
     protected void invokeUpdate(Player lastPlayer, Player nextPlayer, Vector2Int position, boolean isHit, boolean isSunk, boolean isLate)
     {
@@ -168,9 +161,9 @@ public abstract class Match implements IPlayerListener
         }
     }
 
-    
     /** 
-     * @param result
+     * Invokes the GameOver event
+     * @param result The Result of the game
      */
     protected void invokeGameOver(Result result)
     {
@@ -201,9 +194,9 @@ public abstract class Match implements IPlayerListener
         }
     }
 
-    
     /** 
-     * @param player
+     * Invokes the GameSetup event
+     * @param player The player whose game gets set up
      */
     protected void invokeGameSetup(Player player)
     {
@@ -215,10 +208,10 @@ public abstract class Match implements IPlayerListener
         }
     }
 
-    
     /** 
-     * @param leftShipCount
-     * @param rightShipCount
+     * Invokes the ShipCountChanged event
+     * @param leftShipCount The number of ships the left player has left
+     * @param rightShipCount The number of ships the right player has left
      */
     protected void invokeShipCountChanged(int leftShipCount, int rightShipCount)
     {
@@ -230,10 +223,10 @@ public abstract class Match implements IPlayerListener
         }
     }
 
-    
     /** 
-     * @param leftScore
-     * @param rightScore
+     * Invokes the ScoreChanged event
+     * @param leftScore The score of the left player
+     * @param rightScore The score of the right player
      */
     protected void invokeScoreChanged(int leftScore, int rightScore)
     {
@@ -263,6 +256,9 @@ public abstract class Match implements IPlayerListener
         listeners.remove(listener);
     }
 
+    /**
+     * Event subscription cleanup and timer disposing
+     */
     public void dispose()
     {
         matchTimer.stop();

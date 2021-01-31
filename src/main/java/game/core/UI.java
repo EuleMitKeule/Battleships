@@ -26,7 +26,6 @@ public class UI implements IMatchListener
 
     /**
      * @param game The game window context
-     * @param match The match context
      */
     public UI (Game game)
     {
@@ -37,6 +36,9 @@ public class UI implements IMatchListener
         loadMenu();
     }
 
+    /**
+     * Unloads all loaded swing components
+     */
     public void unload()
     {
         for (var c: game.getComponents())
@@ -45,6 +47,9 @@ public class UI implements IMatchListener
         }
     }
 
+    /**
+     * Loads and populates the menu swing components
+     */
     public void loadMenu()
     {
         unload();
@@ -72,6 +77,9 @@ public class UI implements IMatchListener
 
     }
 
+    /**
+     * Loads and populates the server swing components
+     */
     public void loadServer()
     {
         unload();
@@ -86,6 +94,11 @@ public class UI implements IMatchListener
         console.setAutoscrolls(true);
     }
 
+
+    /**
+     * Logs a message to the server console
+     * @param message The message to log
+     */
     public void log(String message)
     {
         System.out.println(message);
@@ -99,6 +112,13 @@ public class UI implements IMatchListener
         console.writeln(message);
     }
 
+    /**
+     * Loads and populates the end screen swing components
+     * @param result The result type of the match
+     * @param winner The name of the winning player
+     * @param isLocal Whether the match was a locally played match
+     * @param isRegularWin Whether the match was won by score or by a player disconnecting
+     */
     public void loadEnd(Result result, String winner, boolean isLocal, boolean isRegularWin)
     {
         unload();
@@ -131,6 +151,9 @@ public class UI implements IMatchListener
         game.add(winnerLabel);
     }
 
+    /**
+     * Loads and populates the ingame swing components
+     */
     public void loadGame(String leftPlayerName, String rightPlayerName)
     {
         unload();
@@ -169,35 +192,57 @@ public class UI implements IMatchListener
         game.add(rightShipCountLabel);
     }
 
+    /**
+     * Invoked when the start local game button is clicked
+     * @param e The ActionEvent context
+     */
     private void onStartLocalButton(ActionEvent e)
     {
-        loadGame("leftPlayerName", "rightPlayerName");
-        new LocalMatch();
+        new LocalMatch(this, false);
     }
 
+    /**
+     * Invoked when the start server button is clicked
+     * @param e The ActionEvent context
+     */
     private void onStartServerButton(ActionEvent e)
     {
         loadServer(); 
         new ServerConnection();  
     }
 
+    /**
+     * Invoked when the join server game button is clicked
+     * @param e The ActionEvent context
+     */
     private void onJoinServerButton(ActionEvent e)
     {
         unload();
         new ClientConnection(false);
     }
 
+    /**
+     * Invoked when the restart local game button is clicked
+     * @param e The ActionEvent context
+     */
     private void onRestartGameButton(ActionEvent e)
     {
-        loadGame("leftPlayerName", "rightPlayerName");
-        new LocalMatch();
+        new LocalMatch(this, false);
     }
 
+    /**
+     * Invoked when the exit button is clicked
+     * @param e The ActionEvent context
+     */
     private void onExitGameButton(ActionEvent e)
     {
         loadMenu();
     }
 
+    /**
+     * Invoked when the join server game as computer button is clicked
+     * @param e The ActionEvent context
+     */
     private void onJoinServerAsComputerButton(ActionEvent e)
     {
         unload();

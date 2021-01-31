@@ -27,10 +27,8 @@ public enum ShipType
     CARRIER;
 
     /**
-     * Returns true if the shipType is indeed a ShipType
-     * @requires shipType
-     * @param shipType
-     * @return which type the ship is
+     * @param shipType The ship type to check
+     * @return Whether the specified ship type is not water
      */
     public static boolean isShip(ShipType shipType)
     {
