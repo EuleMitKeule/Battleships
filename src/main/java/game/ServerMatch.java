@@ -40,7 +40,7 @@ public class ServerMatch extends Match implements IMatchConnectionListener
      * Invokes the Update event
      * @param lastPlayer The player that guessed before
      * @param nextPlayer The player that will be guessing next
-     * @param position The position that was guessed at
+     * @param cellPos The position that was guessed at
      * @param isHit Whether the guess hit a ship
      * @param isSunk Whether the guess sunk a ship
      * @param isLate Whether the move was made due to the round timer running out
@@ -92,10 +92,6 @@ public class ServerMatch extends Match implements IMatchConnectionListener
         else return null;
     }
 
-    /**
-     * @param playerName The name of the player
-     * @return The player object with the specified name or null if none is found
-     */
     @Override
     public void dispose()
     {

@@ -376,7 +376,6 @@ public class Board implements IRenderable
 	
 	/**
 	 * Checks if the move is in the bounds of the board
-	 * @param worldPos The cell position to check
 	 * @return Whether a world position is inside the bounds of the board
 	 */
     public boolean inBounds(Vector2Int cellPos)

@@ -200,7 +200,7 @@ public class ClientConnection
 
     /**
      * Invoked when a game setup message was received
-     * @param nexPlayerName The name of the beginning player
+     * @param nextPlayerName The name of the beginning player
      */
     private void onGameSetup(String nextPlayerName)
     {
@@ -217,7 +217,7 @@ public class ClientConnection
      * @param isSunkEnc Whether the move sunk a ship encoded as string
      * @param isLateEnc Whether the move was due to the round timer running out encoded as string
      * @param lastPlayerName The name of the player that made the move
-     * @param nextPlayername The name of the player who will guess next
+     * @param nextPlayerName The name of the player who will guess next
      */
     private void onUpdate(String xEnc, String yEnc, String isHitEnc, String isSunkEnc, String isLateEnc, String lastPlayerName, String nextPlayerName)
     {
@@ -252,7 +252,7 @@ public class ClientConnection
 
     /**
      * Invokes the GameSetup event
-     * @param nexPlayerName The name of the beginning player
+     * @param nextPlayerName The name of the beginning player
      */
     private void invokeGameSetup(String nextPlayerName)
     {
@@ -267,7 +267,7 @@ public class ClientConnection
     /**
      * Invoked when an update message was received
      * @param lastPlayerName The name of the player that made the move
-     * @param nextPlayername The name of the player who will guess next
+     * @param nextPlayerName The name of the player who will guess next
      * @param cellPos The position the move was made at
      * @param isHit Whether the move hit a ship
      * @param isSunk Whether the move sunk a ship

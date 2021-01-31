@@ -57,8 +57,8 @@ public abstract class Player implements IMatchListener
 
 	/**
 	 * Invokes the ShipPlaced event
-	 * @param cellPos The cell position the ship was placed at 
-	 * @param shipType The ship type that was placed
+	 * @param player The player object
+	 * @param board The board object
 	 */
 	protected void invokeClientBoard(Player player, Board board)
 	{

@@ -141,7 +141,7 @@ public class Game extends JComponent implements IRenderable, IUpdatable
 
 	/**
 	 * Invokes the render method on every renderable object
-	 * @param renderer The renderer context
+	 * @param graphics The graphics context
 	 */
 	@Override
 	public void render(Graphics graphics)
